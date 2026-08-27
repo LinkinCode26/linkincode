@@ -13,7 +13,7 @@ const LANGUAGE_LABELS = {
  * Reemplaza el #langToggle / #langDropdown del boceto estático.
  */
 export function LanguageDropdown({ className = '' }) {
-  const { lang, setLang, supportedLangs } = useLanguage();
+  const { lang, setLang, supportedLangs, t } = useLanguage();
   const [open, setOpen] = useState(false);
   const rootRef = useRef(null);
 
@@ -53,7 +53,7 @@ export function LanguageDropdown({ className = '' }) {
       {open && (
         <div
           role="listbox"
-          aria-label="Seleccionar idioma"
+          aria-label={t('nav.idioma')}
           className="absolute right-0 top-full mt-2 rounded-xl border border-line bg-surface/95 backdrop-blur-md shadow-xl p-1.5 min-w-[130px] z-20"
         >
           {supportedLangs.map((code) => {
@@ -89,10 +89,10 @@ export function LanguageDropdown({ className = '' }) {
  * donde el boceto usaba .lang-option-mobile.
  */
 export function LanguageToggleMobile({ className = '' }) {
-  const { lang, setLang, supportedLangs } = useLanguage();
+  const { lang, setLang, supportedLangs, t } = useLanguage();
 
   return (
-    <div className={`flex gap-2 ${className}`} role="group" aria-label="Seleccionar idioma">
+    <div className={`flex gap-2 ${className}`} role="group" aria-label={t('nav.idioma')}>
       {supportedLangs.map((code) => {
         const isActive = code === lang;
         return (
