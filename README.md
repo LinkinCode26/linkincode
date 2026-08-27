@@ -74,4 +74,4 @@ Por ahora el frontend no requiere variables de entorno propias. Cuando se conect
 
 ## Equipo
 
-Proyecto fundado y desarrollado por Thomas Bretschneider, Angel, Santiago y Jorge.
+Proyecto fundado y desarrollado por Thomas Bretschneider, Angel Berreta, Santiago Molina y Jorge Aparicio.
