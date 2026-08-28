@@ -65,3 +65,19 @@ body {
   font-family: 'Inter', sans-serif;
   transition: background-color .35s ease, color .35s ease;
 }
+
+/*
+ * Scroll reveal — usado por el hook useScrollReveal (LC-012).
+ * Reemplaza el .reveal/.in que en el boceto estático vivía en styles.css.
+ * El hook agrega/quita estas clases sobre el nodo directamente; acá solo
+ * definimos cómo se ven los dos estados.
+ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.reveal.in {
+  opacity: 1;
+  transform: translateY(0);
+}
