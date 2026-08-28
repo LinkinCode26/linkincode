@@ -1,5 +1,7 @@
 /**
- * Contenedor con efecto cristal (Glassmorphism) basado en el boceto original.
+ * Contenedor con efecto cristal (Glassmorphism).
+ * @param {React.ReactNode} children - Contenido interno de la card.
+ * @param {string} className - Clases adicionales de Tailwind.
  */
 export function GlassCard({ children, className = "", ...props }) {
   const glassStyles =
