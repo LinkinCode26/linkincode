@@ -81,3 +81,21 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
+
+/*
+ * Tipografía del hero — headline grande con tamaño fluido.
+ * Igual que .text-huge en el boceto estático (styles.css).
+ */
+.text-huge {
+  font-size: clamp(2.6rem, 6.5vw, 5rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+/*
+ * Sombra del mockup de navegador en el hero.
+ * Igual que .browser-frame en el boceto estático (styles.css).
+ */
+.browser-frame {
+  box-shadow: 0 30px 80px -20px rgb(var(--brand) / 0.35);
+}
