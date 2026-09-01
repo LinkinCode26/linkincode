@@ -1,11 +1,10 @@
-import { createContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import translations from '../i18n/translations';
+import { LanguageContext } from './language-context.js';
 
 const STORAGE_KEY = 'lc-lang';
 const SUPPORTED_LANGS = Object.keys(translations); // ['es', 'en']
 const DEFAULT_LANG = 'es';
-
-export const LanguageContext = createContext(null);
 
 function isSupported(lang) {
   return SUPPORTED_LANGS.includes(lang);
@@ -47,14 +46,16 @@ export function LanguageProvider({ children }) {
     }
   }, [lang]);
 
-  const setLang = (nextLang) => {
-    if (!isSupported(nextLang) || nextLang === lang) return;
-    setLangState(nextLang);
-  };
+  const setLang = useCallback((nextLang) => {
+    setLangState((prev) => {
+      if (!isSupported(nextLang) || nextLang === prev) return prev;
+      return nextLang;
+    });
+  }, []);
 
-  const toggleLang = () => {
+  const toggleLang = useCallback(() => {
     setLangState((prev) => (prev === 'es' ? 'en' : 'es'));
-  };
+  }, []);
 
   // t('nav.inicio') -> string traducido. Si falta la clave en el idioma
   // activo, cae al español; si tampoco existe ahí, devuelve la key.
@@ -79,7 +80,7 @@ export function LanguageProvider({ children }) {
       dict: translations[lang],
       supportedLangs: SUPPORTED_LANGS,
     }),
-    [lang, t]
+    [lang, t, setLang, toggleLang]
   );
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;

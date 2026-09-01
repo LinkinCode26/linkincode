@@ -87,7 +87,6 @@ export function useScrollReveal(options = {}) {
     return () => observer.disconnect();
     // Sólo dependemos de las opciones primitivas, no del objeto `options`
     // (que puede recrearse en cada render si se pasa inline).
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [threshold, rootMargin, once, delay]);
 
   return ref;
