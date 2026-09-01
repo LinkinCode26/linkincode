@@ -69,8 +69,8 @@ export function Hero() {
               </a>
             </div>
 
-            <div className="flex items-center gap-5">
-              <div className="flex -space-x-3">
+            <div className="flex items-start sm:items-center gap-4 sm:gap-5">
+              <div className="flex -space-x-3 shrink-0 mt-1 sm:mt-0">
                 {TEAM.map((member) => (
                   <img
                     key={member.name}
@@ -80,8 +80,8 @@ export function Hero() {
                   />
                 ))}
               </div>
-              <p className="text-sm text-mute">
-                <span className="text-ink font-bold">{boldCaption}</span>
+              <p className="text-sm text-mute leading-relaxed">
+                <span className="text-ink font-bold">{boldCaption}</span>{' '}
                 {restCaption}
               </p>
             </div>
