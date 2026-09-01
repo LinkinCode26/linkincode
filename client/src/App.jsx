@@ -1,6 +1,7 @@
 import LanguageDropdown from "./components/LanguageDropdown";
 import ThemeToggle from "./components/ThemeToggle";
 import { Hero } from './sections/Hero'
+import { Solutions } from './sections/Solutions'
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <LanguageDropdown />
       </div>
       <Hero />
+      <Solutions />
     </main>
   );
 }
