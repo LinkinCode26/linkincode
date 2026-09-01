@@ -1,6 +1,8 @@
 import useLanguage from "./hooks/useLanguage";
 import LanguageDropdown from "./components/LanguageDropdown";
 import ThemeToggle from "./components/ThemeToggle";
+import TechMarquee from "./components/TechMarquee";
+
 function App() {
   const { t } = useLanguage();
 
@@ -14,6 +16,9 @@ function App() {
         Linkincode
       </h1>
       <p className="text-mute max-w-md text-center">{t("hero.subtitle")}</p>
+      <div className="w-full mt-12">
+        <TechMarquee />
+      </div>
     </main>
   );
 }
