@@ -1,14 +1,11 @@
 import { useContext } from 'react';
-import { LanguageContext } from '../context/LanguageContext.jsx';
+import { LanguageContext } from '../context/language-context.js';
 
-// Uso: const { lang, setLang, t } = useLanguage();
 export function useLanguage() {
   const context = useContext(LanguageContext);
-
   if (!context) {
     throw new Error('useLanguage debe usarse dentro de <LanguageProvider>');
   }
-
   return context;
 }
 

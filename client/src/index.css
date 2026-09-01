@@ -94,6 +94,7 @@ body {
 
 [data-theme="light"] .theme-toggle-dot {
   transform: translateX(24px);
+}
 /*
  * Scroll reveal — usado por el hook useScrollReveal (LC-012).
  * Reemplaza el .reveal/.in que en el boceto estático vivía en styles.css.
@@ -167,4 +168,21 @@ body {
 
 [data-theme="dark"] .logo-invert {
   filter: invert(1) drop-shadow(0 0 6px rgb(var(--pc) / 0.55));
+}
+/*
+ * Tipografía del hero — headline grande con tamaño fluido.
+ * Igual que .text-huge en el boceto estático (styles.css).
+ */
+.text-huge {
+  font-size: clamp(2.6rem, 6.5vw, 5rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+/*
+ * Sombra del mockup de navegador en el hero.
+ * Igual que .browser-frame en el boceto estático (styles.css).
+ */
+.browser-frame {
+  box-shadow: 0 30px 80px -20px color-mix(in srgb, var(--brand) 35%, transparent);
 }
