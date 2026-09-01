@@ -126,5 +126,5 @@ body {
  * Igual que .browser-frame en el boceto estático (styles.css).
  */
 .browser-frame {
-  box-shadow: 0 30px 80px -20px rgb(var(--brand) / 0.35);
+  box-shadow: 0 30px 80px -20px color-mix(in srgb, var(--brand) 35%, transparent);
 }
