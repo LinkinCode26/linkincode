@@ -1,9 +1,8 @@
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { ThemeContext } from "./theme-context.js";
 
 const STORAGE_KEY = 'lc-theme';
 const DEFAULT_THEME = 'dark';
-
-export const ThemeContext = createContext(null);
 
 const isValidTheme = (theme) => theme === 'dark' || theme === 'light';
 
@@ -12,7 +11,6 @@ const readStoredTheme = () => {
   try {
     return window.localStorage.getItem(STORAGE_KEY);
   } catch {
-    // localStorage puede fallar en modo privado o si está deshabilitado.
     return null;
   }
 };
@@ -26,8 +24,6 @@ const getInitialTheme = () => {
 export function ThemeProvider({ children }) {
   const [theme, setThemeState] = useState(getInitialTheme);
 
-  // Aplica el atributo data-theme al <html> y persiste en localStorage
-  // cada vez que el tema cambia.
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     try {
