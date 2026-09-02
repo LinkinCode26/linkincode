@@ -101,7 +101,7 @@ body {
  * El hook agrega/quita estas clases sobre el nodo directamente; acá solo
  * definimos cómo se ven los dos estados.
  */
-}
+
 .reveal {
   opacity: 0;
   transform: translateY(28px);
