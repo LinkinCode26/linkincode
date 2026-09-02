@@ -94,13 +94,14 @@ body {
 
 [data-theme="light"] .theme-toggle-dot {
   transform: translateX(24px);
+  }
 /*
  * Scroll reveal — usado por el hook useScrollReveal (LC-012).
  * Reemplaza el .reveal/.in que en el boceto estático vivía en styles.css.
  * El hook agrega/quita estas clases sobre el nodo directamente; acá solo
  * definimos cómo se ven los dos estados.
  */
-}
+
 .reveal {
   opacity: 0;
   transform: translateY(28px);
@@ -251,4 +252,15 @@ body {
   .proceso-step-right .proceso-card {
     grid-column: 3;
   }
+}
+
+
+.text-huge {
+  font-size: clamp(2.6rem, 6.5vw, 5rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.browser-frame {
+  box-shadow: 0 30px 80px -20px color-mix(in srgb, var(--brand) 35%, transparent);
 }
