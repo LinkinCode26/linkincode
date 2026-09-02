@@ -1,7 +1,9 @@
 import LanguageDropdown from "./components/LanguageDropdown";
 import ThemeToggle from "./components/ThemeToggle";
-import { Hero } from './sections/Hero'
-import { Solutions } from './sections/Solutions'
+import { Hero } from "./sections/Hero";
+import { Solutions } from "./sections/Solutions";
+import TechStack from "./sections/TechStack";
+import Timeline from "./sections/Timeline";
 
 function App() {
   return (
@@ -10,8 +12,11 @@ function App() {
         <ThemeToggle />
         <LanguageDropdown />
       </div>
+
       <Hero />
+      <TechStack />
       <Solutions />
+      <Timeline />
     </main>
   );
 }
