@@ -1,7 +1,7 @@
 import { useLanguage } from "./hooks/useLanguage";
 import LanguageDropdown from "./components/LanguageDropdown";
 import ThemeToggle from "./components/ThemeToggle";
-
+import TechStack from "./sections/TechStack";
 import { Hero } from "./sections/Hero";
 import Timeline from "./sections/Timeline";
 
@@ -14,6 +14,7 @@ function App() {
       </div>
 
       <Hero />
+      <TechStack />
       <Timeline />
     </main>
   );
