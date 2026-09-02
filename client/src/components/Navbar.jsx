@@ -129,71 +129,72 @@ export function Navbar() {
       />
 
       {/* Mobile / Tablet Drawer Lateral */}
-      <aside
-        className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-[rgb(var(--nav-bg))] border-l border-line p-6 z-[60] flex flex-col justify-between transform transition-transform duration-300 ease-in-out lg:hidden shadow-2xl ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+<aside
+  className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-surface border-l border-line p-6 z-[60] flex flex-col justify-between transform transition-transform duration-300 ease-in-out lg:hidden shadow-2xl ${
+    isOpen ? 'translate-x-0' : 'translate-x-full'
+  }`}
+>
+  <div className="flex flex-col gap-6">
+    {/* Cabecera del Drawer */}
+    <div className="flex justify-between items-center pb-4 border-b border-line">
+      <span className="text-xs font-bold uppercase tracking-[0.2em] text-mute">
+        Navegación
+      </span>
+      <button
+        type="button"
+        onClick={closeDrawer}
+        className="w-9 h-9 flex items-center justify-center rounded-xl border border-line bg-bg text-mute hover:text-ink hover:border-brand/40 transition-colors shadow-sm"
+        aria-label="Cerrar menú"
       >
-        <div className="flex flex-col gap-6">
-          {/* Cabecera del Drawer */}
-          <div className="flex justify-between items-center pb-4 border-b border-line">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-mute">
-              Navegación
-            </span>
-            <button
-              type="button"
-              onClick={closeDrawer}
-              className="w-9 h-9 flex items-center justify-center rounded-xl border border-line bg-surface/50 text-mute hover:text-ink hover:border-brand/40 transition-colors"
-              aria-label="Cerrar menú"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
 
-          {/* Links dentro del Drawer */}
-          <nav className="flex flex-col gap-2">
-            {NAV_ITEMS.map((item) => {
-              const isActive = activeSection === item.key;
-              return (
-                <a
-                  key={item.key}
-                  href={item.href}
-                  onClick={closeDrawer}
-                  className={`px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-[0.16em] transition-all ${
-                    isActive
-                      ? 'text-brand bg-brand/10 border border-brand/20 font-bold'
-                      : 'text-mute hover:text-ink hover:bg-surface/60'
-                  }`}
-                >
-                  {t(`nav.${item.key}`) || item.key.toUpperCase()}
-                </a>
-              );
-            })}
-          </nav>
-        </div>
-
-        {/* Footer del Drawer: controles de idioma/tema y CTA */}
-        <div className="pt-6 border-t border-line flex flex-col gap-5">
-          <div className="flex items-center justify-between px-1">
-            <span className="text-xs text-mute font-medium uppercase tracking-wider">Ajustes</span>
-            <div className="flex items-center gap-3">
-              <LanguageDropdown />
-              <ThemeToggle />
-            </div>
-          </div>
-
-          <Button
-            href="#contacto"
+    {/* Enlaces dentro del Drawer */}
+    <nav className="flex flex-col gap-2">
+      {NAV_ITEMS.map((item) => {
+        const isActive = activeSection === item.key;
+        return (
+          <a
+            key={item.key}
+            href={item.href}
             onClick={closeDrawer}
-            variant="brand"
-            className="w-full justify-center text-xs font-bold uppercase tracking-widest py-3 rounded-xl shadow-lg shadow-brand/20"
+            className={`px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-[0.16em] transition-all ${
+              isActive
+                ? 'text-brand bg-brand/10 border border-brand/30 font-bold shadow-sm'
+                : 'text-mute hover:text-ink hover:bg-bg/60'
+            }`}
           >
-            {t('nav.contacto') || 'CONTACTO'}
-          </Button>
-        </div>
-      </aside>
+            {t(`nav.${item.key}`) || item.key.toUpperCase()}
+          </a>
+        );
+      })}
+    </nav>
+  </div>
+
+  {/* Footer del Drawer: controles y CTA */}
+  <div className="pt-6 border-t border-line flex flex-col gap-5">
+    <div className="flex items-center justify-between px-1">
+      <span className="text-xs text-mute font-medium uppercase tracking-wider">Ajustes</span>
+      <div className="flex items-center gap-3">
+        <LanguageDropdown />
+        <ThemeToggle />
+      </div>
+    </div>
+
+    <Button
+      href="#contacto"
+      onClick={closeDrawer}
+      variant="brand"
+      className="w-full justify-center text-xs font-bold uppercase tracking-widest py-3 rounded-xl shadow-lg shadow-brand/20"
+    >
+      {t('nav.contacto') || 'CONTACTO'}
+    </Button>
+  </div>
+</aside>
+      
     </>
   );
 }
