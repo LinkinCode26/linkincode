@@ -3,8 +3,6 @@ import useScrollReveal from '../hooks/useScrollReveal';
 import { steps } from '../data/steps';
 import  ProcesoStep  from '../components/ProcesoStep';
 
-import React from 'react'
-
 const Timeline = () => {
 const { t } = useLanguage();
   const headerRef = useScrollReveal();
