@@ -1,10 +1,12 @@
 import LanguageDropdown from "./components/LanguageDropdown";
 import ThemeToggle from "./components/ThemeToggle";
 import { Hero } from './sections/Hero';
-import  Navbar  from './components/Navbar';
+import Navbar from './components/Navbar';
 import TechStack from "./sections/TechStack";
 import { Solutions } from "./sections/Solutions";
 import Timeline from "./sections/Timeline";
+import { Contact } from "./sections/Contact";
+import { CtaPrefooter } from "./sections/CtaPrefooter";
 import Footer from "./sections/Footer";
 
 function App() {
@@ -20,6 +22,8 @@ function App() {
       <TechStack />
       <Solutions />
       <Timeline />
+      <Contact />
+      <CtaPrefooter />
       <Footer />
     </main>
   );
