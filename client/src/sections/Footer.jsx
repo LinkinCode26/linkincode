@@ -30,12 +30,13 @@ export default function Footer() {
                 </h2>
               </a>
               <p className="text-mute leading-relaxed mb-6 max-w-sm">
-                {t("footer.description")}
+                Estudio de 4 desarrolladores Full Stack. Construimos software
+                confiable, escalable y con estándares internacionales.
               </p>
               <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-surface border border-line mb-8">
                 <span className="flex h-2 w-2 rounded-full bg-accent animate-pulse"></span>
                 <span className="text-[11px] font-bold uppercase tracking-widest text-accent">
-                  {t("footer.available")}
+                  Disponibles para nuevos proyectos
                 </span>
               </div>
               <div className="flex gap-3">
@@ -70,7 +71,7 @@ export default function Footer() {
 
             <div className="lg:col-span-2">
               <h4 className="font-display font-bold text-sm uppercase tracking-widest text-ink mb-6">
-                {t("footer.site")}
+                Sitio
               </h4>
               <ul className="space-y-4 text-sm text-mute">
                 <li>
@@ -79,7 +80,7 @@ export default function Footer() {
                     className="hover:text-brand transition-colors flex items-center gap-2"
                   >
                     <i className="fas fa-chevron-right text-[9px] text-accent"></i>
-                    {t("nav.inicio")}
+                    Inicio
                   </a>
                 </li>
                 <li>
@@ -88,7 +89,7 @@ export default function Footer() {
                     className="hover:text-brand transition-colors flex items-center gap-2"
                   >
                     <i className="fas fa-chevron-right text-[9px] text-accent"></i>
-                    {t("nav.soluciones")}
+                    Soluciones
                   </a>
                 </li>
                 <li>
@@ -97,7 +98,7 @@ export default function Footer() {
                     className="hover:text-brand transition-colors flex items-center gap-2"
                   >
                     <i className="fas fa-chevron-right text-[9px] text-accent"></i>
-                    {t("nav.proceso")}
+                    Proceso
                   </a>
                 </li>
                 <li>
@@ -106,7 +107,7 @@ export default function Footer() {
                     className="hover:text-brand transition-colors flex items-center gap-2"
                   >
                     <i className="fas fa-chevron-right text-[9px] text-accent"></i>
-                    {t("nav.nosotros")}
+                    Nosotros
                   </a>
                 </li>
                 <li>
@@ -115,7 +116,7 @@ export default function Footer() {
                     className="hover:text-brand transition-colors flex items-center gap-2"
                   >
                     <i className="fas fa-chevron-right text-[9px] text-accent"></i>
-                    {t("nav.tecnologias")}
+                    Tecnologías
                   </a>
                 </li>
               </ul>
@@ -123,7 +124,7 @@ export default function Footer() {
 
             <div className="lg:col-span-3">
               <h4 className="font-display font-bold text-sm uppercase tracking-widest text-ink mb-6">
-                {t("footer.services")}
+                Servicios
               </h4>
               <ul className="space-y-4 text-sm text-mute">
                 <li>
@@ -168,7 +169,7 @@ export default function Footer() {
                     className="hover:text-brand transition-colors flex items-center gap-2"
                   >
                     <i className="fas fa-wand-magic-sparkles text-[11px] text-accent"></i>
-                    {t("footer.customProject")}
+                    Proyecto a medida
                   </a>
                 </li>
               </ul>
@@ -176,7 +177,7 @@ export default function Footer() {
 
             <div className="lg:col-span-3">
               <h4 className="font-display font-bold text-sm uppercase tracking-widest text-ink mb-6">
-                {t("footer.contact")}
+                Contacto
               </h4>
               <ul className="space-y-4 text-sm">
                 <li>
@@ -201,7 +202,7 @@ export default function Footer() {
                 </li>
                 <li className="flex items-start gap-3 text-mute">
                   <i className="fas fa-location-dot mt-0.5 text-accent"></i>{" "}
-                  {t("footer.location")}
+                  Argentina · Trabajo 100% remoto
                 </li>
               </ul>
             </div>
@@ -209,21 +210,21 @@ export default function Footer() {
 
           <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-[12px] text-mute/70 text-center md:text-left">
-              © 2026{" "}
+              © 2025{" "}
               <span className="text-mute font-semibold">Linkincode Studio</span>
-              . {t("footer.madeWith")}{" "}
-              <i className="fas fa-heart text-brand text-[10px] mx-1"></i>{" "}
-              {t("footer.byFriends")}.
+              . Hecho con{" "}
+              <i className="fas fa-heart text-brand text-[10px] mx-1"></i> por 4
+              amigos developers.
             </p>
             <div className="flex gap-6 text-[12px] text-mute/70">
               <a href="#" className="hover:text-brand transition-colors">
-                {t("footer.privacy")}
+                Privacidad
               </a>
               <a href="#" className="hover:text-brand transition-colors">
-                {t("footer.terms")}
+                Términos
               </a>
               <a href="#" className="hover:text-brand transition-colors">
-                {t("footer.cookies")}
+                Cookies
               </a>
             </div>
           </div>
