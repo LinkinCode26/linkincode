@@ -37,7 +37,18 @@ Extraídos directamente del `:root` y `[data-theme="light"]` del CSS del boceto 
 
 ## Formato de uso
 
-Las variables se declaran como tripleta RGB sin `rgb()` envolvente (ej: `--bg: 10 14 23;`), para poder aplicar opacidad con la sintaxis de Tailwind `rgb(var(--bg) / <alpha-value>)`. Por eso en el código se ven usos como `bg-surface/40` (surface al 40% de opacidad); el color resultante en pantalla se ve distinto al valor puro de la tabla porque está mezclado con lo que hay detrás.
+Las variables se declaran **ya envueltas en `rgb()`** (ej: `--bg: rgb(10 14 23);`), no como tripleta cruda.
+
+Esto es compatible con las utilidades de opacidad de Tailwind (`bg-surface/40`, `shadow-brand/30`, etc.) sin ningún ajuste adicional: Tailwind v4 resuelve la opacidad internamente con `color-mix()` y no necesita que la variable venga "pelada".
+
+**Importante:** si necesitás aplicar opacidad a una variable en CSS plano (fuera de una utilidad de Tailwind, por ejemplo en un `box-shadow` o `background` escrito a mano), **no uses el patrón viejo `rgb(var(--x) / 0.35)`** — con el formato actual de las variables eso genera `rgb(rgb(...) / 0.35)`, que es sintaxis inválida y falla en silencio (el navegador ignora la propiedad completa).
+
+Usá en su lugar:
+```css
+color-mix(in srgb, var(--brand) 35%, transparent)
+```
+
+Ver `.browser-frame` en `index.css` como referencia (bug corregido en LC-011).
 
 ## Nota sobre la validación
 

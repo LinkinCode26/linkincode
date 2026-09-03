@@ -141,6 +141,11 @@ const es = {
         cta: 'Quiero una demo de este módulo',
       },
     },
+    comingSoon: {
+      title: 'Simulador interactivo en camino',
+      description: 'Vas a poder previsualizar este servicio en vivo muy pronto.',
+      badge: 'Próximamente',
+    },    
     simulator: {
       previewLabel: 'Vista previa',
       simulateBadge: 'Tu marca aquí',
@@ -425,6 +430,11 @@ const en = {
         ],
         cta: 'Get a demo of this module',
       },
+    },
+    comingSoon: {
+      title: 'Interactive simulator on its way',
+      description: "You'll be able to preview this service live very soon.",
+      badge: 'Coming soon',
     },
     simulator: {
       previewLabel: 'Preview',

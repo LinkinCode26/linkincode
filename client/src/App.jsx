@@ -2,6 +2,10 @@ import LanguageDropdown from "./components/LanguageDropdown";
 import ThemeToggle from "./components/ThemeToggle";
 import { Hero } from './sections/Hero';
 import  Navbar  from './components/Navbar';
+import TechStack from "./sections/TechStack";
+import { Solutions } from "./sections/Solutions";
+import Timeline from "./sections/Timeline";
+import Footer from "./sections/Footer";
 
 function App() {
   return (
@@ -11,7 +15,12 @@ function App() {
         <ThemeToggle />
         <LanguageDropdown />
       </div>
+
       <Hero />
+      <TechStack />
+      <Solutions />
+      <Timeline />
+      <Footer />
     </main>
   );
 }
