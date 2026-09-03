@@ -32,6 +32,7 @@ export function Select({
   label,
   options = [],
   hasError = false,
+  placeholder,
   className = "",
   ...props
 }) {
@@ -49,7 +50,7 @@ export function Select({
         </label>
       )}
       <select className={`${baseInput} ${borderState}`} {...props}>
-        <option value="">Seleccioná una opción</option>
+        <option value="">{placeholder ?? "Seleccioná una opción"}</option>
         {options.map((opt, i) => (
           <option key={i} value={opt.value}>
             {opt.label}
