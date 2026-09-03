@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import useLanguage from "../hooks/useLanguage";
 
 export default function Footer() {
-  const { t } = useLanguage();
   const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
