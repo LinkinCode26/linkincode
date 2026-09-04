@@ -6,6 +6,56 @@ import { SERVICES } from "../data/services";
 import { ACCENT_STYLES } from "../utils/accentStyles";
 import { SimulatorShell } from "../components/SimulatorShell";
 
+function DemoSimulatorContent({ content }) {
+  const [simTitle, setSimTitle] = useState("");
+  const [simColor, setSimColor] = useState("brand");
+
+  return (
+    <div className="flex flex-col gap-5 py-4">
+      <div>
+        <label className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
+          Título principal
+        </label>
+        <input
+          type="text"
+          value={simTitle}
+          onChange={(e) => setSimTitle(e.target.value)}
+          placeholder="Escribí tu propio título..."
+          className="w-full bg-surface border border-line rounded-xl px-4 py-3 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
+        />
+      </div>
+      <div>
+        <label className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
+          Color de marca
+        </label>
+        <div className="flex gap-3">
+          {["brand", "accent", "indigo", "emerald"].map((c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => setSimColor(c)}
+              className={`w-8 h-8 rounded-full border-2 transition-transform ${
+                simColor === c
+                  ? "scale-110 border-white shadow-lg"
+                  : "border-transparent opacity-70"
+              } bg-brand`}
+            />
+          ))}
+        </div>
+      </div>
+      <div className="mt-4 p-4 rounded-xl bg-surface/60 border border-line text-center">
+        <p className="text-xs text-mute italic">
+          Vista previa activa para:{" "}
+          <span className="font-bold text-ink">{content.heading}</span>
+        </p>
+        <h4 className="font-display font-bold text-xl mt-2 text-ink">
+          {simTitle || "Impulsá tu negocio online"}
+        </h4>
+      </div>
+    </div>
+  );
+}
+
 export function Solutions() {
   const { t } = useLanguage();
   const { requestQuote } = useContact();
@@ -13,10 +63,6 @@ export function Solutions() {
 
   // Estado para saber si el usuario hizo clic en "Simulá tu servicio"
   const [isSimulating, setIsSimulating] = useState(false);
-
-  // Estados mock para el contenido interactivo del simulador de prueba
-  const [simTitle, setSimTitle] = useState("");
-  const [simColor, setSimColor] = useState("brand");
 
   const headerRef = useScrollReveal();
   const tabsRef = useScrollReveal({ delay: 0.05 });
@@ -180,51 +226,8 @@ export function Solutions() {
                   </button>
                 </div>
               ) : (
-                <SimulatorShell title="SIMULANDO EN VIVO">
-                  <div className="flex flex-col gap-5 py-4">
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
-                        Título principal
-                      </label>
-                      <input
-                        type="text"
-                        value={simTitle}
-                        onChange={(e) => setSimTitle(e.target.value)}
-                        placeholder="Escribí tu propio título..."
-                        className="w-full bg-surface border border-line rounded-xl px-4 py-3 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
-                        Color de marca
-                      </label>
-                      <div className="flex gap-3">
-                        {["brand", "accent", "indigo", "emerald"].map((c) => (
-                          <button
-                            key={c}
-                            type="button"
-                            onClick={() => setSimColor(c)}
-                            className={`w-8 h-8 rounded-full border-2 transition-transform ${
-                              simColor === c
-                                ? "scale-110 border-white shadow-lg"
-                                : "border-transparent opacity-70"
-                            } bg-brand`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    <div className="mt-4 p-4 rounded-xl bg-surface/60 border border-line text-center">
-                      <p className="text-xs text-mute italic">
-                        Vista previa activa para:{" "}
-                        <span className="font-bold text-ink">
-                          {content.heading}
-                        </span>
-                      </p>
-                      <h4 className="font-display font-bold text-xl mt-2 text-ink">
-                        {simTitle || "Impulsá tu negocio online"}
-                      </h4>
-                    </div>
-                  </div>
+                <SimulatorShell>
+                  <DemoSimulatorContent content={content} />
                 </SimulatorShell>
               )}
             </div>

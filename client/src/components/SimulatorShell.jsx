@@ -1,8 +1,13 @@
 import { useSimulator } from "../hooks/useSimulator";
+import useLanguage from "../hooks/useLanguage";
 
-export function SimulatorShell({ title = "SIMULANDO EN VIVO", children }) {
+export function SimulatorShell({ title, children }) {
   const { isFullscreen, toggleFullscreen, resetSimulator, resetKey } =
     useSimulator();
+  const { t } = useLanguage();
+
+  const defaultTitle =
+    t("solutions.simulator.liveEditing") || "SIMULANDO EN VIVO";
 
   return (
     <div
@@ -12,12 +17,13 @@ export function SimulatorShell({ title = "SIMULANDO EN VIVO", children }) {
           : "relative bg-surface rounded-2xl border border-line p-6 flex flex-col h-full shadow-lg"
       }`}
     >
-      {/* Header del Shell con botones estándar */}
       <div className="flex items-center justify-between pb-4 mb-6 border-b border-line">
         <div className="flex items-center gap-2">
           <span className="flex h-2 w-2 rounded-full bg-accent animate-pulse"></span>
           <span className="text-[11px] font-bold uppercase tracking-widest text-accent">
-            {isFullscreen ? "EDITANDO EN VIVO" : title}
+            {isFullscreen
+              ? t("solutions.simulator.fullscreenEditing") || "EDITANDO EN VIVO"
+              : title || defaultTitle}
           </span>
         </div>
 
@@ -27,7 +33,8 @@ export function SimulatorShell({ title = "SIMULANDO EN VIVO", children }) {
             onClick={resetSimulator}
             className="flex items-center gap-1.5 hover:text-ink transition-colors cursor-pointer"
           >
-            <i className="fas fa-rotate-right text-[10px]" /> Reiniciar
+            <i className="fas fa-rotate-right text-[10px]" />{" "}
+            {t("solutions.simulator.resetLabel") || "Reiniciar"}
           </button>
           <button
             type="button"
@@ -37,12 +44,13 @@ export function SimulatorShell({ title = "SIMULANDO EN VIVO", children }) {
             <i
               className={`fas ${isFullscreen ? "fa-compress" : "fa-expand"} text-[10px]`}
             />
-            {isFullscreen ? "Salir" : "Pantalla completa"}
+            {isFullscreen
+              ? t("solutions.simulator.exitFullscreen") || "Salir"
+              : t("solutions.simulator.fullscreenLabel") || "Pantalla completa"}
           </button>
         </div>
       </div>
 
-      {/* Contenedor del contenido del simulador (el key={resetKey} fuerza el reseteo del componente hijo) */}
       <div className="flex-1 flex flex-col" key={resetKey}>
         {children}
       </div>
