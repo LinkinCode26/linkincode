@@ -81,7 +81,6 @@ export function Solutions() {
   const handleTabChange = (id) => {
     setActiveId(id);
     setIsSimulating(false);
-    setSimTitle("");
   };
 
   return (
