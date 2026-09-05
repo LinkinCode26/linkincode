@@ -8,6 +8,7 @@ import Timeline from "./sections/Timeline";
 import { Contact } from "./sections/Contact";
 import { CtaPrefooter } from "./sections/CtaPrefooter";
 import Footer from "./sections/Footer";
+import AboutUs from "./sections/AboutUs";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <TechStack />
       <Solutions />
       <Timeline />
+      <AboutUs></AboutUs>
       <Contact />
       <CtaPrefooter />
       <Footer />
