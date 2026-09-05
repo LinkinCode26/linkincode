@@ -1,5 +1,3 @@
-import React from "react";
-
 const stats = [
   { id: 1, value: "15+", label: "Proyectos completados" },
   { id: 2, value: "MERN", label: "Stack Principal" },
