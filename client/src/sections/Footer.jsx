@@ -1,19 +1,25 @@
 import { useState, useEffect } from "react";
+import useLanguage from "../hooks/useLanguage";
+
+const SITE_HREFS = ["#inicio", "#soluciones", "#proceso", "#nosotros", "#tecnologias"];
+const SERVICE_HREFS = ["#soluciones", "#soluciones", "#soluciones", "#soluciones", "#contacto"];
+const SERVICE_ICONS = ["fa-globe", "fa-store", "fa-code", "fa-chart-pie", "fa-wand-magic-sparkles"];
 
 export default function Footer() {
+  const { t } = useLanguage();
   const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 500);
-    };
+    const handleScroll = () => setShowBackToTop(window.scrollY > 500);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+  const siteLinks = t("footer.columns.site.links");
+  const serviceLinks = t("footer.columns.services.links");
+  const legalLinks = t("footer.legalLinks");
 
   return (
     <>
@@ -28,40 +34,31 @@ export default function Footer() {
                 </h2>
               </a>
               <p className="text-mute leading-relaxed mb-6 max-w-sm">
-                Estudio de 4 desarrolladores Full Stack. Construimos software
-                confiable, escalable y con estándares internacionales.
+                {t("footer.description")}
               </p>
               <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-surface border border-line mb-8">
                 <span className="flex h-2 w-2 rounded-full bg-accent animate-pulse"></span>
                 <span className="text-[11px] font-bold uppercase tracking-widest text-accent">
-                  Disponibles para nuevos proyectos
+                  {t("footer.availability")}
                 </span>
               </div>
               <div className="flex gap-3">
-                <a
-                  href="#"
-                  className="w-11 h-11 rounded-xl bg-surface border border-line flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all"
-                >
+                <a href="#" className="w-11 h-11 rounded-xl bg-surface border border-line flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all">
                   <i className="fab fa-github"></i>
                 </a>
-                <a
-                  href="#"
-                  className="w-11 h-11 rounded-xl bg-surface border border-line flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all"
-                >
+                <a href="#" className="w-11 h-11 rounded-xl bg-surface border border-line flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all">
                   <i className="fab fa-linkedin-in"></i>
                 </a>
                 <a
                   href="https://wa.me/5491100000000"
                   target="_blank"
                   rel="noreferrer"
+                  aria-label={t("common.contactWhatsapp")}
                   className="w-11 h-11 rounded-xl bg-surface border border-line flex items-center justify-center text-mute hover:text-white hover:bg-[#25D366] hover:border-[#25D366] transition-all"
                 >
                   <i className="fab fa-whatsapp"></i>
                 </a>
-                <a
-                  href="#"
-                  className="w-11 h-11 rounded-xl bg-surface border border-line flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all"
-                >
+                <a href="#" className="w-11 h-11 rounded-xl bg-surface border border-line flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all">
                   <i className="fab fa-instagram"></i>
                 </a>
               </div>
@@ -69,138 +66,53 @@ export default function Footer() {
 
             <div className="lg:col-span-2">
               <h4 className="font-display font-bold text-sm uppercase tracking-widest text-ink mb-6">
-                Sitio
+                {t("footer.columns.site.title")}
               </h4>
               <ul className="space-y-4 text-sm text-mute">
-                <li>
-                  <a
-                    href="#inicio"
-                    className="hover:text-brand transition-colors flex items-center gap-2"
-                  >
-                    <i className="fas fa-chevron-right text-[9px] text-accent"></i>
-                    Inicio
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#soluciones"
-                    className="hover:text-brand transition-colors flex items-center gap-2"
-                  >
-                    <i className="fas fa-chevron-right text-[9px] text-accent"></i>
-                    Soluciones
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#proceso"
-                    className="hover:text-brand transition-colors flex items-center gap-2"
-                  >
-                    <i className="fas fa-chevron-right text-[9px] text-accent"></i>
-                    Proceso
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#nosotros"
-                    className="hover:text-brand transition-colors flex items-center gap-2"
-                  >
-                    <i className="fas fa-chevron-right text-[9px] text-accent"></i>
-                    Nosotros
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#tecnologias"
-                    className="hover:text-brand transition-colors flex items-center gap-2"
-                  >
-                    <i className="fas fa-chevron-right text-[9px] text-accent"></i>
-                    Tecnologías
-                  </a>
-                </li>
+                {siteLinks.map((label, i) => (
+                  <li key={label}>
+                    <a href={SITE_HREFS[i]} className="hover:text-brand transition-colors flex items-center gap-2">
+                      <i className="fas fa-chevron-right text-[9px] text-accent"></i>
+                      {label}
+                    </a>
+                  </li>
+                ))}
               </ul>
             </div>
 
             <div className="lg:col-span-3">
               <h4 className="font-display font-bold text-sm uppercase tracking-widest text-ink mb-6">
-                Servicios
+                {t("footer.columns.services.title")}
               </h4>
               <ul className="space-y-4 text-sm text-mute">
-                <li>
-                  <a
-                    href="#soluciones"
-                    className="hover:text-brand transition-colors flex items-center gap-2"
-                  >
-                    <i className="fas fa-globe text-[11px] text-accent"></i>
-                    Landing Pages
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#soluciones"
-                    className="hover:text-brand transition-colors flex items-center gap-2"
-                  >
-                    <i className="fas fa-store text-[11px] text-accent"></i>
-                    E-commerce
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#soluciones"
-                    className="hover:text-brand transition-colors flex items-center gap-2"
-                  >
-                    <i className="fas fa-code text-[11px] text-accent"></i>APIs
-                    REST
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#soluciones"
-                    className="hover:text-brand transition-colors flex items-center gap-2"
-                  >
-                    <i className="fas fa-chart-pie text-[11px] text-accent"></i>
-                    Dashboards
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#contacto"
-                    className="hover:text-brand transition-colors flex items-center gap-2"
-                  >
-                    <i className="fas fa-wand-magic-sparkles text-[11px] text-accent"></i>
-                    Proyecto a medida
-                  </a>
-                </li>
+                {serviceLinks.map((label, i) => (
+                  <li key={label}>
+                    <a href={SERVICE_HREFS[i]} className="hover:text-brand transition-colors flex items-center gap-2">
+                      <i className={`fas ${SERVICE_ICONS[i]} text-[11px] text-accent`}></i>
+                      {label}
+                    </a>
+                  </li>
+                ))}
               </ul>
             </div>
 
             <div className="lg:col-span-3">
               <h4 className="font-display font-bold text-sm uppercase tracking-widest text-ink mb-6">
-                Contacto
+                {t("footer.columns.contact.title")}
               </h4>
               <ul className="space-y-4 text-sm">
                 <li>
-                  <a
-                    href="mailto:hola@linkincode.dev"
-                    className="flex items-start gap-3 text-mute hover:text-brand transition-colors"
-                  >
-                    <i className="fas fa-envelope mt-0.5 text-accent"></i>{" "}
-                    hola@linkincode.dev
+                  <a href="mailto:hola@linkincode.dev" className="flex items-start gap-3 text-mute hover:text-brand transition-colors">
+                    <i className="fas fa-envelope mt-0.5 text-accent"></i> hola@linkincode.dev
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="https://wa.me/5491100000000"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-start gap-3 text-mute hover:text-brand transition-colors"
-                  >
-                    <i className="fab fa-whatsapp mt-0.5 text-accent"></i> +54 9
-                    11 0000-0000
+                  <a href="https://wa.me/5491100000000" target="_blank" rel="noreferrer" className="flex items-start gap-3 text-mute hover:text-brand transition-colors">
+                    <i className="fab fa-whatsapp mt-0.5 text-accent"></i> +54 9 11 0000-0000
                   </a>
                 </li>
                 <li className="flex items-start gap-3 text-mute">
-                  <i className="fas fa-location-dot mt-0.5 text-accent"></i>{" "}
-                  Argentina · Trabajo 100% remoto
+                  <i className="fas fa-location-dot mt-0.5 text-accent"></i> {t("footer.columns.contact.location")}
                 </li>
               </ul>
             </div>
@@ -208,22 +120,14 @@ export default function Footer() {
 
           <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-[12px] text-mute/70 text-center md:text-left">
-              © 2025{" "}
-              <span className="text-mute font-semibold">Linkincode Studio</span>
-              . Hecho con{" "}
-              <i className="fas fa-heart text-brand text-[10px] mx-1"></i> por 4
-              amigos developers.
+              © {new Date().getFullYear()} <span className="text-mute font-semibold">Linkincode Studio</span>. {t("footer.copyright")}
             </p>
             <div className="flex gap-6 text-[12px] text-mute/70">
-              <a href="#" className="hover:text-brand transition-colors">
-                Privacidad
-              </a>
-              <a href="#" className="hover:text-brand transition-colors">
-                Términos
-              </a>
-              <a href="#" className="hover:text-brand transition-colors">
-                Cookies
-              </a>
+              {legalLinks.map((label) => (
+                <a key={label} href="#" className="hover:text-brand transition-colors">
+                  {label}
+                </a>
+              ))}
             </div>
           </div>
         </div>
@@ -242,7 +146,7 @@ export default function Footer() {
       <button
         onClick={scrollToTop}
         className={`fixed right-6 bottom-24 z-50 w-11 h-11 rounded-full bg-surface/70 backdrop-blur-md border border-line text-ink flex items-center justify-center transition-all duration-300 ${showBackToTop ? "opacity-100 pointer-events-auto translate-y-0" : "opacity-0 pointer-events-none translate-y-2"}`}
-        aria-label="Volver arriba"
+        aria-label={t("common.backToTop")}
       >
         <i className="fas fa-arrow-up"></i>
       </button>
