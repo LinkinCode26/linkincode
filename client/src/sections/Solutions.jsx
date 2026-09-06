@@ -104,8 +104,8 @@ export function Solutions() {
         <div
           ref={tabsRef}
           role="tablist"
-          aria-label={t("solutions.title")}
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 mb-14 bg-bg border border-line rounded-2xl p-2 max-w-5xl mx-auto"
+          aria-label={t('solutions.title')}
+          className="flex flex-wrap justify-center gap-2 mb-14 bg-bg border border-line rounded-2xl p-2 max-w-5xl mx-auto"
         >
           {SERVICES.map((service) => {
             const isActive = service.id === activeId;
@@ -118,14 +118,16 @@ export function Solutions() {
                 aria-selected={isActive}
                 aria-controls={`panel-${service.id}`}
                 onClick={() => handleTabChange(service.id)}
-                className={`flex items-center justify-center gap-2 px-4 py-4 rounded-xl border transition-colors duration-300 ${
-                  isActive
-                    ? "bg-surface border-brand text-brand shadow-lg shadow-brand/15"
-                    : "bg-surface/50 border-line text-mute hover:text-ink hover:border-brand/40"
-                }`}
+                className={`flex items-center justify-center gap-2 px-4 py-4 rounded-xl border transition-colors duration-300
+                  w-[calc((100%-8px)/2)] 
+                  sm:w-[calc((100%-16px)/3)] 
+                  lg:w-[calc((100%-24px)/4)]
+                  ${isActive
+                    ? 'bg-surface border-brand text-brand shadow-lg shadow-brand/15'
+                    : 'bg-surface/50 border-line text-mute hover:text-ink hover:border-brand/40'}`}
               >
-                <i className={`fas ${service.icon}`} aria-hidden="true" />
-                <span className="font-bold text-sm">
+                <i className={`fas ${service.icon} shrink-0`} aria-hidden="true" />
+                <span className="font-bold text-sm text-center leading-snug">
                   {t(`solutions.tabs.${service.id}`)}
                 </span>
               </button>
