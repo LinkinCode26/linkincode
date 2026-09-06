@@ -8,17 +8,17 @@ const teamMembers = [
       es: 'Full Stack Lead',
       en: 'Full Stack Lead',
     },
-    image: 'public/team/agustin.png',
+    image: '/team/Agustin.png',
     skills: ['React', 'Node.js', 'Arquitectura'],
   },
   {
     id: 2,
-    name: 'Angel Berreta',
+    name: 'Angel Berretta',
     role: {
       es: 'Frontend Engineer',
       en: 'Frontend Engineer',
     },
-    image: 'public/team/angel.png',
+    image: '/team/Angel.png',
     skills: ['React', 'Tailwind CSS', 'UI/UX'],
   },
   {
@@ -28,7 +28,7 @@ const teamMembers = [
       es: 'Database & API Specialist',
       en: 'Database & API Specialist',
     },
-    image: 'public/team/santiago.png',
+    image: '/team/Santiago.png',
     skills: ['Node.js', 'Express', 'MongoDB'],
   },
   {
@@ -38,16 +38,14 @@ const teamMembers = [
       es: 'Backend Developer',
       en: 'Backend Developer',
     },
-    image: 'public/team/thomas.png',
+    image: '/team/Thomas.png',
     skills: ['Databases', 'REST APIs', 'SQL/NoSQL'],
   },
 ];
 
 export default function AboutUs() {
-  const { t } = useLanguage();
-
-  // Detección directa mediante el diccionario
-  const isEn = t('nav.idioma')?.toLowerCase() === 'language';
+  const { lang } = useLanguage();
+  const isEn = lang === 'en';
 
   const stats = [
     { id: 1, value: '15+', label: isEn ? 'Completed projects' : 'Proyectos completados' },
