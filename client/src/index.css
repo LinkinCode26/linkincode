@@ -231,6 +231,7 @@ body {
 
 .proceso-card {
   grid-column: 2;
+  min-width: 0;
 }
 
 @media (min-width: 1024px) {
