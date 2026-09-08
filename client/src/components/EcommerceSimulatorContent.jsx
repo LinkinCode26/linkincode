@@ -37,13 +37,13 @@ export function EcommerceSimulatorContent() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-surface p-4 rounded-2xl border border-line">
         <div>
           <label className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
-            Nombre de tu tienda
+            Nombre del cliente
           </label>
           <input
             type="text"
             value={simTitle}
             onChange={(e) => setSimTitle(e.target.value)}
-            placeholder="Ej: Tienda Tech..."
+            placeholder="Ej: Juan Pérez..."
             className="w-full bg-bg border border-line rounded-xl px-4 py-2.5 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
           />
         </div>
@@ -88,12 +88,12 @@ export function EcommerceSimulatorContent() {
           </div>
         </div>
 
-        {/* Grilla de Productos */}
+        {/* Grilla de Productos con distribución simétrica (h-full y mt-auto) */}
         <div className="p-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
           {MOCK_PRODUCTS.map((product) => (
             <div
               key={product.id}
-              className="flex flex-col items-center p-4 border border-line rounded-xl bg-surface"
+              className="flex flex-col items-center p-4 border border-line rounded-xl bg-surface h-full"
             >
               <i className={`fas ${product.icon} text-3xl text-mute mb-3`} />
               <span className="text-sm font-bold text-ink text-center mb-1">
@@ -102,10 +102,11 @@ export function EcommerceSimulatorContent() {
               <span className="text-xs text-mute mb-4">
                 ${product.price.toLocaleString()}
               </span>
+              {/* mt-auto empuja el botón siempre hacia el fondo de la card, alineándolos a todos */}
               <button
                 type="button"
                 onClick={() => handleAddToCart(product)}
-                className={`w-full py-2 text-xs font-bold rounded-lg transition-colors ${activeColorStyle}`}
+                className={`w-full py-2 text-xs font-bold rounded-lg transition-colors mt-auto ${activeColorStyle}`}
               >
                 Agregar
               </button>
