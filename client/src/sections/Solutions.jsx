@@ -5,6 +5,7 @@ import useContact from "../hooks/useContact";
 import { SERVICES } from "../data/services";
 import { ACCENT_STYLES } from "../utils/accentStyles";
 import { SimulatorShell } from "../components/SimulatorShell";
+import { EcommerceSimulatorContent } from "../components/EcommerceSimulatorContent";
 
 function DemoSimulatorContent({ content }) {
   const [simTitle, setSimTitle] = useState("");
@@ -77,10 +78,23 @@ export function Solutions() {
     requestQuote(activeService.id, t(`solutions.tabs.${activeService.id}`));
   };
 
-  // Cada vez que cambia de tab, reseteamos la vista de simulación si estaba abierta
+  // Cada vez que cambia de tab, reseteamos la vista de simulación
   const handleTabChange = (id) => {
     setActiveId(id);
     setIsSimulating(false);
+  };
+
+  // Función para renderizar el simulador correspondiente según la tab activa
+  const renderSimulatorContent = () => {
+    switch (activeService.id) {
+      case "ecommerce":
+        return <EcommerceSimulatorContent />;
+      case "landing":
+        return <DemoSimulatorContent content={content} />;
+      default:
+        // Fallback temporal hasta que los chicos terminen sus cards
+        return <DemoSimulatorContent content={content} />;
+    }
   };
 
   return (
@@ -104,7 +118,7 @@ export function Solutions() {
         <div
           ref={tabsRef}
           role="tablist"
-          aria-label={t('solutions.title')}
+          aria-label={t("solutions.title")}
           className="flex flex-wrap justify-center gap-2 mb-14 bg-bg border border-line rounded-2xl p-2 max-w-5xl mx-auto"
         >
           {SERVICES.map((service) => {
@@ -122,11 +136,16 @@ export function Solutions() {
                   w-[calc((100%-8px)/2)] 
                   sm:w-[calc((100%-16px)/3)] 
                   lg:w-[calc((100%-24px)/4)]
-                  ${isActive
-                    ? 'bg-surface border-brand text-brand shadow-lg shadow-brand/15'
-                    : 'bg-surface/50 border-line text-mute hover:text-ink hover:border-brand/40'}`}
+                  ${
+                    isActive
+                      ? "bg-surface border-brand text-brand shadow-lg shadow-brand/15"
+                      : "bg-surface/50 border-line text-mute hover:text-ink hover:border-brand/40"
+                  }`}
               >
-                <i className={`fas ${service.icon} shrink-0`} aria-hidden="true" />
+                <i
+                  className={`fas ${service.icon} shrink-0`}
+                  aria-hidden="true"
+                />
                 <span className="font-bold text-sm text-center leading-snug">
                   {t(`solutions.tabs.${service.id}`)}
                 </span>
@@ -195,7 +214,6 @@ export function Solutions() {
               </button>
             </div>
 
-            {/* Contenedor dinámico: Muestra el Placeholder o tu SimulatorShell interactivo */}
             <div>
               {!isSimulating ? (
                 <div
@@ -227,9 +245,7 @@ export function Solutions() {
                   </button>
                 </div>
               ) : (
-                <SimulatorShell>
-                  <DemoSimulatorContent content={content} />
-                </SimulatorShell>
+                <SimulatorShell>{renderSimulatorContent()}</SimulatorShell>
               )}
             </div>
           </div>
