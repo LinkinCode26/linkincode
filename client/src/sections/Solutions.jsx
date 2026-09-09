@@ -7,6 +7,7 @@ import { ACCENT_STYLES } from "../utils/accentStyles";
 import { SimulatorShell } from "../components/SimulatorShell";
 import { EcommerceSimulatorContent } from "../components/EcommerceSimulatorContent";
 import { DashboardSimulator } from "../components/DashboardSimulator";
+import { StaffSimulatorContent } from "../components/StaffSimulatorContent";
 
 function DemoSimulatorContent({ content }) {
   const [simTitle, setSimTitle] = useState("");
@@ -92,6 +93,8 @@ export function Solutions() {
         return <EcommerceSimulatorContent />;
       case "dashboard":
         return <DashboardSimulator />;
+      case "staff":
+        return <StaffSimulatorContent />;  
       default:
         return <DemoSimulatorContent content={content} />;
     }
@@ -262,6 +265,7 @@ export function Solutions() {
                     const hasRealSimulator =
                       activeService.id === "dashboard" ||
                       activeService.id === "ecommerce";
+                      activeService.id === "staff";
                     const placeholder = hasRealSimulator
                       ? "solutions.simulatorReady"
                       : "solutions.comingSoon";
