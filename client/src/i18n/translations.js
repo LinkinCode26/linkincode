@@ -173,6 +173,19 @@ const es = {
       colorLabel: "Color de marca",
       disclaimer:
         "Simulación visual — no se envía ni almacena en nuestros servidores.",
+      ecommerce: {
+        clientName: "Nombre del cliente",
+        placeholder: "Ej: Juan Pérez...",
+        defaultStore: "Mi Tienda",
+        add: "Agregar",
+        cartSummary: "Resumen del carrito",
+        products: {
+          "prod-1": "Auriculares Inalámbricos",
+          "prod-2": "Mochila Urbana",
+          "prod-3": "Botella Térmica 1L",
+          "prod-4": "Teclado Mecánico",
+        },
+      },
       dashboard: {
         rangeLabel: "Rango de fechas",
         updating: "Actualizando…",
@@ -182,13 +195,7 @@ const es = {
           "90d": "90 días",
           "12m": "12 meses",
         },
-        ecommerce: {
-          clientName: "Nombre del cliente",
-          placeholder: "Ej: Juan Pérez...",
-          defaultStore: "Mi Tienda",
-          add: "Agregar",
-          cartSummary: "Resumen del carrito",
-        },
+
         kpis: {
           ventas: "Ventas",
           pedidos: "Pedidos",
@@ -547,6 +554,19 @@ const en = {
       colorLabel: "Brand color",
       disclaimer:
         "Visual simulation — nothing is sent or stored on our servers.",
+      ecommerce: {
+        clientName: "Client name",
+        placeholder: "E.g. John Doe...",
+        defaultStore: "My Store",
+        add: "Add to cart",
+        cartSummary: "Cart summary",
+        products: {
+          "prod-1": "Wireless Headphones",
+          "prod-2": "Urban Backpack",
+          "prod-3": "Thermal Bottle 1L",
+          "prod-4": "Mechanical Keyboard",
+        },
+      },
       dashboard: {
         rangeLabel: "Date range",
         updating: "Updating…",
@@ -562,13 +582,7 @@ const en = {
           conversion: "Conversion rate",
           visitas: "Visits",
         },
-        ecommerce: {
-          clientName: "Client name",
-          placeholder: "E.g. John Doe...",
-          defaultStore: "My Store",
-          add: "Add to cart",
-          cartSummary: "Cart summary",
-        },
+
         categories: {
           electronica: "Electronics",
           ropa: "Clothing",

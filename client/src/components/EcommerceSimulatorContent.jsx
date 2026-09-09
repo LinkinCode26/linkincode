@@ -82,31 +82,40 @@ export function EcommerceSimulatorContent() {
         </div>
 
         <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="flex flex-col items-center p-4 border border-line rounded-xl bg-surface h-full"
-            >
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-20 h-20 object-cover rounded-lg mb-3"
-              />
-              <span className="text-sm font-bold text-ink text-center mb-1">
-                {product.name}
-              </span>
-              <span className="text-xs text-mute mb-4">
-                ${product.price.toLocaleString()}
-              </span>
-              <button
-                type="button"
-                onClick={() => handleAddToCart(product)}
-                className={`w-full py-2 text-xs font-bold rounded-lg transition-colors mt-auto ${activeColorStyle}`}
+          {products.map((product) => {
+            // Obtenemos el nombre traducido usando el ID del producto
+            const translatedName =
+              t(`solutions.simulator.ecommerce.products.${product.id}`) ||
+              product.name;
+
+            return (
+              <div
+                key={product.id}
+                className="flex flex-col items-center p-4 border border-line rounded-xl bg-surface h-full"
               >
-                {t("solutions.simulator.ecommerce.add") || "Agregar"}
-              </button>
-            </div>
-          ))}
+                <img
+                  src={product.image}
+                  alt={translatedName}
+                  className="w-20 h-20 object-cover rounded-lg mb-3"
+                />
+                <span className="text-sm font-bold text-ink text-center mb-1">
+                  {translatedName}
+                </span>
+                <span className="text-xs text-mute mb-4">
+                  ${product.price.toLocaleString()}
+                </span>
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleAddToCart({ ...product, name: translatedName })
+                  }
+                  className={`w-full py-2 text-xs font-bold rounded-lg transition-colors mt-auto ${activeColorStyle}`}
+                >
+                  {t("solutions.simulator.ecommerce.add") || "Agregar"}
+                </button>
+              </div>
+            );
+          })}
         </div>
 
         {cart.length > 0 && (
@@ -143,3 +152,5 @@ export function EcommerceSimulatorContent() {
     </div>
   );
 }
+
+export default EcommerceSimulatorContent;
