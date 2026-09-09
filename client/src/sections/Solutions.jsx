@@ -5,6 +5,7 @@ import useContact from "../hooks/useContact";
 import { SERVICES } from "../data/services";
 import { ACCENT_STYLES } from "../utils/accentStyles";
 import { SimulatorShell } from "../components/SimulatorShell";
+import { EcommerceSimulatorContent } from "../components/EcommerceSimulatorContent";
 import { DashboardSimulator } from "../components/DashboardSimulator";
 
 function DemoSimulatorContent({ content }) {
@@ -78,10 +79,22 @@ export function Solutions() {
     requestQuote(activeService.id, t(`solutions.tabs.${activeService.id}`));
   };
 
-  // Cada vez que cambia de tab, reseteamos la vista de simulación si estaba abierta
+  // Cada vez que cambia de tab, reseteamos la vista de simulación
   const handleTabChange = (id) => {
     setActiveId(id);
     setIsSimulating(false);
+  };
+
+  // Función para renderizar el simulador correspondiente según la tab activa
+  const renderSimulatorContent = () => {
+    switch (activeService.id) {
+      case "ecommerce":
+        return <EcommerceSimulatorContent />;
+      case "dashboard":
+        return <DashboardSimulator />;
+      default:
+        return <DemoSimulatorContent content={content} />;
+    }
   };
 
   return (
@@ -105,7 +118,7 @@ export function Solutions() {
         <div
           ref={tabsRef}
           role="tablist"
-          aria-label={t('solutions.title')}
+          aria-label={t("solutions.title")}
           className="flex flex-wrap justify-center gap-2 mb-14 bg-bg border border-line rounded-2xl p-2 max-w-5xl mx-auto"
         >
           {SERVICES.map((service) => {
@@ -123,11 +136,16 @@ export function Solutions() {
                   w-[calc((100%-8px)/2)] 
                   sm:w-[calc((100%-16px)/3)] 
                   lg:w-[calc((100%-24px)/4)]
-                  ${isActive
-                    ? 'bg-surface border-brand text-brand shadow-lg shadow-brand/15'
-                    : 'bg-surface/50 border-line text-mute hover:text-ink hover:border-brand/40'}`}
+                  ${
+                    isActive
+                      ? "bg-surface border-brand text-brand shadow-lg shadow-brand/15"
+                      : "bg-surface/50 border-line text-mute hover:text-ink hover:border-brand/40"
+                  }`}
               >
-                <i className={`fas ${service.icon} shrink-0`} aria-hidden="true" />
+                <i
+                  className={`fas ${service.icon} shrink-0`}
+                  aria-hidden="true"
+                />
                 <span className="font-bold text-sm text-center leading-snug">
                   {t(`solutions.tabs.${service.id}`)}
                 </span>
@@ -198,21 +216,31 @@ export function Solutions() {
                     className={`inline-flex items-center gap-2 px-6 py-3.5 text-white font-bold text-sm rounded-xl transition-all shadow-lg ${accent.button}`}
                   >
                     {content.cta}{" "}
-                    <i className="fas fa-arrow-right text-xs" aria-hidden="true" />
+                    <i
+                      className="fas fa-arrow-right text-xs"
+                      aria-hidden="true"
+                    />
                   </button>
                 </div>
               </div>
             )}
 
             {/* Columna / bloque del simulador: ocupa todo el ancho al simular */}
-            <div className={`transition-all duration-300 ease-in-out ${isSimulating ? "w-full" : ""}`}>
+            <div
+              className={`transition-all duration-300 ease-in-out ${
+                isSimulating ? "w-full" : ""
+              }`}
+            >
               {isSimulating && (
                 <button
                   type="button"
                   onClick={() => setIsSimulating(false)}
                   className="mb-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-mute hover:text-ink transition-colors"
                 >
-                  <i className="fas fa-arrow-left text-[10px]" aria-hidden="true" />
+                  <i
+                    className="fas fa-arrow-left text-[10px]"
+                    aria-hidden="true"
+                  />
                   {content.heading}
                 </button>
               )}
@@ -229,22 +257,25 @@ export function Solutions() {
                       aria-hidden="true"
                     />
                   </div>
-                {(() => {
-                  const hasRealSimulator = activeService.id === "dashboard";
-                  const placeholder = hasRealSimulator
-                    ? "solutions.simulatorReady"
-                    : "solutions.comingSoon";
-                  return (
-                    <>
-                      <p className="font-display font-bold text-lg text-ink mb-1">
-                        {t(`${placeholder}.title`)}
-                      </p>
-                      <p className="text-sm text-mute max-w-65 mx-auto mb-2">
-                        {t(`${placeholder}.description`)}
-                      </p>
-                    </>
-                  );
-                })()}
+                  {(() => {
+                    // Validamos si el servicio actual tiene un simulador real asignado
+                    const hasRealSimulator =
+                      activeService.id === "dashboard" ||
+                      activeService.id === "ecommerce";
+                    const placeholder = hasRealSimulator
+                      ? "solutions.simulatorReady"
+                      : "solutions.comingSoon";
+                    return (
+                      <>
+                        <p className="font-display font-bold text-lg text-ink mb-1">
+                          {t(`${placeholder}.title`)}
+                        </p>
+                        <p className="text-sm text-mute max-w-65 mx-auto mb-2">
+                          {t(`${placeholder}.description`)}
+                        </p>
+                      </>
+                    );
+                  })()}
                   <button
                     type="button"
                     onClick={() => setIsSimulating(true)}
@@ -256,11 +287,7 @@ export function Solutions() {
                 </div>
               ) : (
                 <SimulatorShell onExit={() => setIsSimulating(false)}>
-                  {activeService.id === "dashboard" ? (
-                    <DashboardSimulator />
-                  ) : (
-                    <DemoSimulatorContent content={content} />
-                  )}
+                  {renderSimulatorContent()}
                 </SimulatorShell>
               )}
             </div>
