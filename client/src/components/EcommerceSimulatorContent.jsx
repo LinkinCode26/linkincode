@@ -1,55 +1,48 @@
 import { useState } from "react";
-
-const MOCK_PRODUCTS = [
-  { id: 1, name: "Zapatillas Urban", price: 45000, icon: "fa-shoe-prints" },
-  { id: 2, name: "Auriculares Pro", price: 85000, icon: "fa-headphones" },
-  { id: 3, name: "Mochila Tech", price: 62000, icon: "fa-suitcase" },
-];
+import useLanguage from "../hooks/useLanguage";
+import { products } from "../data/mock/products";
 
 export function EcommerceSimulatorContent() {
+  const { t } = useLanguage();
   const [simTitle, setSimTitle] = useState("");
   const [simColor, setSimColor] = useState("brand");
   const [cart, setCart] = useState([]);
 
-  const handleAddToCart = (product) => {
-    setCart((prev) => [...prev, product]);
-  };
-
-  const handleRemoveFromCart = (indexToRemove) => {
+  const handleAddToCart = (product) => setCart((prev) => [...prev, product]);
+  const handleRemoveFromCart = (indexToRemove) =>
     setCart((prev) => prev.filter((_, index) => index !== indexToRemove));
-  };
-
   const cartTotal = cart.reduce((total, item) => total + item.price, 0);
 
-  // Mapa de colores dinámicos para Tailwind
   const colorStyles = {
     brand: "bg-brand text-white hover:bg-brand/90",
     accent: "bg-accent text-white hover:bg-accent/90",
     indigo: "bg-indigo-500 text-white hover:bg-indigo-600",
     emerald: "bg-emerald-500 text-white hover:bg-emerald-600",
   };
-
   const activeColorStyle = colorStyles[simColor] || colorStyles.brand;
 
   return (
     <div className="flex flex-col gap-6 py-2">
-      {/* Controles de Configuración */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-surface p-4 rounded-2xl border border-line">
         <div>
           <label className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
-            Nombre del cliente
+            {t("solutions.simulator.ecommerce.clientName") ||
+              "Nombre del cliente"}
           </label>
           <input
             type="text"
             value={simTitle}
             onChange={(e) => setSimTitle(e.target.value)}
-            placeholder="Ej: Juan Pérez..."
+            placeholder={
+              t("solutions.simulator.ecommerce.placeholder") ||
+              "Ej: Juan Pérez..."
+            }
             className="w-full bg-bg border border-line rounded-xl px-4 py-2.5 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
           />
         </div>
         <div>
           <label className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
-            Color de marca
+            {t("solutions.simulator.colorLabel")}
           </label>
           <div className="flex gap-3 mt-2">
             {Object.keys(colorStyles).map((c) => (
@@ -68,12 +61,12 @@ export function EcommerceSimulatorContent() {
         </div>
       </div>
 
-      {/* Vista Previa de la Tienda (Mock) */}
       <div className="flex flex-col border border-line rounded-2xl overflow-hidden bg-bg">
-        {/* Header E-commerce */}
         <div className="flex justify-between items-center p-4 border-b border-line bg-surface/50">
           <span className="font-display font-bold text-lg text-ink">
-            {simTitle || "Mi Tienda"}
+            {simTitle ||
+              t("solutions.simulator.ecommerce.defaultStore") ||
+              "Mi Tienda"}
           </span>
           <div className="relative flex items-center gap-2">
             <i className="fas fa-shopping-cart text-mute" />
@@ -88,37 +81,39 @@ export function EcommerceSimulatorContent() {
           </div>
         </div>
 
-        {/* Grilla de Productos con distribución simétrica (h-full y mt-auto) */}
-        <div className="p-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {MOCK_PRODUCTS.map((product) => (
+        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {products.map((product) => (
             <div
               key={product.id}
               className="flex flex-col items-center p-4 border border-line rounded-xl bg-surface h-full"
             >
-              <i className={`fas ${product.icon} text-3xl text-mute mb-3`} />
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-20 h-20 object-cover rounded-lg mb-3"
+              />
               <span className="text-sm font-bold text-ink text-center mb-1">
                 {product.name}
               </span>
               <span className="text-xs text-mute mb-4">
                 ${product.price.toLocaleString()}
               </span>
-              {/* mt-auto empuja el botón siempre hacia el fondo de la card, alineándolos a todos */}
               <button
                 type="button"
                 onClick={() => handleAddToCart(product)}
                 className={`w-full py-2 text-xs font-bold rounded-lg transition-colors mt-auto ${activeColorStyle}`}
               >
-                Agregar
+                {t("solutions.simulator.ecommerce.add") || "Agregar"}
               </button>
             </div>
           ))}
         </div>
 
-        {/* Mini Carrito Desplegable (Solo si hay items) */}
         {cart.length > 0 && (
           <div className="p-4 bg-surface/30 border-t border-line">
             <p className="text-xs font-bold uppercase text-mute mb-3">
-              Resumen del carrito
+              {t("solutions.simulator.ecommerce.cartSummary") ||
+                "Resumen del carrito"}
             </p>
             <div className="flex flex-col gap-2 max-h-32 overflow-y-auto pr-2">
               {cart.map((item, index) => (
@@ -134,8 +129,7 @@ export function EcommerceSimulatorContent() {
                     <button
                       type="button"
                       onClick={() => handleRemoveFromCart(index)}
-                      className="text-red-500 hover:text-red-700 transition-colors"
-                      title="Quitar producto"
+                      className="text-red-500 hover:text-red-700"
                     >
                       <i className="fas fa-trash-alt text-xs" />
                     </button>
@@ -149,5 +143,3 @@ export function EcommerceSimulatorContent() {
     </div>
   );
 }
-
-export default EcommerceSimulatorContent;
