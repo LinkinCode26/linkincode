@@ -8,6 +8,7 @@ import { SimulatorShell } from "../components/SimulatorShell";
 import { EcommerceSimulatorContent } from "../components/EcommerceSimulatorContent";
 import { DashboardSimulator } from "../components/DashboardSimulator";
 import { LandingSimulatorContent } from "../components/LandingSimulatorContent";
+import { StockSimulatorContent } from "../components/StockSimulatorContent";
 
 function DemoSimulatorContent({ content }) {
   const [simTitle, setSimTitle] = useState("");
@@ -95,6 +96,8 @@ export function Solutions() {
         return <EcommerceSimulatorContent />;
       case "dashboard":
         return <DashboardSimulator />;
+      case "stock":
+        return <StockSimulatorContent />;
       default:
         return <DemoSimulatorContent content={content} />;
     }
@@ -265,7 +268,8 @@ export function Solutions() {
                     const hasRealSimulator =
                       activeService.id === "dashboard" ||
                       activeService.id === "ecommerce" ||
-                      activeService.id === "landing";
+                      activeService.id === "landing" ||
+                      activeService.id === "stock";
                     const placeholder = hasRealSimulator
                       ? "solutions.simulatorReady"
                       : "solutions.comingSoon";
