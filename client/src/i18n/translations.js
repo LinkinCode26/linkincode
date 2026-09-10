@@ -243,6 +243,25 @@ const es = {
         disclaimer:
           "Datos simulados con fines demostrativos — no representan información real ni se envían a ningún servidor.",
       },
+      staff: {
+        present: "Presente",
+        absent: "Ausente",
+        hoursShort: "hs",
+        summary: {
+          scheduledHours: "Horas programadas",
+          workedHours: "Horas trabajadas",
+          presentCount: "Presentes",
+          attendance: "Asistencia",
+        },
+        roles: {
+          ventas: "Ventas",
+          deposito: "Depósito",
+          atencion: "Atención al cliente",
+          administracion: "Administración",
+        },
+        disclaimer:
+          "Datos de personal simulados con fines demostrativos — no representan empleados reales ni se envían a ningún servidor.",
+      },      
     },
   },
 
@@ -629,6 +648,25 @@ const en = {
         disclaimer:
           "Simulated data for demonstration purposes only — it does not represent real information and is not sent to any server.",
       },
+      staff: {
+        present: "Present",
+        absent: "Absent",
+        hoursShort: "hrs",
+        summary: {
+          scheduledHours: "Scheduled hours",
+          workedHours: "Worked hours",
+          presentCount: "Present",
+          attendance: "Attendance",
+        },
+        roles: {
+          ventas: "Sales",
+          deposito: "Warehouse",
+          atencion: "Customer service",
+          administracion: "Administration",
+        },
+        disclaimer:
+          "Simulated staff data for demonstration purposes only — it does not represent real employees and is not sent to any server.",
+      },      
     },
   },
 
