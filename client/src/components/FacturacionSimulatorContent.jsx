@@ -1,16 +1,15 @@
 import { useState, useContext } from "react";
 import { LanguageContext } from "../context/language-context.js";
-
-const IVA_RATE = 0.21;
+import { invoiceItems, IVA_RATE } from "../data/mock/invoices.js";
 
 const crearItem = () => ({
   id: crypto.randomUUID(),
-  descripcion: "",
-  cantidad: 1,
-  precio: 0,
+  description: "",
+  quantity: 1,
+  price: 0,
 });
 
-// Mantiene ARS siempre
+// Mantiene ARS siempre fija
 const formatearMonto = (n, lang = "es") =>
   n.toLocaleString(lang === "en" ? "en-US" : "es-AR", {
     style: "currency",
@@ -28,18 +27,24 @@ function generarCAE(lang = "es") {
   };
 }
 
-export function FacturacionSimulatorContent() {  
+export function FacturacionSimulatorContent() {
   const { t, lang } = useContext(LanguageContext);
 
   const b = (key) => t(`solutions.simulator.billing.${key}`);
 
-  const [cliente, setCliente] = useState({ nombre: "", cuit: "", condicion: "finalConsumer" });
-  const [tipoComprobante, setTipoComprobante] = useState("B");
-  const [items, setItems] = useState([crearItem()]);
+  const [cliente, setCliente] = useState({
+    nombre: "Acme Corp S.A.",
+    cuit: "30-71234567-9",
+    condicion: "registered",
+  });
+  const [tipoComprobante, setTipoComprobante] = useState("A");
+  
+  // Inicializado con los datos mock solicitados en la PR
+  const [items, setItems] = useState(invoiceItems);
   const [comprobante, setComprobante] = useState(null);
   const [error, setError] = useState("");
 
-  const subtotal = items.reduce((acc, it) => acc + it.cantidad * it.precio, 0);
+  const subtotal = items.reduce((acc, it) => acc + it.quantity * it.price, 0);
   const iva = subtotal * IVA_RATE;
   const total = subtotal + iva;
 
@@ -58,7 +63,7 @@ export function FacturacionSimulatorContent() {
       setError(b("errorMissingClient"));
       return;
     }
-    if (items.some((it) => !it.descripcion.trim() || it.precio <= 0)) {
+    if (items.some((it) => !it.description.trim() || it.price <= 0)) {
       setError(b("errorMissingItems"));
       return;
     }
@@ -69,11 +74,12 @@ export function FacturacionSimulatorContent() {
   const nuevaFactura = () => {
     setCliente({ nombre: "", cuit: "", condicion: "finalConsumer" });
     setTipoComprobante("B");
-    setItems([crearItem()]);
+    setItems(invoiceItems);
     setComprobante(null);
     setError("");
   };
 
+  // VISTA FACTURA GENERADA
   if (comprobante) {
     return (
       <div className="w-full max-w-xl mx-auto rounded-2xl border border-line bg-surface p-5 sm:p-6">
@@ -98,9 +104,10 @@ export function FacturacionSimulatorContent() {
     );
   }
 
+  // VISTA FORMULARIO SIMULADOR
   return (
     <div className="flex flex-col gap-5 py-4 w-full max-w-xl mx-auto">
-      {/* Sección Cliente */}
+      {/* Sección Cliente: 1 col en celular, 2 cols en tablet/PC */}
       <section>
         <label className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
           {b("clientSection")}
@@ -151,7 +158,7 @@ export function FacturacionSimulatorContent() {
         </div>
       </section>
 
-      {/* Ítems */}
+      {/* Ítems corregidos con sm:contents */}
       <section>
         <div className="mb-2 flex items-center justify-between">
           <label className="block text-xs font-bold uppercase tracking-wider text-mute">
@@ -168,24 +175,26 @@ export function FacturacionSimulatorContent() {
               className="flex flex-wrap sm:grid sm:grid-cols-[1fr_64px_110px_32px] items-center gap-2 bg-surface/30 sm:bg-transparent p-2.5 sm:p-0 rounded-xl border border-line/40 sm:border-0"
             >
               <input
-                value={it.descripcion}
-                onChange={(e) => actualizarItem(it.id, "descripcion", e.target.value)}
+                value={it.description}
+                onChange={(e) => actualizarItem(it.id, "description", e.target.value)}
                 placeholder={b("descriptionPlaceholder")}
                 className="w-full sm:w-auto flex-1 bg-surface border border-line rounded-lg px-3 py-2 text-sm text-ink placeholder:text-mute focus:outline-none focus:border-brand transition-colors"
               />
-              <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-start">
+              
+              {/* Solución al review: sm:contents para no romper la grilla */}
+              <div className="flex items-center gap-2 w-full sm:contents justify-between sm:justify-start">
                 <input
                   type="number"
                   min={1}
-                  value={it.cantidad}
-                  onChange={(e) => actualizarItem(it.id, "cantidad", Number(e.target.value))}
+                  value={it.quantity}
+                  onChange={(e) => actualizarItem(it.id, "quantity", Number(e.target.value))}
                   className="w-16 sm:w-full bg-surface border border-line rounded-lg px-2 py-2 text-right text-sm text-ink focus:outline-none focus:border-brand transition-colors"
                 />
                 <input
                   type="number"
                   min={0}
-                  value={it.precio}
-                  onChange={(e) => actualizarItem(it.id, "precio", Number(e.target.value))}
+                  value={it.price}
+                  onChange={(e) => actualizarItem(it.id, "price", Number(e.target.value))}
                   placeholder={b("pricePlaceholder")}
                   className="w-28 sm:w-full bg-surface border border-line rounded-lg px-2 py-2 text-right text-sm text-ink placeholder:text-mute focus:outline-none focus:border-brand transition-colors"
                 />
