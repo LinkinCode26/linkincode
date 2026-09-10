@@ -171,6 +171,11 @@ const es = {
       inputLabel: "Título principal",
       inputPlaceholder: "Escribí tu propio título...",
       colorLabel: "Color de marca",
+      bgColorLabel: "Color de fondo",
+      subtitleLabel: "Subtítulo",
+      subtitlePlaceholder: "Escribí una breve descripción...",
+      ctaLabel: "Texto del botón",
+      ctaPlaceholder: "Ej: Empezar ahora",
       disclaimer:
         "Simulación visual — no se envía ni almacena en nuestros servidores.",
       ecommerce: {
@@ -552,6 +557,11 @@ const en = {
       inputLabel: "Main headline",
       inputPlaceholder: "Write your own headline...",
       colorLabel: "Brand color",
+      bgColorLabel: "Background color",
+      subtitleLabel: "Subtitle",
+      subtitlePlaceholder: "Write a short description...",
+      ctaLabel: "Button text",
+      ctaPlaceholder: "E.g: Get started",
       disclaimer:
         "Visual simulation — nothing is sent or stored on our servers.",
       ecommerce: {
