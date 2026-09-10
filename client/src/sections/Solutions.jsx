@@ -7,6 +7,7 @@ import { ACCENT_STYLES } from "../utils/accentStyles";
 import { SimulatorShell } from "../components/SimulatorShell";
 import { EcommerceSimulatorContent } from "../components/EcommerceSimulatorContent";
 import { DashboardSimulator } from "../components/DashboardSimulator";
+ import { FacturacionSimulatorContent } from "../components/FacturacionSimulatorContent";
 
 function DemoSimulatorContent({ content }) {
   const [simTitle, setSimTitle] = useState("");
@@ -92,6 +93,8 @@ export function Solutions() {
         return <EcommerceSimulatorContent />;
       case "dashboard":
         return <DashboardSimulator />;
+      case "billing" : 
+        return <FacturacionSimulatorContent />;
       default:
         return <DemoSimulatorContent content={content} />;
     }
@@ -261,7 +264,8 @@ export function Solutions() {
                     // Validamos si el servicio actual tiene un simulador real asignado
                     const hasRealSimulator =
                       activeService.id === "dashboard" ||
-                      activeService.id === "ecommerce";
+                      activeService.id === "ecommerce" ||
+                      activeService.id === "billing";
                     const placeholder = hasRealSimulator
                       ? "solutions.simulatorReady"
                       : "solutions.comingSoon";
