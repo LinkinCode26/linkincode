@@ -171,6 +171,11 @@ const es = {
       inputLabel: "Título principal",
       inputPlaceholder: "Escribí tu propio título...",
       colorLabel: "Color de marca",
+      bgColorLabel: "Color de fondo",
+      subtitleLabel: "Subtítulo",
+      subtitlePlaceholder: "Escribí una breve descripción...",
+      ctaLabel: "Texto del botón",
+      ctaPlaceholder: "Ej: Empezar ahora",
       disclaimer:
         "Simulación visual — no se envía ni almacena en nuestros servidores.",
       ecommerce: {
@@ -264,6 +269,25 @@ const es = {
         dueLabel: "Vence",
         newInvoice: "← nueva factura",
       },
+      staff: {
+        present: "Presente",
+        absent: "Ausente",
+        hoursShort: "hs",
+        summary: {
+          scheduledHours: "Horas programadas",
+          workedHours: "Horas trabajadas",
+          presentCount: "Presentes",
+          attendance: "Asistencia",
+        },
+        roles: {
+          ventas: "Ventas",
+          deposito: "Depósito",
+          atencion: "Atención al cliente",
+          administracion: "Administración",
+        },
+        disclaimer:
+          "Datos de personal simulados con fines demostrativos — no representan empleados reales ni se envían a ningún servidor.",
+      },      
     },
   },
 
@@ -578,6 +602,11 @@ const en = {
       inputLabel: "Main headline",
       inputPlaceholder: "Write your own headline...",
       colorLabel: "Brand color",
+      bgColorLabel: "Background color",
+      subtitleLabel: "Subtitle",
+      subtitlePlaceholder: "Write a short description...",
+      ctaLabel: "Button text",
+      ctaPlaceholder: "E.g: Get started",
       disclaimer:
         "Visual simulation — nothing is sent or stored on our servers.",
       ecommerce: {
@@ -671,6 +700,25 @@ const en = {
         dueLabel: "Due date",
         newInvoice: "← new invoice",
       },
+      staff: {
+        present: "Present",
+        absent: "Absent",
+        hoursShort: "hrs",
+        summary: {
+          scheduledHours: "Scheduled hours",
+          workedHours: "Worked hours",
+          presentCount: "Present",
+          attendance: "Attendance",
+        },
+        roles: {
+          ventas: "Sales",
+          deposito: "Warehouse",
+          atencion: "Customer service",
+          administracion: "Administration",
+        },
+        disclaimer:
+          "Simulated staff data for demonstration purposes only — it does not represent real employees and is not sent to any server.",
+      },      
     },
   },
 

@@ -8,6 +8,8 @@ import { SimulatorShell } from "../components/SimulatorShell";
 import { EcommerceSimulatorContent } from "../components/EcommerceSimulatorContent";
 import { DashboardSimulator } from "../components/DashboardSimulator";
  import { FacturacionSimulatorContent } from "../components/FacturacionSimulatorContent";
+import { StaffSimulatorContent } from "../components/StaffSimulatorContent";
+import { LandingSimulatorContent } from "../components/LandingSimulatorContent";
 
 function DemoSimulatorContent({ content }) {
   const [simTitle, setSimTitle] = useState("");
@@ -89,12 +91,16 @@ export function Solutions() {
   // Función para renderizar el simulador correspondiente según la tab activa
   const renderSimulatorContent = () => {
     switch (activeService.id) {
+      case "landing":
+        return <LandingSimulatorContent />;
       case "ecommerce":
         return <EcommerceSimulatorContent />;
       case "dashboard":
         return <DashboardSimulator />;
       case "billing" : 
         return <FacturacionSimulatorContent />;
+      case "staff":
+        return <StaffSimulatorContent />;
       default:
         return <DemoSimulatorContent content={content} />;
     }
@@ -266,6 +272,8 @@ export function Solutions() {
                       activeService.id === "dashboard" ||
                       activeService.id === "ecommerce" ||
                       activeService.id === "billing";
+                      activeService.id === "landing" ||
+                      activeService.id === "staff";
                     const placeholder = hasRealSimulator
                       ? "solutions.simulatorReady"
                       : "solutions.comingSoon";
