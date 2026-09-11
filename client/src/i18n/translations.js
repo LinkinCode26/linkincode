@@ -200,7 +200,6 @@ const es = {
           "90d": "90 días",
           "12m": "12 meses",
         },
-
         kpis: {
           ventas: "Ventas",
           pedidos: "Pedidos",
@@ -242,6 +241,33 @@ const es = {
         },
         disclaimer:
           "Datos simulados con fines demostrativos — no representan información real ni se envían a ningún servidor.",
+      },
+      billing: {
+        clientSection: "Cliente",
+        clientNamePlaceholder: "Nombre o razón social",
+        taxIdPlaceholder: "CUIT / DNI",
+        taxConditions: {
+          finalConsumer: "Consumidor final",
+          registered: "Responsable inscripto",
+          monotax: "Monotributista",
+        },
+        voucherSection: "Tipo de comprobante",
+        invoiceLabel: "Factura",
+        itemsSection: "Ítems",
+        addItem: "+ agregar ítem",
+        descriptionPlaceholder: "Descripción",
+        pricePlaceholder: "Precio",
+        removeItem: "Quitar ítem",
+        subtotal: "Subtotal",
+        vat: "IVA (21%)",
+        total: "Total",
+        errorMissingClient: "Falta el nombre o razón social del cliente.",
+        errorMissingItems: "Revisá que todos los ítems tengan descripción y precio.",
+        emitButton: "Emitir factura",
+        authorizedBadge: "autorizada",
+        caeLabel: "CAE",
+        dueLabel: "Vence",
+        newInvoice: "← nueva factura",
       },
       staff: {
         present: "Presente",
@@ -611,7 +637,6 @@ const en = {
           conversion: "Conversion rate",
           visitas: "Visits",
         },
-
         categories: {
           electronica: "Electronics",
           ropa: "Clothing",
@@ -647,6 +672,33 @@ const en = {
         },
         disclaimer:
           "Simulated data for demonstration purposes only — it does not represent real information and is not sent to any server.",
+      },
+      billing: {
+        clientSection: "Client",
+        clientNamePlaceholder: "Full name or business name",
+        taxIdPlaceholder: "Tax ID / CUIT",
+        taxConditions: {
+          finalConsumer: "Final consumer",
+          registered: "Registered taxpayer",
+          monotax: "Small taxpayer (Monotributo)",
+        },
+        voucherSection: "Voucher type",
+        invoiceLabel: "Invoice",
+        itemsSection: "Items",
+        addItem: "+ add item",
+        descriptionPlaceholder: "Description",
+        pricePlaceholder: "Price",
+        removeItem: "Remove item",
+        subtotal: "Subtotal",
+        vat: "VAT (21%)",
+        total: "Total",
+        errorMissingClient: "The client's name or business name is missing.",
+        errorMissingItems: "Make sure every item has a description and a price.",
+        emitButton: "Issue invoice",
+        authorizedBadge: "authorized",
+        caeLabel: "CAE",
+        dueLabel: "Due date",
+        newInvoice: "← new invoice",
       },
       staff: {
         present: "Present",

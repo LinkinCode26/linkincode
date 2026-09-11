@@ -7,6 +7,7 @@ import { ACCENT_STYLES } from "../utils/accentStyles";
 import { SimulatorShell } from "../components/SimulatorShell";
 import { EcommerceSimulatorContent } from "../components/EcommerceSimulatorContent";
 import { DashboardSimulator } from "../components/DashboardSimulator";
+ import { FacturacionSimulatorContent } from "../components/FacturacionSimulatorContent";
 import { StaffSimulatorContent } from "../components/StaffSimulatorContent";
 import { LandingSimulatorContent } from "../components/LandingSimulatorContent";
 
@@ -96,6 +97,8 @@ export function Solutions() {
         return <EcommerceSimulatorContent />;
       case "dashboard":
         return <DashboardSimulator />;
+      case "billing" : 
+        return <FacturacionSimulatorContent />;
       case "staff":
         return <StaffSimulatorContent />;
       default:
@@ -268,6 +271,7 @@ export function Solutions() {
                     const hasRealSimulator =
                       activeService.id === "dashboard" ||
                       activeService.id === "ecommerce" ||
+                      activeService.id === "billing";
                       activeService.id === "landing" ||
                       activeService.id === "staff";
                     const placeholder = hasRealSimulator
