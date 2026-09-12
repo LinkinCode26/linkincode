@@ -176,6 +176,15 @@ const es = {
       subtitlePlaceholder: "Escribí una breve descripción...",
       ctaLabel: "Texto del botón",
       ctaPlaceholder: "Ej: Empezar ahora",
+      stock: {
+        units: "u.",
+        products: {
+          "prod-1": "Auriculares Inalámbricos",
+          "prod-2": "Mochila Urbana",
+          "prod-3": "Botella Térmica 1L",
+          "prod-4": "Teclado Mecánico",
+        },
+      },
       disclaimer:
         "Simulación visual — no se envía ni almacena en nuestros servidores.",
       ecommerce: {
@@ -562,6 +571,15 @@ const en = {
       subtitlePlaceholder: "Write a short description...",
       ctaLabel: "Button text",
       ctaPlaceholder: "E.g: Get started",
+      stock: {
+        units: "units",
+        products: {
+          "prod-1": "Wireless Headphones",
+          "prod-2": "Urban Backpack",
+          "prod-3": "Thermal Bottle 1L",
+          "prod-4": "Mechanical Keyboard",
+        },
+      },
       disclaimer:
         "Visual simulation — nothing is sent or stored on our servers.",
       ecommerce: {
