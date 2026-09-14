@@ -25,24 +25,24 @@ export const StockSimulatorContent = () => {
   return (
     <div
       key={product.id}
-      className={`flex items-center justify-between gap-4 p-4 rounded-xl border transition-colors ${
+      className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 rounded-xl border transition-colors ${
         isLowStock ? "bg-red-500/10 border-red-500/40" : "bg-surface border-line"
       }`}
     >
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 min-w-0">
         <img
           src={product.image}
           alt={translatedName}
           className="w-14 h-14 object-cover rounded-lg"
         />
         <div className="flex flex-col">
-          <span className="font-bold text-sm text-ink">{translatedName}</span>
+          <span className="font-bold text-sm text-ink leading-tight sm:truncate">{translatedName}</span>
           <span className="text-xs text-mute">
             ${product.price.toLocaleString("es-AR")}
           </span>
         </div>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
         <button
           type="button"
           onClick={() => handleStockChange(product.id, -1)}
