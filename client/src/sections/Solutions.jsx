@@ -10,6 +10,7 @@ import { DashboardSimulator } from "../components/DashboardSimulator";
  import { FacturacionSimulatorContent } from "../components/FacturacionSimulatorContent";
 import { StaffSimulatorContent } from "../components/StaffSimulatorContent";
 import { LandingSimulatorContent } from "../components/LandingSimulatorContent";
+import { StockSimulatorContent } from "../components/StockSimulatorContent";
 
 function DemoSimulatorContent({ content }) {
   const [simTitle, setSimTitle] = useState("");
@@ -97,6 +98,8 @@ export function Solutions() {
         return <EcommerceSimulatorContent />;
       case "dashboard":
         return <DashboardSimulator />;
+      case "stock":
+        return <StockSimulatorContent />;
       case "billing" : 
         return <FacturacionSimulatorContent />;
       case "staff":
@@ -271,6 +274,8 @@ export function Solutions() {
                     const hasRealSimulator =
                       activeService.id === "dashboard" ||
                       activeService.id === "ecommerce" ||
+                      activeService.id === "landing" ||
+                      activeService.id === "stock";
                       activeService.id === "billing";
                       activeService.id === "landing" ||
                       activeService.id === "staff";
