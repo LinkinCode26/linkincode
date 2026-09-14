@@ -7,6 +7,8 @@ import { ACCENT_STYLES } from "../utils/accentStyles";
 import { SimulatorShell } from "../components/SimulatorShell";
 import { EcommerceSimulatorContent } from "../components/EcommerceSimulatorContent";
 import { DashboardSimulator } from "../components/DashboardSimulator";
+ import { FacturacionSimulatorContent } from "../components/FacturacionSimulatorContent";
+import { StaffSimulatorContent } from "../components/StaffSimulatorContent";
 import { LandingSimulatorContent } from "../components/LandingSimulatorContent";
 import { StockSimulatorContent } from "../components/StockSimulatorContent";
 
@@ -98,6 +100,10 @@ export function Solutions() {
         return <DashboardSimulator />;
       case "stock":
         return <StockSimulatorContent />;
+      case "billing" : 
+        return <FacturacionSimulatorContent />;
+      case "staff":
+        return <StaffSimulatorContent />;
       default:
         return <DemoSimulatorContent content={content} />;
     }
@@ -270,6 +276,9 @@ export function Solutions() {
                       activeService.id === "ecommerce" ||
                       activeService.id === "landing" ||
                       activeService.id === "stock";
+                      activeService.id === "billing";
+                      activeService.id === "landing" ||
+                      activeService.id === "staff";
                     const placeholder = hasRealSimulator
                       ? "solutions.simulatorReady"
                       : "solutions.comingSoon";
