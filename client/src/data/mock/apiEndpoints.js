@@ -1,7 +1,3 @@
-// Endpoints de ejemplo para el simulador de APIs REST (LC-025).
-// Cada uno simula una respuesta real, con status, headers y el body
-// que se mostraría en el "playground" tipo Postman.
-
 export const apiEndpoints = [
   {
     id: 'get-productos',
@@ -9,6 +5,11 @@ export const apiEndpoints = [
     path: '/api/productos',
     status: 200,
     responseTimeMs: 84,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Response-Time': '84ms',
+      'Cache-Control': 'no-cache',
+    },
     responseBody: {
       data: [
         { id: 1, nombre: 'Auriculares Inalámbricos', precio: 45000 },
@@ -22,6 +23,11 @@ export const apiEndpoints = [
     path: '/api/pedido',
     status: 201,
     responseTimeMs: 132,
+    headers: {
+      'Content-Type': 'application/json',
+      'Location': '/api/pedido/501',
+      'X-Response-Time': '132ms',
+    },
     responseBody: {
       id: 501,
       estado: 'creado',
@@ -34,6 +40,10 @@ export const apiEndpoints = [
     path: '/api/productos/999',
     status: 404,
     responseTimeMs: 47,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Response-Time': '47ms',
+    },
     responseBody: {
       error: 'Producto no encontrado',
     },
