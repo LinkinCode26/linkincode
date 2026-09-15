@@ -20,15 +20,14 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-// HOOK: Hashear la contraseña antes de guardar en la base de datos (Criterio 1)
-userSchema.pre("save", async function (next) {
-  // Si la contraseña no se modificó, pasamos de largo
+// HOOK: Hashear la contraseña antes de guardar en la base de datos
+userSchema.pre("save", async function () {
+  // Si la contraseña no se modificó, salimos
   if (!this.isModified("password")) {
-    return next();
+    return;
   }
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  next();
 });
 
 // MÉTODO: Comparar la contraseña ingresada con la hasheada
