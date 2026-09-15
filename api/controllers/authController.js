@@ -11,6 +11,7 @@ const generateToken = (id) => {
 // @desc    Registrar un nuevo administrador/usuario (Opcional pero necesario para crear el primero)
 // @route   POST /api/auth/register
 export const register = async (req, res) => {
+  console.log("🟡 Entró al endpoint /register con body:", req.body);
   try {
     const { email, password } = req.body;
     const userExists = await User.findOne({ email });
