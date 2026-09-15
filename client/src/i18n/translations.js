@@ -176,6 +176,16 @@ const es = {
       subtitlePlaceholder: "Escribí una breve descripción...",
       ctaLabel: "Texto del botón",
       ctaPlaceholder: "Ej: Empezar ahora",
+      api: {
+        chooseEndpoint: "Elegí un endpoint",
+        send: "Enviar solicitud",
+        sending: "Enviando...",
+        waiting: "Esperando respuesta del servidor...",
+        placeholder: 'Elegí un endpoint y tocá "Enviar solicitud" para ver la respuesta simulada.',
+        headers: "Headers",
+        body: "Body",
+        disclaimer: "Simulación de respuestas — no se conecta a ningún backend real.",
+      },
       stock: {
         units: "u.",
         products: {
@@ -616,6 +626,16 @@ const en = {
       subtitlePlaceholder: "Write a short description...",
       ctaLabel: "Button text",
       ctaPlaceholder: "E.g: Get started",
+      api: {
+        chooseEndpoint: "Choose an endpoint",
+        send: "Send request",
+        sending: "Sending...",
+        waiting: "Waiting for server response...",
+        placeholder: 'Pick an endpoint and tap "Send request" to see the simulated response.',
+        headers: "Headers",
+        body: "Body",
+        disclaimer: "Simulated responses — not connected to any real backend.",
+      },
       stock: {
         units: "units",
         products: {
