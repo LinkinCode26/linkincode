@@ -4,14 +4,13 @@ import jwt from "jsonwebtoken";
 // Función helper para generar el token JWT
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET || "linkincode_secret_dev", {
-    expiresIn: "1d", // Expira en 1 día
+    expiresIn: "1d",
   });
 };
 
-// @desc    Registrar un nuevo administrador/usuario (Opcional pero necesario para crear el primero)
+// @desc    Registrar un nuevo administrador/usuario
 // @route   POST /api/auth/register
 export const register = async (req, res) => {
-  console.log("🟡 Entró al endpoint /register con body:", req.body);
   try {
     const { email, password } = req.body;
     const userExists = await User.findOne({ email });
@@ -44,19 +43,15 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Buscamos al usuario por su email
     const user = await User.findOne({ email });
 
-    // Verificamos si existe y si la contraseña coincide
     if (user && (await user.matchPassword(password))) {
-      // Criterio 2: Login devuelve token válido con expiración
       res.json({
         _id: user._id,
         email: user.email,
         token: generateToken(user._id),
       });
     } else {
-      // Criterio 3: Login con credenciales inválidas devuelve 401
       res.status(401).json({ message: "Email o contraseña incorrectos" });
     }
   } catch (error) {
