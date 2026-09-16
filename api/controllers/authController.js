@@ -3,7 +3,10 @@ import jwt from "jsonwebtoken";
 
 // Función helper para generar el token JWT
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET || "linkincode_secret_dev", {
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET no está definido en las variables de entorno");
+  }
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
 };

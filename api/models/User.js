@@ -5,14 +5,19 @@ const userSchema = new mongoose.Schema(
   {
     email: {
       type: String,
-      required: true,
+      required: [true, "El email es obligatorio"],
       unique: true,
       trim: true,
       lowercase: true,
+      match: [
+        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+        "Por favor ingrese un email válido",
+      ],
     },
     password: {
       type: String,
-      required: true,
+      required: [true, "La contraseña es obligatoria"],
+      minlength: [6, "La contraseña debe tener al menos 6 caracteres"],
     },
   },
   {
@@ -20,9 +25,7 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-// HOOK: Hashear la contraseña antes de guardar en la base de datos
 userSchema.pre("save", async function () {
-  // Si la contraseña no se modificó, salimos
   if (!this.isModified("password")) {
     return;
   }
