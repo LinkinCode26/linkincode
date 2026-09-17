@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import useLanguage from "../hooks/useLanguage";
-import { apiEndpoints } from "../data/mock/apiEndpoints";
+import { getApiEndpoints } from "../data/mock/apiEndpoints";
 
 const METHOD_STYLES = {
   GET: "bg-brand/15 text-brand border-brand/30",
@@ -17,20 +17,41 @@ function statusColor(status) {
 }
 
 export const ApiSimulatorContent = () => {
-  const { t } = useLanguage();
-  const [selectedId, setSelectedId] = useState(apiEndpoints[0].id);
+  const langContext = useLanguage();
+  const { t } = langContext;
+
+  // Detección robusta del locale:
+  // 1. Busca variables comunes (language, lang, currentLanguage, locale)
+  // 2. Si no existen, comprueba el texto del botón nav ("Home" -> en, caso contrario es)
+  const activeLang =
+    langContext.language ||
+    langContext.lang ||
+    langContext.currentLanguage ||
+    langContext.locale ||
+    (t("nav.inicio") === "Home" ? "en" : "es");
+
+  const endpoints = getApiEndpoints(activeLang);
+
+  const [selectedId, setSelectedId] = useState(endpoints[0]?.id ?? "get-productos");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const timeoutRef = useRef(null);
 
-  // Limpieza del temporizador al desmontar el componente
+  const selectedEndpoint = endpoints.find((e) => e.id === selectedId) ?? endpoints[0];
+
+  // Si cambia el idioma y ya había una respuesta en pantalla, actualiza los datos al nuevo idioma
+  useEffect(() => {
+    if (result) {
+      const updatedResult = endpoints.find((e) => e.id === result.id);
+      if (updatedResult) setResult(updatedResult);
+    }
+  }, [activeLang]);
+
   useEffect(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, []);
-
-  const selectedEndpoint = apiEndpoints.find((e) => e.id === selectedId);
 
   const handleSend = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -38,7 +59,6 @@ export const ApiSimulatorContent = () => {
     setLoading(true);
     setResult(null);
 
-    // Piso mínimo de 450ms para percibir la animación de carga
     const fakeDelay = Math.max(selectedEndpoint.responseTimeMs * 4, 450);
 
     timeoutRef.current = setTimeout(() => {
@@ -54,7 +74,7 @@ export const ApiSimulatorContent = () => {
           {t("solutions.simulator.api.chooseEndpoint")}
         </label>
         <div className="flex flex-col gap-2">
-          {apiEndpoints.map((endpoint) => {
+          {endpoints.map((endpoint) => {
             const isActive = endpoint.id === selectedId;
             const methodClass =
               METHOD_STYLES[endpoint.method] ?? "bg-surface text-mute border-line";
