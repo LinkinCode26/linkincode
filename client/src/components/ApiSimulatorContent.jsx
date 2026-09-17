@@ -20,9 +20,6 @@ export const ApiSimulatorContent = () => {
   const langContext = useLanguage();
   const { t } = langContext;
 
-  // Detección robusta del locale:
-  // 1. Busca variables comunes (language, lang, currentLanguage, locale)
-  // 2. Si no existen, comprueba el texto del botón nav ("Home" -> en, caso contrario es)
   const activeLang =
     langContext.language ||
     langContext.lang ||
@@ -34,19 +31,15 @@ export const ApiSimulatorContent = () => {
 
   const [selectedId, setSelectedId] = useState(endpoints[0]?.id ?? "get-productos");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
+  const [resultId, setResultId] = useState(null);
   const timeoutRef = useRef(null);
 
   const selectedEndpoint = endpoints.find((e) => e.id === selectedId) ?? endpoints[0];
+  
+  // Estado derivado: se traduce automáticamente si cambia el idioma
+  const result = resultId ? endpoints.find((e) => e.id === resultId) : null;
 
-  // Si cambia el idioma y ya había una respuesta en pantalla, actualiza los datos al nuevo idioma
-  useEffect(() => {
-    if (result) {
-      const updatedResult = endpoints.find((e) => e.id === result.id);
-      if (updatedResult) setResult(updatedResult);
-    }
-  }, [activeLang]);
-
+  // Limpieza del timeout si el componente se desmonta
   useEffect(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -57,12 +50,12 @@ export const ApiSimulatorContent = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
     setLoading(true);
-    setResult(null);
+    setResultId(null);
 
     const fakeDelay = Math.max(selectedEndpoint.responseTimeMs * 4, 450);
 
     timeoutRef.current = setTimeout(() => {
-      setResult(selectedEndpoint);
+      setResultId(selectedEndpoint.id);
       setLoading(false);
     }, fakeDelay);
   };
@@ -84,7 +77,7 @@ export const ApiSimulatorContent = () => {
                 type="button"
                 onClick={() => {
                   setSelectedId(endpoint.id);
-                  setResult(null);
+                  setResultId(null);
                 }}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-left transition-colors cursor-pointer ${
                   isActive
