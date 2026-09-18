@@ -5,6 +5,8 @@
 //
 // Uso: const { t } = useLanguage(); t('hero.subtitle')
 
+import { adminEs, adminEn } from "./admin.js";
+
 const es = {
   nav: {
     inicio: "Inicio",
@@ -907,6 +909,9 @@ const en = {
   },
 };
 
-export const translations = { es, en };
+export const translations = {
+  es: { ...es, admin: adminEs },
+  en: { ...en, admin: adminEn },
+};
 
 export default translations;
