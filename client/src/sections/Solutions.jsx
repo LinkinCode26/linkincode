@@ -75,6 +75,28 @@ export function Solutions() {
   const tabsRef = useScrollReveal({ delay: 0.05 });
   const panelRef = useScrollReveal({ delay: 0.1 });
 
+  // Entrar/salir del simulador cambia el alto del panel (transition de
+  // 500ms al pasar de 1 a 2 columnas). Reacomodamos el scroll una vez
+  // asentado el layout.
+  const scrollToRef = (ref, block) => {
+    window.setTimeout(() => {
+      ref.current?.scrollIntoView({ behavior: "smooth", block });
+    }, 520);
+  };
+
+  const enterSimulation = () => {
+    setIsSimulating(true);
+    scrollToRef(panelRef, "nearest");
+  };
+
+  const exitSimulation = () => {
+    setIsSimulating(false);
+    // Al salir, subimos hasta la altura de las tabs (no solo del panel)
+    // para mantener como referencia visual el servicio seleccionado.
+    scrollToRef(tabsRef, "start");
+  };
+
+
   const activeService =
     SERVICES.find((service) => service.id === activeId) ?? SERVICES[0];
   const accent = ACCENT_STYLES[activeService.accent];
@@ -134,7 +156,7 @@ export function Solutions() {
           ref={tabsRef}
           role="tablist"
           aria-label={t("solutions.title")}
-          className="flex flex-wrap justify-center gap-2 mb-14 bg-bg border border-line rounded-2xl p-2 max-w-5xl mx-auto"
+          className="scroll-mt-24 flex flex-wrap justify-center gap-2 mb-14 bg-bg border border-line rounded-2xl p-2 max-w-5xl mx-auto"
         >
           {SERVICES.map((service) => {
             const isActive = service.id === activeId;
@@ -249,7 +271,7 @@ export function Solutions() {
               {isSimulating && (
                 <button
                   type="button"
-                  onClick={() => setIsSimulating(false)}
+                  onClick={exitSimulation}
                   className="mb-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-mute hover:text-ink transition-colors cursor-pointer"
                 >
                   <i
@@ -291,9 +313,10 @@ export function Solutions() {
                             {t("solutions.simulatorReady.description") ??
                               "Explorá una demo interactiva de este servicio en tiempo real."}
                           </p>
+
                           <button
                             type="button"
-                            onClick={() => setIsSimulating(true)}
+                            onClick={enterSimulation}                            
                             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-brand hover:opacity-90 transition-all cursor-pointer shadow-md"
                           >
                             <i
@@ -323,7 +346,7 @@ export function Solutions() {
                 <SimulatorShell
                   title={content.heading}
                   accentColor={activeService.accent}
-                  onClose={() => setIsSimulating(false)}
+                  onExit={exitSimulation}
                 >
                   {renderSimulatorContent()}
                 </SimulatorShell>

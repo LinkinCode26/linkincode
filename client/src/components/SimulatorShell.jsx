@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { createPortal } from "react-dom";
 import { useSimulator } from "../hooks/useSimulator";
 import useLanguage from "../hooks/useLanguage";
 
@@ -28,13 +27,15 @@ export function SimulatorShell({ title, children, onExit }) {
   }, [isFullscreen, toggleFullscreen]);
 
   const handleExit = () => {
-    // Si estaba en pantalla completa, no hace falta togglear manualmente:
-    // el componente se desmonta al cerrar el simulador y su estado interno
-    // (incluido isFullscreen) se pierde solo.
     onExit?.();
   };
 
-  const shellContent = (
+  // Sin createPortal: ahora que el panel padre ya no atrapa los
+  // position:fixed (ver .reveal.in en index.css), alcanza con cambiar las
+  // clases de este mismo div. Es el mismo nodo siempre — nunca cambia de
+  // tipo ni de contenedor — así que React nunca lo desmonta al entrar o
+  // salir de pantalla completa, y el estado de cada simulador se conserva.
+  return (
     <div
       className={
         isFullscreen
@@ -101,12 +102,6 @@ export function SimulatorShell({ title, children, onExit }) {
       </div>
     </div>
   );
-
-  if (isFullscreen && typeof document !== "undefined") {
-    return createPortal(shellContent, document.body);
-  }
-
-  return shellContent;
 }
 
 export default SimulatorShell;
