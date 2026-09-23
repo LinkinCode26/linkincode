@@ -7,10 +7,11 @@ import { ACCENT_STYLES } from "../utils/accentStyles";
 import { SimulatorShell } from "../components/SimulatorShell";
 import { EcommerceSimulatorContent } from "../components/EcommerceSimulatorContent";
 import { DashboardSimulator } from "../components/DashboardSimulator";
- import { FacturacionSimulatorContent } from "../components/FacturacionSimulatorContent";
+import { FacturacionSimulatorContent } from "../components/FacturacionSimulatorContent";
 import { StaffSimulatorContent } from "../components/StaffSimulatorContent";
 import { LandingSimulatorContent } from "../components/LandingSimulatorContent";
 import { StockSimulatorContent } from "../components/StockSimulatorContent";
+import { ApiSimulatorContent } from "../components/ApiSimulatorContent";
 
 function DemoSimulatorContent({ content }) {
   const [simTitle, setSimTitle] = useState("");
@@ -74,6 +75,28 @@ export function Solutions() {
   const tabsRef = useScrollReveal({ delay: 0.05 });
   const panelRef = useScrollReveal({ delay: 0.1 });
 
+  // Entrar/salir del simulador cambia el alto del panel (transition de
+  // 500ms al pasar de 1 a 2 columnas). Reacomodamos el scroll una vez
+  // asentado el layout.
+  const scrollToRef = (ref, block) => {
+    window.setTimeout(() => {
+      ref.current?.scrollIntoView({ behavior: "smooth", block });
+    }, 520);
+  };
+
+  const enterSimulation = () => {
+    setIsSimulating(true);
+    scrollToRef(panelRef, "nearest");
+  };
+
+  const exitSimulation = () => {
+    setIsSimulating(false);
+    // Al salir, subimos hasta la altura de las tabs (no solo del panel)
+    // para mantener como referencia visual el servicio seleccionado.
+    scrollToRef(tabsRef, "start");
+  };
+
+
   const activeService =
     SERVICES.find((service) => service.id === activeId) ?? SERVICES[0];
   const accent = ACCENT_STYLES[activeService.accent];
@@ -100,10 +123,12 @@ export function Solutions() {
         return <DashboardSimulator />;
       case "stock":
         return <StockSimulatorContent />;
-      case "billing" : 
+      case "billing":
         return <FacturacionSimulatorContent />;
       case "staff":
         return <StaffSimulatorContent />;
+      case "api":
+        return <ApiSimulatorContent />;
       default:
         return <DemoSimulatorContent content={content} />;
     }
@@ -131,7 +156,7 @@ export function Solutions() {
           ref={tabsRef}
           role="tablist"
           aria-label={t("solutions.title")}
-          className="flex flex-wrap justify-center gap-2 mb-14 bg-bg border border-line rounded-2xl p-2 max-w-5xl mx-auto"
+          className="scroll-mt-24 flex flex-wrap justify-center gap-2 mb-14 bg-bg border border-line rounded-2xl p-2 max-w-5xl mx-auto"
         >
           {SERVICES.map((service) => {
             const isActive = service.id === activeId;
@@ -178,7 +203,7 @@ export function Solutions() {
               isSimulating ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2"
             }`}
           >
-            {/* Columna de texto: se oculta por completo mientras se simula */}
+            {/* Columna de información textual (se oculta durante la simulación interactiva) */}
             {!isSimulating && (
               <div className="flex flex-col h-full">
                 <div className="flex items-center gap-3 mb-5">
@@ -220,12 +245,12 @@ export function Solutions() {
                   ))}
                 </div>
 
-                {/* CTA empujado al fondo de la columna con mt-auto */}
+                {/* CTA anclado al pie de la columna */}
                 <div className="mt-auto">
                   <button
                     type="button"
                     onClick={handleRequestQuote}
-                    className={`inline-flex items-center gap-2 px-6 py-3.5 text-white font-bold text-sm rounded-xl transition-all shadow-lg ${accent.button}`}
+                    className={`inline-flex items-center gap-2 px-6 py-3.5 text-white font-bold text-sm rounded-xl transition-all shadow-lg cursor-pointer ${accent.button}`}
                   >
                     {content.cta}{" "}
                     <i
@@ -237,7 +262,7 @@ export function Solutions() {
               </div>
             )}
 
-            {/* Columna / bloque del simulador: ocupa todo el ancho al simular */}
+            {/* Columna / bloque del simulador */}
             <div
               className={`transition-all duration-300 ease-in-out ${
                 isSimulating ? "w-full" : ""
@@ -246,8 +271,8 @@ export function Solutions() {
               {isSimulating && (
                 <button
                   type="button"
-                  onClick={() => setIsSimulating(false)}
-                  className="mb-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-mute hover:text-ink transition-colors"
+                  onClick={exitSimulation}
+                  className="mb-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-mute hover:text-ink transition-colors cursor-pointer"
                 >
                   <i
                     className="fas fa-arrow-left text-[10px]"
@@ -269,57 +294,65 @@ export function Solutions() {
                       aria-hidden="true"
                     />
                   </div>
+
                   {(() => {
-                    // Validamos si el servicio actual tiene un simulador real asignado
-                    const hasRealSimulator =
-                      activeService.id === "dashboard" ||
-                      activeService.id === "ecommerce" ||
-                      activeService.id === "landing" ||
-                      activeService.id === "stock";
-                      activeService.id === "billing";
-                      activeService.id === "landing" ||
-                      activeService.id === "staff";
-                    const placeholder = hasRealSimulator
-                      ? "solutions.simulatorReady"
-                      : "solutions.comingSoon";
+                    const hasRealSimulator = [
+                      "dashboard",
+                      "ecommerce",
+                      "landing",
+                      "stock",
+                      "billing",
+                      "staff",
+                      "api",
+                    ].includes(activeService.id);
+
+                    if (hasRealSimulator) {
+                      return (
+                        <div className="flex flex-col items-center gap-3">
+                          <p className="text-sm text-mute max-w-xs">
+                            {t("solutions.simulatorReady.description") ??
+                              "Explorá una demo interactiva de este servicio en tiempo real."}
+                          </p>
+
+                          <button
+                            type="button"
+                            onClick={enterSimulation}                            
+                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-brand hover:opacity-90 transition-all cursor-pointer shadow-md"
+                          >
+                            <i
+                              className="fas fa-play text-[10px]"
+                              aria-hidden="true"
+                            />
+                            {t("solutions.simulator.simulateTrigger") ?? "Simulá tu servicio"}
+                          </button>
+                        </div>
+                      );
+                    }
+
                     return (
-                      <>
-                        <p className="font-display font-bold text-lg text-ink mb-1">
-                          {t(`${placeholder}.title`)}
+                      <div className="flex flex-col items-center gap-2">
+                        <span className="text-xs font-bold uppercase tracking-wider text-mute px-3 py-1 rounded-full bg-surface border border-line">
+                          {t("solutions.comingSoon.badge") ?? "Próximamente"}
+                        </span>
+                        <p className="text-xs text-mute/80 max-w-xs">
+                          {t("solutions.comingSoon.description") ??
+                            "Estamos diseñando el simulador interactivo para este módulo."}
                         </p>
-                        <p className="text-sm text-mute max-w-65 mx-auto mb-2">
-                          {t(`${placeholder}.description`)}
-                        </p>
-                      </>
+                      </div>
                     );
                   })()}
-                  <button
-                    type="button"
-                    onClick={() => setIsSimulating(true)}
-                    className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white transition-all ${accent.button}`}
-                  >
-                    <i className="fas fa-wand-magic-sparkles" />{" "}
-                    {t("solutions.simulator.simulateTrigger")}
-                  </button>
                 </div>
               ) : (
-                <SimulatorShell onExit={() => setIsSimulating(false)}>
+                <SimulatorShell
+                  title={content.heading}
+                  accentColor={activeService.accent}
+                  onExit={exitSimulation}
+                >
                   {renderSimulatorContent()}
                 </SimulatorShell>
               )}
             </div>
           </div>
-        </div>
-
-        <div className="mt-14 text-center">
-          <p className="text-mute mb-6">{t("solutions.moreCta.text")}</p>
-          <a
-            href="#contacto"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-surface border border-line hover:border-brand text-ink font-bold rounded-2xl transition-all"
-          >
-            <i className="fas fa-comments text-accent" aria-hidden="true" />{" "}
-            {t("solutions.moreCta.button")}
-          </a>
         </div>
       </div>
     </section>
