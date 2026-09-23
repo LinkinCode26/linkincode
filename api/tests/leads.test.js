@@ -51,7 +51,30 @@ describe("POST /api/leads", () => {
     expect(response.status).toBe(500);
     expect(response.body.status).toBe("error");
 
+
     // Restaura createLead a su comportamiento real para los próximos tests
     leadsService.createLead.mockRestore();
+
+    
+  });
+
+    it("descarta silenciosamente cuando el honeypot viene lleno, sin llamar a createLead", async () => {
+    // Espiamos createLead solo para confirmar que NUNCA se llama en este caso
+    const createLeadSpy = jest.spyOn(leadsService, "createLead");
+
+    const response = await request(app).post("/api/leads").send({
+      nombre: "Juan Perez",
+      email: "juan@ejemplo.com",
+      tipoProyecto: "Landing Page",
+      mensaje: "Quiero una landing page",
+      website: "http://spam.com",
+    });
+
+    expect(response.status).toBe(201);
+    expect(response.body.status).toBe("ok");
+    expect(response.body.lead).toBeUndefined();
+    expect(createLeadSpy).not.toHaveBeenCalled();
+
+    createLeadSpy.mockRestore();
   });
 });

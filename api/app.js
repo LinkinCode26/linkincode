@@ -6,6 +6,9 @@ import authRoutes from "./routes/authRoutes.js";
 
 const app = express();
 
+// Necesario detrás de un proxy para que req.ip sea la IP real del visitante, no la del proxy.
+app.set("trust proxy", 1);
+
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
