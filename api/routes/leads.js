@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { postLead } from "../controllers/leads.controller.js";
-const router = Router()
+import leadsRateLimit from "../middlewares/rateLimiter.js";
+const router = Router();
 
-router.post("/", postLead)
+router.post("/", leadsRateLimit, postLead);
 
-export default router
+export default router;
