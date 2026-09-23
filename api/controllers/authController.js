@@ -63,3 +63,10 @@ export const login = async (req, res) => {
       .json({ message: "Error en el servidor", error: error.message });
   }
 };
+
+// @desc    Devolver el usuario de la sesión actual (valida el token)
+// @route   GET /api/auth/me
+// @access  Privado (middleware `protect`)
+export const me = (req, res) => {
+  res.json({ _id: req.user._id, email: req.user.email });
+};
