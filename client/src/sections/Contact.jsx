@@ -33,7 +33,7 @@ export function Contact() {
   const cardRef = useScrollReveal({ delay: 0.05 });
 
   const projectTypeOptions = t('contact.form.projectTypeOptions');
-  
+
   const options = useMemo(
     () => projectTypeOptions.map((label) => ({ value: label, label })),
     [projectTypeOptions]
@@ -59,16 +59,52 @@ export function Contact() {
     effectiveProjectType.trim().length > 0 &&
     form.message.trim().length > 0;
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (!isValid) return;
+  const [loading, setLoading] = useState(false);
 
-    // TODO: conectar con POST /api/contact cuando el backend esté listo.
-    setSubmitted(true);
-    setTimeout(() => {
-      setForm(EMPTY_FORM);
-      setSubmitted(false);
-    }, 5000);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!isValid || loading) return;
+
+    setLoading(true);
+
+    // 1. Mapeamos los campos del frontend a lo que espera Zod en el backend
+    const payload = {
+      nombre: form.name.trim(),
+      email: form.email.trim(),
+      tipoProyecto: effectiveProjectType.trim(),
+      mensaje: form.message.trim(),
+      origen: "Web LinkinCode",
+    };
+
+    try {
+      // 2. Llamada real al backend (ajustá el puerto o ruta si usás proxy de Vite o axios)
+      const response = await fetch("http://localhost:3000/api/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Error al enviar el formulario");
+      }
+
+      // 3. Éxito: mostramos la pantalla de confirmación
+      setSubmitted(true);
+      setTimeout(() => {
+        setForm(EMPTY_FORM);
+        setSubmitted(false);
+      }, 6000);
+
+    } catch (error) {
+      console.error("Error al enviar el formulario de contacto:", error);
+      alert("Hubo un error al enviar tu consulta. Por favor, intentá nuevamente.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -163,10 +199,11 @@ export function Contact() {
                   <Button
                     type="submit"
                     variant="brand"
-                    disabled={!isValid}
+                    disabled={!isValid || loading}
                     className="w-full justify-center disabled:opacity-40 disabled:pointer-events-none"
                   >
-                    {t('contact.form.submit')} <i className="fas fa-paper-plane text-sm" aria-hidden="true" />
+                    {loading ? "Enviando..." : t('contact.form.submit')}{" "}
+                    <i className="fas fa-paper-plane text-sm" aria-hidden="true" />
                   </Button>
                 </form>
               ) : (
