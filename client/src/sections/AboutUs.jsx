@@ -59,7 +59,7 @@ export default function AboutUs() {
       <div className="container mx-auto px-6 max-w-7xl">
         {/* Encabezado */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-accent block mb-3">
+          <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-accent-text block mb-3">
             {isEn ? 'Our Studio' : 'Nuestro Estudio'}
           </span>
           <h2 className="font-display font-bold text-4xl sm:text-5xl text-ink leading-tight mb-4">
@@ -115,7 +115,7 @@ export default function AboutUs() {
                   {member.name}
                 </h4>
 
-                <p className="text-xs font-semibold text-accent mt-1 mb-6">
+                <p className="text-xs font-semibold text-accent-text mt-1 mb-6">
                   {isEn ? member.role.en : member.role.es}
                 </p>
 
