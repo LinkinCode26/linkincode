@@ -100,7 +100,7 @@ export function Contact() {
             "No pudimos enviar tu mensaje. Revisá los datos e intentá de nuevo.",
         );
       }
-    } catch (error) {
+    } catch {
       // Error de red (backend caído, sin internet, etc.)
       setSubmitError(
         "Ocurrió un error de conexión. Revisá tu internet e intentá más tarde.",
