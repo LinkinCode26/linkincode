@@ -31,6 +31,7 @@ export function FacturacionSimulatorContent() {
   const { t, lang } = useContext(LanguageContext);
 
   const b = (key) => t(`solutions.simulator.billing.${key}`);
+  const quantityLabel = lang === "en" ? "Quantity" : "Cantidad";
 
   const [cliente, setCliente] = useState({
     nombre: "Acme Corp S.A.",
@@ -38,7 +39,7 @@ export function FacturacionSimulatorContent() {
     condicion: "registered",
   });
   const [tipoComprobante, setTipoComprobante] = useState("A");
-  
+
   // Inicializado con los datos mock solicitados en la PR
   const [items, setItems] = useState(invoiceItems);
   const [comprobante, setComprobante] = useState(null);
@@ -117,17 +118,20 @@ export function FacturacionSimulatorContent() {
             value={cliente.nombre}
             onChange={(e) => setCliente({ ...cliente, nombre: e.target.value })}
             placeholder={b("clientNamePlaceholder")}
+            aria-label={b("clientNamePlaceholder")}
             className="sm:col-span-2 bg-surface border border-line rounded-xl px-4 py-3 text-sm text-ink placeholder:text-mute focus:outline-none focus:border-brand transition-colors"
           />
           <input
             value={cliente.cuit}
             onChange={(e) => setCliente({ ...cliente, cuit: e.target.value })}
             placeholder={b("taxIdPlaceholder")}
+            aria-label={b("taxIdPlaceholder")}
             className="bg-surface border border-line rounded-xl px-4 py-3 text-sm text-ink placeholder:text-mute focus:outline-none focus:border-brand transition-colors"
           />
           <select
             value={cliente.condicion}
             onChange={(e) => setCliente({ ...cliente, condicion: e.target.value })}
+            aria-label={b("clientSection")}
             className="bg-surface border border-line rounded-xl px-4 py-3 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
           >
             <option value="finalConsumer">{b("taxConditions.finalConsumer")}</option>
@@ -148,6 +152,7 @@ export function FacturacionSimulatorContent() {
               key={tLetter}
               type="button"
               onClick={() => setTipoComprobante(tLetter)}
+              aria-pressed={tipoComprobante === tLetter}
               className={`flex-1 rounded-xl border py-2.5 text-xs sm:text-sm font-bold transition-colors ${
                 tipoComprobante === tLetter ? "border-brand bg-brand text-white" : "border-line text-mute hover:text-ink"
               }`}
@@ -170,17 +175,18 @@ export function FacturacionSimulatorContent() {
         </div>
         <div className="space-y-3 sm:space-y-2">
           {items.map((it) => (
-            <div 
-              key={it.id} 
+            <div
+              key={it.id}
               className="flex flex-wrap sm:grid sm:grid-cols-[1fr_64px_110px_32px] items-center gap-2 bg-surface/30 sm:bg-transparent p-2.5 sm:p-0 rounded-xl border border-line/40 sm:border-0"
             >
               <input
                 value={it.description}
                 onChange={(e) => actualizarItem(it.id, "description", e.target.value)}
                 placeholder={b("descriptionPlaceholder")}
+                aria-label={b("descriptionPlaceholder")}
                 className="w-full sm:w-auto flex-1 bg-surface border border-line rounded-lg px-3 py-2 text-sm text-ink placeholder:text-mute focus:outline-none focus:border-brand transition-colors"
               />
-              
+
               {/* Solución al review: sm:contents para no romper la grilla */}
               <div className="flex items-center gap-2 w-full sm:contents justify-between sm:justify-start">
                 <input
@@ -188,6 +194,7 @@ export function FacturacionSimulatorContent() {
                   min={1}
                   value={it.quantity}
                   onChange={(e) => actualizarItem(it.id, "quantity", Number(e.target.value))}
+                  aria-label={quantityLabel}
                   className="w-16 sm:w-full bg-surface border border-line rounded-lg px-2 py-2 text-right text-sm text-ink focus:outline-none focus:border-brand transition-colors"
                 />
                 <input
@@ -196,6 +203,7 @@ export function FacturacionSimulatorContent() {
                   value={it.price}
                   onChange={(e) => actualizarItem(it.id, "price", Number(e.target.value))}
                   placeholder={b("pricePlaceholder")}
+                  aria-label={b("pricePlaceholder")}
                   className="w-28 sm:w-full bg-surface border border-line rounded-lg px-2 py-2 text-right text-sm text-ink placeholder:text-mute focus:outline-none focus:border-brand transition-colors"
                 />
                 <button
@@ -228,7 +236,7 @@ export function FacturacionSimulatorContent() {
         </div>
       </section>
 
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-red-400" role="alert">{error}</p>}
 
       <button
         type="button"
