@@ -57,6 +57,32 @@ export function Navbar() {
     document.body.style.overflow = isOpen ? 'hidden' : 'auto';
   }, [isOpen]);
 
+  // Accesibilidad del drawer: cerrar con Escape y mover el foco adentro al
+  // abrirlo, para que el teclado no se quede "atrás" en contenido oculto.
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') setIsOpen(false);
+    };
+    document.addEventListener('keydown', handleEscape);
+
+    const drawer = document.getElementById('mobile-drawer');
+    const firstFocusable = drawer?.querySelector('a, button');
+    firstFocusable?.focus();
+
+    // Evita que Tab llegue al contenido de atrás mientras el drawer está
+    // abierto (soportado en navegadores modernos; degrada sin romper nada
+    // en los que no lo soporten).
+    const mainContent = document.querySelector('main');
+    mainContent?.setAttribute('inert', '');
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      mainContent?.removeAttribute('inert');
+    };
+  }, [isOpen]);
+
   const closeDrawer = () => setIsOpen(false);
 
   return (
@@ -120,8 +146,10 @@ export function Navbar() {
               onClick={() => setIsOpen(true)}
               className="p-2.5 rounded-xl border border-line bg-surface/60 text-mute hover:text-ink hover:border-brand/40 transition-colors"
               aria-label="Abrir menú"
+              aria-expanded={isOpen}
+              aria-controls="mobile-drawer"
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
@@ -133,6 +161,7 @@ export function Navbar() {
       {/* Backdrop oscuro con blur para el Drawer */}
       <div
         onClick={closeDrawer}
+        aria-hidden="true"
         className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-50 transition-opacity duration-300 lg:hidden ${
           isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
@@ -140,6 +169,10 @@ export function Navbar() {
 
       {/* Mobile / Tablet Drawer Lateral */}
       <aside
+        id="mobile-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navegación"
         className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-surface border-l border-line p-6 z-[60] flex flex-col justify-between transform transition-transform duration-300 ease-in-out lg:hidden shadow-2xl ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
@@ -156,7 +189,7 @@ export function Navbar() {
               className="w-9 h-9 flex items-center justify-center rounded-xl border border-line bg-bg text-mute hover:text-ink hover:border-brand/40 transition-colors shadow-sm"
               aria-label="Cerrar menú"
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
