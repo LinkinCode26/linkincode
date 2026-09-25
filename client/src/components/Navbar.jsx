@@ -71,15 +71,8 @@ export function Navbar() {
     const firstFocusable = drawer?.querySelector('a, button');
     firstFocusable?.focus();
 
-    // Evita que Tab llegue al contenido de atrás mientras el drawer está
-    // abierto (soportado en navegadores modernos; degrada sin romper nada
-    // en los que no lo soporten).
-    const mainContent = document.querySelector('main');
-    mainContent?.setAttribute('inert', '');
-
     return () => {
       document.removeEventListener('keydown', handleEscape);
-      mainContent?.removeAttribute('inert');
     };
   }, [isOpen]);
 
