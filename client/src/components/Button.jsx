@@ -22,7 +22,17 @@ export function Button({
   };
 
   const variants = {
-    brand: "bg-brand hover:bg-brand/90 text-white shadow-brand/25",
+    // bg-brand-text (no bg-brand): --brand normal es demasiado claro para
+    // texto blanco encima en tema oscuro (~3.68:1, falla AA). --brand-text
+    // es un azul más oscuro pensado específicamente para fondo sólido +
+    // texto blanco, y da el mismo contraste seguro en los dos temas.
+    brand: "bg-brand-text hover:bg-brand-text/90 text-white shadow-brand/25",
+    // TODO: "accent" tiene el mismo problema en tema oscuro (bg-accent con
+    // texto blanco da ~2.4:1) y hoy no tiene un token seguro equivalente a
+    // brand-text — --accent-text está reservado para texto chico sobre el
+    // fondo de la página, no sirve como fondo de botón. Si se usa este
+    // variant, primero sumar un --accent-solid (oscuro en los dos temas,
+    // igual que se hizo con --brand-text) antes de usarlo con texto blanco.
     accent: "bg-accent hover:bg-accent/90 text-white shadow-accent/25",
     outline:
       "border border-line bg-surface/70 backdrop-blur-md hover:border-brand/50 text-mute hover:text-ink shadow-none",
