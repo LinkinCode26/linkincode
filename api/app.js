@@ -13,8 +13,7 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-// Montamos las rutas de autenticación y el router principal de la API
-app.use("/api/auth", authRoutes);
+
 app.use("/api", routes);
 
 // Middleware global de manejo de errores
