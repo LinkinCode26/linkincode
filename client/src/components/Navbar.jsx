@@ -168,7 +168,7 @@ export function Navbar() {
       />
 
       {/* Mobile / Tablet Drawer Lateral */}
-      <aside
+      <div
         id="mobile-drawer"
         role="dialog"
         aria-modal="true"
@@ -240,7 +240,7 @@ export function Navbar() {
             {t('nav.contacto') || 'CONTACTO'}
           </Button>
         </div>
-      </aside>
+      </div>
       
     </>
   );
