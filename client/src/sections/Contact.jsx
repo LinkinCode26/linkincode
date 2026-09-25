@@ -4,6 +4,7 @@ import useScrollReveal from '../hooks/useScrollReveal';
 import useContact from '../hooks/useContact';
 import { Input, Select, Textarea } from '../components/FormElements';
 import { Button } from '../components/Button';
+import { createLeadRequest } from '../../src/services/authApi'; 
 
 // Mismo orden que SERVICES (data/services.js) y que las primeras 7
 // entradas de contact.form.projectTypeOptions en translations.js.
@@ -28,6 +29,7 @@ export function Contact() {
   const { requestedService } = useContact();
   const [form, setForm] = useState(EMPTY_FORM);
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const headerRef = useScrollReveal();
   const cardRef = useScrollReveal({ delay: 0.05 });
@@ -59,15 +61,12 @@ export function Contact() {
     effectiveProjectType.trim().length > 0 &&
     form.message.trim().length > 0;
 
-  const [loading, setLoading] = useState(false);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!isValid || loading) return;
 
     setLoading(true);
 
-    // 1. Mapeamos los campos del frontend a lo que espera Zod en el backend
     const payload = {
       nombre: form.name.trim(),
       email: form.email.trim(),
@@ -77,28 +76,13 @@ export function Contact() {
     };
 
     try {
-      // 2. Llamada real al backend (ajustá el puerto o ruta si usás proxy de Vite o axios)
-      const response = await fetch("http://localhost:3000/api/leads", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      await createLeadRequest(payload);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Error al enviar el formulario");
-      }
-
-      // 3. Éxito: mostramos la pantalla de confirmación
       setSubmitted(true);
       setTimeout(() => {
         setForm(EMPTY_FORM);
         setSubmitted(false);
       }, 6000);
-
     } catch (error) {
       console.error("Error al enviar el formulario de contacto:", error);
       alert("Hubo un error al enviar tu consulta. Por favor, intentá nuevamente.");

@@ -40,3 +40,7 @@ export const loginRequest = (email, password) =>
   request("/auth/login", { method: "POST", body: { email, password } });
 
 export const fetchMe = (token) => request("/auth/me", { token });
+
+// Nuevo helper para crear leads usando el mismo cliente centralizado
+export const createLeadRequest = (leadData) =>
+  request("/leads", { method: "POST", body: leadData });

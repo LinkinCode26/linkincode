@@ -1,6 +1,4 @@
 import nodemailer from "nodemailer";
-import dotenv from "dotenv";
-dotenv.config();
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || "smtp.gmail.com",
@@ -12,14 +10,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Verificación automática de la conexión SMTP al iniciar
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("❌ [Nodemailer] Error al conectar con el servidor de correo:", error.message);
-  } else {
-    console.log("✅ [Nodemailer] Servidor de correo listo para enviar mensajes.");
-  }
-});
 
 /**
  * Mail interno al equipo con todos los datos del lead

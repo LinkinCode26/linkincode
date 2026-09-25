@@ -21,30 +21,29 @@ export const postLead = async (req, res, next) => {
   }
 
   try {
-    // 1. Guardar el lead en la base de datos
+    // 1. Guardar primero en la base de datos
     const lead = await createLead(parsed.data);
+    const leadInfo = lead || parsed.data;
 
-    // 2. Disparar los correos sin bloquear ni romper si falla SMTP
-    try {
-      // Usamos los datos guardados o parsed.data
-      const leadInfo = lead || parsed.data;
+    // 2. Despachar emails en segundo plano (fire-and-forget con logging de fallos)
+    // Sin 'await' para responder al cliente de inmediato sin esperar la latencia SMTP
+    Promise.allSettled([
+      sendLeadNotificationToTeam(leadInfo),
+      sendLeadAutoReply(leadInfo),
+    ]).then((results) => {
+      results.forEach((r) => {
+        if (r.status === "rejected") {
+          console.error("[Email Error]:", r.reason);
+        }
+      });
+    });
 
-      await Promise.allSettled([
-        sendLeadNotificationToTeam(leadInfo),
-        sendLeadAutoReply(leadInfo),
-      ]);
-    } catch (mailError) {
-      // Si el servidor de correos falla, solo lo registramos en consola
-      console.error("[Email Warning] Error al intentar enviar las notificaciones:", mailError);
-    }
-
-    // 3. Devolver la respuesta exitosa al frontend
+    // 3. Responder de inmediato con el 201
     return res.status(201).json({
       status: "ok",
       lead,
     });
   } catch (error) {
-    // Si falla la BD o algo crítico, pasa al middleware de error
     next(error);
   }
 };
