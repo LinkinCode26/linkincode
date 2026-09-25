@@ -28,7 +28,7 @@ export default function Footer() {
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-16 border-b border-line">
             <div className="lg:col-span-4">
-              <a href="#" className="flex items-center mb-6">
+              <a href="/#" className="flex items-center mb-6">
                 <h2 className="font-display text-2xl font-bold text-ink tracking-tight">
                   Linkincode
                 </h2>
@@ -43,10 +43,10 @@ export default function Footer() {
                 </span>
               </div>
               <div className="flex gap-3">
-                <a href="#" aria-label="GitHub" className="w-11 h-11 rounded-xl bg-surface border border-line flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all">
+                <a href="/#" aria-label="GitHub" className="w-11 h-11 rounded-xl bg-surface border border-line flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all">
                   <i className="fab fa-github" aria-hidden="true"></i>
                 </a>
-                <a href="#" aria-label="LinkedIn" className="w-11 h-11 rounded-xl bg-surface border border-line flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all">
+                <a href="/#" aria-label="LinkedIn" className="w-11 h-11 rounded-xl bg-surface border border-line flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all">
                   <i className="fab fa-linkedin-in" aria-hidden="true"></i>
                 </a>
                 <a
@@ -58,7 +58,7 @@ export default function Footer() {
                 >
                   <i className="fab fa-whatsapp" aria-hidden="true"></i>
                 </a>
-                <a href="#" aria-label="Instagram" className="w-11 h-11 rounded-xl bg-surface border border-line flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all">
+                <a href="/#" aria-label="Instagram" className="w-11 h-11 rounded-xl bg-surface border border-line flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all">
                   <i className="fab fa-instagram" aria-hidden="true"></i>
                 </a>
               </div>
@@ -124,7 +124,7 @@ export default function Footer() {
             </p>
             <div className="flex gap-6 text-[12px] text-mute">
               {legalLinks.map((label) => (
-                <a key={label} href="#" className="hover:text-brand transition-colors">
+                <a key={label} href="/#" className="hover:text-brand transition-colors">
                   {label}
                 </a>
               ))}

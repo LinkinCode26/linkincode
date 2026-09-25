@@ -33,9 +33,9 @@ function DemoSimulatorContent({ content }) {
         />
       </div>
       <div>
-        <label className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
+        <span className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
           Color de marca
-        </label>
+        </span>
         <div className="flex gap-3">
           {["brand", "accent", "indigo", "emerald"].map((c) => (
             <button

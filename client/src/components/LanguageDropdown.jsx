@@ -42,7 +42,6 @@ export function LanguageDropdown({ className = "" }) {
     }
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   // Al abrir el panel, mueve el foco a la primera opción.

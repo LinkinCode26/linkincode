@@ -1,15 +1,12 @@
-import { useMemo, useState } from 'react';
-import useLanguage from '../hooks/useLanguage';
-import useScrollReveal from '../hooks/useScrollReveal';
-import useContact from '../hooks/useContact';
-import { Input, Select, Textarea } from '../components/FormElements';
-import { Button } from '../components/Button';
+import { useMemo, useState } from "react";
+import useLanguage from "../hooks/useLanguage";
+import useScrollReveal from "../hooks/useScrollReveal";
+import useContact from "../hooks/useContact";
+import { Input, Select, Textarea } from "../components/FormElements";
+import { Button } from "../components/Button";
 
 // Mismo orden que SERVICES (data/services.js) y que las primeras 7
 // entradas de contact.form.projectTypeOptions en translations.js.
-// Mapeamos por id (no por label) porque las tabs de Soluciones y las
-// opciones del <select> no siempre coinciden textualmente
-// (ej. "APIs & Backends" vs "APIs REST y Backends").
 const SERVICE_OPTION_INDEX = {
   landing: 0,
   ecommerce: 1,
@@ -20,34 +17,41 @@ const SERVICE_OPTION_INDEX = {
   billing: 6,
 };
 
-const EMPTY_FORM = { name: '', email: '', projectType: '', message: '' };
+const EMPTY_FORM = { name: "", email: "", projectType: "", message: "" };
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function Contact() {
   const { t } = useLanguage();
   const { requestedService } = useContact();
+
   const [form, setForm] = useState(EMPTY_FORM);
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
   const headerRef = useScrollReveal();
   const cardRef = useScrollReveal({ delay: 0.05 });
 
-  const projectTypeOptions = t('contact.form.projectTypeOptions');
-  
+  const projectTypeOptions = t("contact.form.projectTypeOptions");
+
   const options = useMemo(
     () => projectTypeOptions.map((label) => ({ value: label, label })),
-    [projectTypeOptions]
+    [projectTypeOptions],
   );
 
   // Deriva el valor del projectType directamente sin necesidad de useEffect
   const derivedProjectType = useMemo(() => {
-    if (!requestedService?.id) return '';
+    if (!requestedService?.id) return "";
     const index = SERVICE_OPTION_INDEX[requestedService.id];
-    return index !== undefined ? projectTypeOptions[index] : requestedService.label;
+    return index !== undefined
+      ? projectTypeOptions[index]
+      : requestedService.label;
   }, [requestedService, projectTypeOptions]);
 
   const handleChange = (field) => (event) => {
     setForm((prev) => ({ ...prev, [field]: event.target.value }));
+    // Limpiamos el error previo si el usuario empieza a escribir de nuevo
+    if (submitError) setSubmitError(null);
   };
 
   // Usa el valor derivado si el usuario no ha cambiado manualmente el campo
@@ -59,20 +63,58 @@ export function Contact() {
     effectiveProjectType.trim().length > 0 &&
     form.message.trim().length > 0;
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!isValid) return;
+    if (!isValid || isSubmitting) return;
 
-    // TODO: conectar con POST /api/contact cuando el backend esté listo.
-    setSubmitted(true);
-    setTimeout(() => {
-      setForm(EMPTY_FORM);
-      setSubmitted(false);
-    }, 5000);
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          // Mapeamos los campos del front al esquema que espera el backend
+          nombre: form.name.trim(),
+          email: form.email.trim(),
+          tipoProyecto: effectiveProjectType.trim(),
+          mensaje: form.message.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 201) {
+        setSubmitted(true);
+        setForm(EMPTY_FORM);
+        setTimeout(() => {
+          setSubmitted(false);
+        }, 5000);
+      } else {
+        // Mostramos el mensaje de error que viene del backend o uno genérico
+        setSubmitError(
+          data.message ||
+            "No pudimos enviar tu mensaje. Revisá los datos e intentá de nuevo.",
+        );
+      }
+    } catch {
+      // Error de red (backend caído, sin internet, etc.)
+      setSubmitError(
+        "Ocurrió un error de conexión. Revisá tu internet e intentá más tarde.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <section id="contacto" className="py-24 sm:py-32 bg-surface/40 border-y border-line">
+    <section
+      id="contacto"
+      className="py-24 sm:py-32 bg-surface/40 border-y border-line"
+    >
       <div className="container mx-auto px-6 max-w-7xl">
         <div
           ref={cardRef}
@@ -83,12 +125,15 @@ export function Contact() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-center">
             <div ref={headerRef}>
               <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-accent">
-                {t('contact.eyebrow')}
+                {t("contact.eyebrow")}
               </span>
               <h2 className="font-display font-bold text-4xl sm:text-5xl my-6 text-ink leading-tight">
-                {t('contact.titlePart1')} <span className="text-accent">{t('contact.titleHighlight')}</span>
+                {t("contact.titlePart1")}{" "}
+                <span className="text-accent">
+                  {t("contact.titleHighlight")}
+                </span>
               </h2>
-              <p className="text-lg text-mute mb-10">{t('contact.subtitle')}</p>
+              <p className="text-lg text-mute mb-10">{t("contact.subtitle")}</p>
 
               <div className="space-y-6">
                 <div className="flex items-center gap-5">
@@ -96,7 +141,9 @@ export function Contact() {
                     <i className="fas fa-envelope text-xl" aria-hidden="true" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-widest text-mute">{t('contact.emailLabel')}</p>
+                    <p className="text-xs font-bold uppercase tracking-widest text-mute">
+                      {t("contact.emailLabel")}
+                    </p>
                     <p className="text-ink font-medium">hola@linkincode.dev</p>
                   </div>
                 </div>
@@ -105,7 +152,9 @@ export function Contact() {
                     <i className="fab fa-whatsapp text-xl" aria-hidden="true" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-widest text-mute">{t('contact.whatsappLabel')}</p>
+                    <p className="text-xs font-bold uppercase tracking-widest text-mute">
+                      {t("contact.whatsappLabel")}
+                    </p>
                     <p className="text-ink font-medium">+54 9 11 0000-0000</p>
                   </div>
                 </div>
@@ -114,8 +163,12 @@ export function Contact() {
                     <i className="fas fa-globe text-xl" aria-hidden="true" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-widest text-mute">{t('contact.scopeLabel')}</p>
-                    <p className="text-ink font-medium">{t('contact.scopeValue')}</p>
+                    <p className="text-xs font-bold uppercase tracking-widest text-mute">
+                      {t("contact.scopeLabel")}
+                    </p>
+                    <p className="text-ink font-medium">
+                      {t("contact.scopeValue")}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -127,50 +180,80 @@ export function Contact() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Input
                       id="contact-name"
-                      label={t('contact.form.nameLabel')}
-                      placeholder={t('contact.form.namePlaceholder')}
+                      label={t("contact.form.nameLabel")}
+                      placeholder={t("contact.form.namePlaceholder")}
                       value={form.name}
-                      onChange={handleChange('name')}
+                      onChange={handleChange("name")}
                       required
+                      disabled={isSubmitting}
                     />
                     <Input
                       id="contact-email"
                       type="email"
-                      label={t('contact.form.emailLabel')}
-                      placeholder={t('contact.form.emailPlaceholder')}
+                      label={t("contact.form.emailLabel")}
+                      placeholder={t("contact.form.emailPlaceholder")}
                       value={form.email}
-                      onChange={handleChange('email')}
+                      onChange={handleChange("email")}
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
 
                   <Select
                     id="contact-project-type"
-                    label={t('contact.form.projectTypeLabel')}
-                    placeholder={t('contact.form.projectTypePlaceholder')}
+                    label={t("contact.form.projectTypeLabel")}
+                    placeholder={t("contact.form.projectTypePlaceholder")}
                     options={options}
                     value={effectiveProjectType}
-                    onChange={handleChange('projectType')}
+                    onChange={handleChange("projectType")}
                     required
+                    disabled={isSubmitting}
                   />
 
                   <Textarea
                     id="contact-message"
-                    label={t('contact.form.messageLabel')}
-                    placeholder={t('contact.form.messagePlaceholder')}
+                    label={t("contact.form.messageLabel")}
+                    placeholder={t("contact.form.messagePlaceholder")}
                     rows={4}
                     value={form.message}
-                    onChange={handleChange('message')}
+                    onChange={handleChange("message")}
                     required
+                    disabled={isSubmitting}
                   />
+
+                  {submitError && (
+                    <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm flex items-center gap-3">
+                      <i
+                        className="fas fa-exclamation-circle"
+                        aria-hidden="true"
+                      />
+                      <p>{submitError}</p>
+                    </div>
+                  )}
 
                   <Button
                     type="submit"
                     variant="brand"
-                    disabled={!isValid}
-                    className="w-full justify-center disabled:opacity-40 disabled:pointer-events-none"
+                    disabled={!isValid || isSubmitting}
+                    className="w-full justify-center disabled:opacity-40 disabled:pointer-events-none transition-all"
                   >
-                    {t('contact.form.submit')} <i className="fas fa-paper-plane text-sm" aria-hidden="true" />
+                    {isSubmitting ? (
+                      <>
+                        <i
+                          className="fas fa-circle-notch fa-spin mr-2"
+                          aria-hidden="true"
+                        />
+                        Enviando...
+                      </>
+                    ) : (
+                      <>
+                        {t("contact.form.submit")}{" "}
+                        <i
+                          className="fas fa-paper-plane text-sm ml-2"
+                          aria-hidden="true"
+                        />
+                      </>
+                    )}
                   </Button>
                 </form>
               ) : (
@@ -178,8 +261,10 @@ export function Contact() {
                   <div className="w-16 h-16 rounded-full bg-gradient-to-br from-brand to-accent flex items-center justify-center text-white text-2xl mx-auto mb-5">
                     <i className="fas fa-check" aria-hidden="true" />
                   </div>
-                  <h3 className="font-display font-bold text-2xl text-ink mb-2">{t('contact.success.title')}</h3>
-                  <p className="text-mute">{t('contact.success.text')}</p>
+                  <h3 className="font-display font-bold text-2xl text-ink mb-2">
+                    {t("contact.success.title")}
+                  </h3>
+                  <p className="text-mute">{t("contact.success.text")}</p>
                 </div>
               )}
             </div>
