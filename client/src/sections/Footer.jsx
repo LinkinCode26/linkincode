@@ -65,9 +65,9 @@ export default function Footer() {
             </div>
 
             <div className="lg:col-span-2">
-              <h4 className="font-display font-bold text-sm uppercase tracking-widest text-ink mb-6">
+              <h3 className="font-display font-bold text-sm uppercase tracking-widest text-ink mb-6">
                 {t("footer.columns.site.title")}
-              </h4>
+              </h3>
               <ul className="space-y-4 text-sm text-mute">
                 {siteLinks.map((label, i) => (
                   <li key={label}>
@@ -81,9 +81,9 @@ export default function Footer() {
             </div>
 
             <div className="lg:col-span-3">
-              <h4 className="font-display font-bold text-sm uppercase tracking-widest text-ink mb-6">
+              <h3 className="font-display font-bold text-sm uppercase tracking-widest text-ink mb-6">
                 {t("footer.columns.services.title")}
-              </h4>
+              </h3>
               <ul className="space-y-4 text-sm text-mute">
                 {serviceLinks.map((label, i) => (
                   <li key={label}>
@@ -97,9 +97,9 @@ export default function Footer() {
             </div>
 
             <div className="lg:col-span-3">
-              <h4 className="font-display font-bold text-sm uppercase tracking-widest text-ink mb-6">
+              <h3 className="font-display font-bold text-sm uppercase tracking-widest text-ink mb-6">
                 {t("footer.columns.contact.title")}
-              </h4>
+              </h3>
               <ul className="space-y-4 text-sm">
                 <li>
                   <a href="mailto:hola@linkincode.dev" className="flex items-start gap-3 text-mute hover:text-brand transition-colors">
@@ -119,10 +119,10 @@ export default function Footer() {
           </div>
 
           <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-[12px] text-mute/70 text-center md:text-left">
-              © {new Date().getFullYear()} <span className="text-mute font-semibold">Linkincode Studio</span>. {t("footer.copyright")}
+            <p className="text-[12px] text-mute text-center md:text-left">
+              © {new Date().getFullYear()} <span className="text-ink font-semibold">Linkincode Studio</span>. {t("footer.copyright")}
             </p>
-            <div className="flex gap-6 text-[12px] text-mute/70">
+            <div className="flex gap-6 text-[12px] text-mute">
               {legalLinks.map((label) => (
                 <a key={label} href="#" className="hover:text-brand transition-colors">
                   {label}
