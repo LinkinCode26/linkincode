@@ -4,7 +4,9 @@
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-brand: var(--brand);
+  --color-brand-text: var(--brand-text);
   --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
   --color-ink: var(--ink);
   --color-mute: var(--mute);
   --color-line: var(--line);
@@ -30,7 +32,10 @@
   --bg: rgb(10 14 23);
   --surface: rgb(17 24 39);
   --brand: rgb(59 130 246);
+  --brand-text: rgb(29 78 216); 
   --accent: rgb(6 182 212);
+  /* En oscuro --accent ya da ~7.9:1 sobre --bg, así que --accent-text es el mismo valor. */
+  --accent-text: var(--accent);
   --ink: rgb(241 245 249);
   --mute: rgb(148 163 184);
   --line: rgb(30 41 59);
@@ -45,6 +50,12 @@
   --surface: rgb(239 246 255);
   --brand: rgb(37 99 235);
   --accent: rgb(8 145 178);
+  /* --accent en claro da ~3.5:1 sobre --bg/--surface (falla WCAG AA en texto
+     chico). --accent-text es un cyan más oscuro (cyan-700) reservado para
+     texto y botones con texto blanco: ~5.1:1 sobre fondo y ~5.4:1 con texto
+     blanco encima. --accent sigue usándose para fondos, bordes y glows,
+     donde el contraste original no es un problema. */
+  --accent-text: rgb(14 116 144);
   --ink: rgb(15 23 42);
   --mute: rgb(71 85 105);
   --line: rgb(226 232 240);

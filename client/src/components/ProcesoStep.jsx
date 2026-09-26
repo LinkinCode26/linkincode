@@ -17,7 +17,7 @@ const ProcesoStep = ({ step, title, description, isRight, delay }) => {
           >
             <i className={`fas ${step.icon}`} aria-hidden="true" />
           </div>
-          <h4 className="font-bold text-lg text-ink mb-2">{title}</h4>
+          <h3 className="font-bold text-lg text-ink mb-2">{title}</h3>
           <p className="text-sm text-mute leading-relaxed">{description}</p>
         </div>
       </div>

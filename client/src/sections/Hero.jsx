@@ -33,7 +33,7 @@ export function Hero() {
           <div ref={textRef}>
             <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-surface border border-line mb-8">
               <span className="flex h-2 w-2 rounded-full bg-accent animate-pulse" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-accent">
+              <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-accent-text">
                 {t('hero.badge')}
               </span>
             </div>

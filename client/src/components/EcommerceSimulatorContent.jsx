@@ -36,11 +36,15 @@ export function EcommerceSimulatorContent() {
     <div className="flex flex-col gap-6 py-2">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-surface p-4 rounded-2xl border border-line">
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
+          <label
+            htmlFor="sim-ecommerce-client"
+            className="block text-xs font-bold uppercase tracking-wider text-mute mb-2"
+          >
             {t("solutions.simulator.ecommerce.clientName") ||
               "Nombre del cliente"}
           </label>
           <input
+            id="sim-ecommerce-client"
             type="text"
             value={simTitle}
             onChange={(e) => setSimTitle(e.target.value)}
@@ -61,6 +65,8 @@ export function EcommerceSimulatorContent() {
                 key={c}
                 type="button"
                 onClick={() => setSimColor(c)}
+                aria-label={c}
+                aria-pressed={simColor === c}
                 className={`w-8 h-8 rounded-full border-2 transition-transform ${
                   simColor === c
                     ? "scale-110 border-white shadow-lg"
@@ -80,7 +86,7 @@ export function EcommerceSimulatorContent() {
               "Mi Tienda"}
           </span>
           <div className="relative flex items-center gap-2">
-            <i className="fas fa-shopping-cart text-mute" />
+            <i className="fas fa-shopping-cart text-mute" aria-hidden="true" />
             <span
               className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${activeColorStyle}`}
             >
@@ -155,9 +161,10 @@ export function EcommerceSimulatorContent() {
                       <button
                         type="button"
                         onClick={() => handleRemoveFromCart(item.id)}
+                        aria-label={`Quitar ${item.name} del carrito`}
                         className="text-red-500 hover:text-red-700"
                       >
-                        <i className="fas fa-trash-alt text-xs" />
+                        <i className="fas fa-trash-alt text-xs" aria-hidden="true" />
                       </button>
                     </div>
                   </div>

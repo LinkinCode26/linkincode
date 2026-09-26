@@ -8,6 +8,10 @@ export function SimulatorShell({ title, children, onExit }) {
   const { t } = useLanguage();
 
   const defaultTitle = t("solutions.simulator.liveEditing", "SIMULANDO EN VIVO");
+  const resetLabel = t("solutions.simulator.resetLabel") || "Reiniciar";
+  const fullscreenLabel = t("solutions.simulator.fullscreenLabel", "Pantalla completa");
+  const exitFullscreenLabel = t("solutions.simulator.exitFullscreenLabel", "Salir de pantalla completa");
+  const exitLabel = t("solutions.simulator.exitLabel") || "Salir del simulador";
 
   useEffect(() => {
     if (!isFullscreen) return;
@@ -47,7 +51,7 @@ export function SimulatorShell({ title, children, onExit }) {
       <div className="flex items-center justify-between gap-3 pb-4 mb-6 border-b border-line shrink-0">
         <div className="flex items-center gap-2 min-w-0">
           <span className="flex h-2 w-2 rounded-full bg-accent animate-pulse shrink-0"></span>
-          <span className="text-[11px] font-bold uppercase tracking-widest text-accent truncate">
+          <span className="text-[11px] font-bold uppercase tracking-widest text-accent-text truncate">
             {isFullscreen
               ? t("solutions.simulator.fullscreenTitle", "SIMULANDO EN PANTALLA COMPLETA")
               : title || defaultTitle}
@@ -58,26 +62,27 @@ export function SimulatorShell({ title, children, onExit }) {
           <button
             type="button"
             onClick={resetSimulator}
+            aria-label={resetLabel}
             className="flex items-center gap-1.5 hover:text-ink transition-colors cursor-pointer"
           >
-            <i className="fas fa-rotate-right text-[10px]" />
-            <span className="hidden sm:inline">
-              {t("solutions.simulator.resetLabel") || "Reiniciar"}
+            <i className="fas fa-rotate-right text-[10px]" aria-hidden="true" />
+            <span className="hidden sm:inline" aria-hidden="true">
+              {resetLabel}
             </span>
           </button>
 
           <button
             type="button"
             onClick={toggleFullscreen}
+            aria-label={isFullscreen ? exitFullscreenLabel : fullscreenLabel}
             className="flex items-center gap-1.5 hover:text-ink transition-colors cursor-pointer"
           >
             <i
               className={`fas ${isFullscreen ? "fa-compress" : "fa-expand"} text-[10px]`}
+              aria-hidden="true"
             />
-            <span className="hidden sm:inline">
-              {isFullscreen
-                ? t("solutions.simulator.exitFullscreenLabel", "Salir de pantalla completa")
-                : t("solutions.simulator.fullscreenLabel", "Pantalla completa")}
+            <span className="hidden sm:inline" aria-hidden="true">
+              {isFullscreen ? exitFullscreenLabel : fullscreenLabel}
             </span>
           </button>
 
@@ -85,12 +90,12 @@ export function SimulatorShell({ title, children, onExit }) {
             <button
               type="button"
               onClick={handleExit}
-              aria-label={t("solutions.simulator.exitLabel") || "Salir del simulador"}
+              aria-label={exitLabel}
               className="flex items-center gap-1.5 text-mute hover:text-red-400 transition-colors cursor-pointer pl-3 sm:pl-4 border-l border-line"
             >
-              <i className="fas fa-xmark text-sm" />
-              <span className="hidden sm:inline">
-                {t("solutions.simulator.exitLabel") || "Salir del simulador"}
+              <i className="fas fa-xmark text-sm" aria-hidden="true" />
+              <span className="hidden sm:inline" aria-hidden="true">
+                {exitLabel}
               </span>
             </button>
           )}

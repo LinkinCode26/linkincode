@@ -179,6 +179,7 @@ export function Contact() {
                 <form onSubmit={handleSubmit} noValidate className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Input
+                      id="contact-name"
                       label={t("contact.form.nameLabel")}
                       placeholder={t("contact.form.namePlaceholder")}
                       value={form.name}
@@ -187,6 +188,7 @@ export function Contact() {
                       disabled={isSubmitting}
                     />
                     <Input
+                      id="contact-email"
                       type="email"
                       label={t("contact.form.emailLabel")}
                       placeholder={t("contact.form.emailPlaceholder")}
@@ -198,6 +200,7 @@ export function Contact() {
                   </div>
 
                   <Select
+                    id="contact-project-type"
                     label={t("contact.form.projectTypeLabel")}
                     placeholder={t("contact.form.projectTypePlaceholder")}
                     options={options}
@@ -208,6 +211,7 @@ export function Contact() {
                   />
 
                   <Textarea
+                    id="contact-message"
                     label={t("contact.form.messageLabel")}
                     placeholder={t("contact.form.messagePlaceholder")}
                     rows={4}

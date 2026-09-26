@@ -16,6 +16,15 @@ export function LanguageDropdown({ className = "" }) {
   const { lang, setLang, supportedLangs, t } = useLanguage();
   const [open, setOpen] = useState(false);
   const rootRef = useRef(null);
+  const triggerRef = useRef(null);
+  const firstOptionRef = useRef(null);
+
+  // Cierra el panel y devuelve el foco al botón que lo abrió, para no
+  // dejar el teclado "perdido" después de elegir un idioma o de escapar.
+  const close = () => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  };
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -29,17 +38,23 @@ export function LanguageDropdown({ className = "" }) {
 
   useEffect(() => {
     function handleEscape(event) {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape" && open) close();
     }
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, []);
+  }, [open]);
+
+  // Al abrir el panel, mueve el foco a la primera opción.
+  useEffect(() => {
+    if (open) firstOptionRef.current?.focus();
+  }, [open]);
 
   const active = LANGUAGE_LABELS[lang];
 
   return (
     <div className={`relative ${className}`} ref={rootRef}>
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((prev) => !prev)}
         aria-haspopup="listbox"
@@ -56,18 +71,19 @@ export function LanguageDropdown({ className = "" }) {
           aria-label={t("nav.idioma")}
           className="absolute right-0 top-full mt-2 rounded-xl border border-line bg-surface/95 backdrop-blur-md shadow-xl p-1.5 min-w-32.5 z-20"
         >
-          {supportedLangs.map((code) => {
+          {supportedLangs.map((code, index) => {
             const isActive = code === lang;
             const label = LANGUAGE_LABELS[code];
             return (
               <button
                 key={code}
+                ref={index === 0 ? firstOptionRef : undefined}
                 type="button"
                 role="option"
                 aria-selected={isActive}
                 onClick={() => {
                   setLang(code);
-                  setOpen(false);
+                  close();
                 }}
                 className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg text-xs font-bold transition-all ${
                   isActive

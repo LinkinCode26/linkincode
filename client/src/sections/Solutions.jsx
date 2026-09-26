@@ -20,10 +20,11 @@ function DemoSimulatorContent({ content }) {
   return (
     <div className="flex flex-col gap-5 py-4">
       <div>
-        <label className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
+        <label htmlFor="sim-demo-title" className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
           Título principal
         </label>
         <input
+          id="sim-demo-title"
           type="text"
           value={simTitle}
           onChange={(e) => setSimTitle(e.target.value)}
@@ -32,15 +33,17 @@ function DemoSimulatorContent({ content }) {
         />
       </div>
       <div>
-        <label className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
+        <span className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
           Color de marca
-        </label>
+        </span>
         <div className="flex gap-3">
           {["brand", "accent", "indigo", "emerald"].map((c) => (
             <button
               key={c}
               type="button"
               onClick={() => setSimColor(c)}
+              aria-label={c}
+              aria-pressed={simColor === c}
               className={`w-8 h-8 rounded-full border-2 transition-transform ${
                 simColor === c
                   ? "scale-110 border-white shadow-lg"
@@ -141,7 +144,7 @@ export function Solutions() {
     >
       <div className="container mx-auto px-6 max-w-7xl">
         <div ref={headerRef} className="text-center max-w-2xl mx-auto mb-14">
-          <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-accent">
+          <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-accent-text">
             {t("solutions.eyebrow")}
           </span>
           <h2 className="font-display font-bold text-4xl sm:text-5xl mt-4 mb-6 text-ink">
