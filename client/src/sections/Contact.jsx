@@ -28,6 +28,7 @@ export function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [website, setWebsite] = useState("");
 
   const headerRef = useScrollReveal();
   const cardRef = useScrollReveal({ delay: 0.05 });
@@ -82,6 +83,7 @@ export function Contact() {
           email: form.email.trim(),
           tipoProyecto: effectiveProjectType.trim(),
           mensaje: form.message.trim(),
+            website: website.trim(),
         }),
       });
 
@@ -230,6 +232,28 @@ export function Contact() {
                       <p>{submitError}</p>
                     </div>
                   )}
+
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: "-9999px",
+                      width: "1px",
+                      height: "1px",
+                      overflow: "hidden",
+                    }}
+                    aria-hidden="true"
+                  >
+                    <label htmlFor="website">No completar este campo</label>
+                    <input
+                      type="text"
+                      id="website"
+                      name="website"
+                      value={website}
+                      onChange={(e) => setWebsite(e.target.value)}
+                      tabIndex="-1"
+                      autoComplete="off"
+                    />
+                  </div>
 
                   <Button
                     type="submit"
