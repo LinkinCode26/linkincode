@@ -3,8 +3,9 @@ import useLanguage from "../hooks/useLanguage";
 import { products as initialProducts } from "../data/mock/products";
 
 export const StockSimulatorContent = () => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [products, setProducts] = useState(initialProducts);
+  const lowStockLabel = lang === "en" ? "Low stock" : "Stock bajo";
 
   const handleStockChange = (productId, delta) => {
     setProducts((prev) =>
@@ -36,7 +37,14 @@ export const StockSimulatorContent = () => {
           className="w-14 h-14 object-cover rounded-lg"
         />
         <div className="flex flex-col">
-          <span className="font-bold text-sm text-ink leading-tight sm:truncate">{translatedName}</span>
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-sm text-ink leading-tight sm:truncate">{translatedName}</span>
+            {isLowStock && (
+              <span className="text-[10px] font-bold uppercase tracking-wide text-red-500 [[data-theme=light]_&]:text-red-700">
+                {lowStockLabel}
+              </span>
+            )}
+          </div>
           <span className="text-xs text-mute">
             ${product.price.toLocaleString("es-AR")}
           </span>
@@ -46,7 +54,8 @@ export const StockSimulatorContent = () => {
         <button
           type="button"
           onClick={() => handleStockChange(product.id, -1)}
-          className="w-8 h-8 rounded-lg bg-bg border border-line text-red-400 font-bold hover:bg-red-400/10 hover:border-red-400/40 transition-colors cursor-pointer"
+          aria-label={`Restar una unidad de ${translatedName}`}
+          className="w-8 h-8 rounded-lg bg-bg border border-line text-red-400 [[data-theme=light]_&]:text-red-700 font-bold hover:bg-red-400/10 hover:border-red-400/40 transition-colors cursor-pointer"
         >
           −
         </button>
@@ -56,7 +65,8 @@ export const StockSimulatorContent = () => {
         <button
           type="button"
           onClick={() => handleStockChange(product.id, 1)}
-          className="w-8 h-8 rounded-lg bg-bg border border-line text-emerald-500 font-bold hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-colors cursor-pointer"
+          aria-label={`Sumar una unidad de ${translatedName}`}
+          className="w-8 h-8 rounded-lg bg-bg border border-line text-emerald-500 [[data-theme=light]_&]:text-emerald-700 font-bold hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-colors cursor-pointer"
         >
           +
         </button>

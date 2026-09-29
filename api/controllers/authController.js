@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
+import { findUserByEmail, createUser } from "../services/auth.service.js"
 
 // Función helper para generar el token JWT
 const generateToken = (id) => {
@@ -13,54 +14,49 @@ const generateToken = (id) => {
 
 // @desc    Registrar un nuevo administrador/usuario
 // @route   POST /api/auth/register
-export const register = async (req, res) => {
+export const register = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const userExists = await User.findOne({ email });
+    const userExists = await findUserByEmail( email );
 
     if (userExists) {
       return res.status(400).json({ message: "El usuario ya existe" });
     }
 
-    const user = await User.create({ email, password });
+    const user = await createUser({ email, password });
 
     if (user) {
-      res.status(201).json({
+      return res.status(201).json({
         _id: user._id,
         email: user.email,
         token: generateToken(user._id),
       });
-    } else {
-      res.status(400).json({ message: "Datos de usuario inválidos" });
     }
+
+    return res.status(400).json({ message: "Datos de usuario inválidos" });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error en el servidor", error: error.message });
+    next(error);
   }
 };
 
 // @desc    Autenticar usuario y conseguir token (Login)
 // @route   POST /api/auth/login
-export const login = async (req, res) => {
+export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
-    const user = await User.findOne({ email });
+    const user = await findUserByEmail(email);
 
     if (user && (await user.matchPassword(password))) {
-      res.json({
+      return res.json({
         _id: user._id,
         email: user.email,
         token: generateToken(user._id),
       });
-    } else {
-      res.status(401).json({ message: "Email o contraseña incorrectos" });
     }
+
+    return res.status(401).json({ message: "Email o contraseña incorrectos" });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error en el servidor", error: error.message });
+    next(error);
   }
 };
 

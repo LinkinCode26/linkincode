@@ -1,15 +1,15 @@
-import 'dotenv/config';
-import mongoose from 'mongoose';
-import { jest } from '@jest/globals';
+import "dotenv/config";
+import { jest } from "@jest/globals";
 import request from "supertest";
+import jwt from "jsonwebtoken";
 import app from "../app.js";
+import User from "../models/User.js";
 import * as leadsService from "../services/leads.service.js";
 import * as emailService from "../services/emailService.js";
-import { connectDB } from '../config/db.js';
+import { startTestDB, stopTestDB } from "./helpers/testDb.js";
 
-beforeAll(async () => {
-  await connectDB();
-});
+beforeAll(startTestDB, 60_000);
+afterAll(stopTestDB);
 
 // Mockeamos el envío de emails por defecto en todos los tests para evitar conexiones reales
 beforeEach(() => {
@@ -19,10 +19,6 @@ beforeEach(() => {
 
 afterEach(() => {
   jest.restoreAllMocks();
-});
-
-afterAll(async () => {
-  await mongoose.connection.close();
 });
 
 describe("POST /api/leads", () => {
@@ -76,5 +72,106 @@ describe("POST /api/leads", () => {
     expect(response.body.status).toBe("ok");
     expect(response.body.lead).toBeDefined();
     expect(response.body.lead.nombre).toBe("Carlos Resiliente");
+  });
+
+  it("descarta silenciosamente cuando el honeypot viene lleno, sin llamar a createLead", async () => {
+    const createLeadSpy = jest.spyOn(leadsService, "createLead");
+
+    const response = await request(app).post("/api/leads").send({
+      nombre: "Juan Perez",
+      email: "juan@ejemplo.com",
+      tipoProyecto: "Landing Page",
+      mensaje: "Quiero una landing page",
+      website: "http://spam.com",
+    });
+
+    expect(response.status).toBe(201);
+    expect(response.body.status).toBe("ok");
+    expect(response.body.lead).toBeUndefined();
+    expect(createLeadSpy).not.toHaveBeenCalled();
+
+    createLeadSpy.mockRestore();
+  });
+});
+
+describe("GET /api/leads", () => {
+  let validToken;
+
+  beforeAll(() => {
+    process.env.JWT_SECRET = process.env.JWT_SECRET || "secreto_de_prueba";
+    validToken = jwt.sign({ id: "id_falso_123" }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it("responde 401 si no se envía el token (sin token)", async () => {
+    const response = await request(app).get("/api/leads");
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toMatch(/falta el token/i);
+  });
+
+  it("responde 401 si el token es inválido o expiró", async () => {
+    const response = await request(app)
+      .get("/api/leads")
+      .set("Authorization", "Bearer token_inventado_invalido");
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toMatch(/inválido o expirado/i);
+  });
+
+  it("responde 200 y devuelve los datos de paginación correctos (totalPages/currentPage)", async () => {
+    jest.spyOn(User, "findById").mockReturnValue({
+      select: jest
+        .fn()
+        .mockResolvedValue({ _id: "id_falso_123", email: "admin@test.com" }),
+    });
+
+    jest.spyOn(leadsService, "getFilteredLeads").mockResolvedValue({
+      leads: [{ nombre: "Lead 1" }, { nombre: "Lead 2" }],
+      total: 12,
+    });
+
+    const response = await request(app)
+      .get("/api/leads?page=2&limit=2")
+      .set("Authorization", `Bearer ${validToken}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.status).toBe("ok");
+    expect(response.body.pagination.currentPage).toBe(2);
+    expect(response.body.pagination.pageSize).toBe(2);
+    expect(response.body.pagination.totalItems).toBe(12);
+    expect(response.body.pagination.totalPages).toBe(6);
+  });
+
+  it("responde 200 y aplica correctamente los filtros combinados", async () => {
+    jest.spyOn(User, "findById").mockReturnValue({
+      select: jest.fn().mockResolvedValue({ _id: "id_falso_123" }),
+    });
+
+    const getFilteredLeadsSpy = jest
+      .spyOn(leadsService, "getFilteredLeads")
+      .mockResolvedValue({
+        leads: [],
+        total: 0,
+      });
+
+    const response = await request(app)
+      .get("/api/leads?tipoProyecto=web&estado=nuevo")
+      .set("Authorization", `Bearer ${validToken}`);
+
+    expect(response.status).toBe(200);
+    expect(getFilteredLeadsSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        tipoProyecto: { $regex: "web", $options: "i" },
+        estado: "nuevo",
+      }),
+      0,
+      10,
+    );
   });
 });

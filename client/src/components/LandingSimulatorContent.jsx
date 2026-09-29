@@ -67,10 +67,14 @@ export function LandingSimulatorContent() {
     <div className="flex flex-col lg:flex-row lg:items-stretch gap-8 py-2">
       <div className="flex-1 flex flex-col gap-6">
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
+          <label
+            htmlFor="sim-landing-title"
+            className="block text-xs font-bold uppercase tracking-wider text-mute mb-2"
+          >
             {t("solutions.simulator.inputLabel")}
           </label>
           <input
+            id="sim-landing-title"
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -80,10 +84,14 @@ export function LandingSimulatorContent() {
         </div>
 
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
+          <label
+            htmlFor="sim-landing-subtitle"
+            className="block text-xs font-bold uppercase tracking-wider text-mute mb-2"
+          >
             {t("solutions.simulator.subtitleLabel")}
           </label>
           <input
+            id="sim-landing-subtitle"
             type="text"
             value={subtitle}
             onChange={(e) => setSubtitle(e.target.value)}
@@ -93,10 +101,14 @@ export function LandingSimulatorContent() {
         </div>
 
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
+          <label
+            htmlFor="sim-landing-cta"
+            className="block text-xs font-bold uppercase tracking-wider text-mute mb-2"
+          >
             {t("solutions.simulator.ctaLabel")}
           </label>
           <input
+            id="sim-landing-cta"
             type="text"
             value={ctaText}
             onChange={(e) => setCtaText(e.target.value)}
@@ -116,6 +128,7 @@ export function LandingSimulatorContent() {
                 type="button"
                 onClick={() => setBrandColorId(option.id)}
                 aria-label={option.id}
+                aria-pressed={brandColorId === option.id}
                 className={`w-8 h-8 rounded-full ${option.dotClass} border-2 transition-transform ${
                   brandColorId === option.id
                     ? "scale-110 border-white shadow-lg"
@@ -137,6 +150,7 @@ export function LandingSimulatorContent() {
                 type="button"
                 onClick={() => setBgColorId(option.id)}
                 aria-label={option.id}
+                aria-pressed={bgColorId === option.id}
                 className={`w-8 h-8 rounded-full ${option.dotClass} border-2 transition-transform ${
                   bgColorId === option.id
                     ? "scale-110 border-white shadow-lg"
