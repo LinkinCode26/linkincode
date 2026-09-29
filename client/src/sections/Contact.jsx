@@ -1,19 +1,10 @@
-<<<<<<< HEAD
-import { useMemo, useState } from 'react';
-import useLanguage from '../hooks/useLanguage';
-import useScrollReveal from '../hooks/useScrollReveal';
-import useContact from '../hooks/useContact';
-import { Input, Select, Textarea } from '../components/FormElements';
-import { Button } from '../components/Button';
-import { createLeadRequest } from '../../src/services/authApi'; 
-=======
 import { useMemo, useState } from "react";
 import useLanguage from "../hooks/useLanguage";
 import useScrollReveal from "../hooks/useScrollReveal";
 import useContact from "../hooks/useContact";
 import { Input, Select, Textarea } from "../components/FormElements";
 import { Button } from "../components/Button";
->>>>>>> cc59aeea2ec80249b42dd2446de6d13772164398
+import { createLeadRequest } from "../../src/services/authApi";
 
 // Mismo orden que SERVICES (data/services.js) y que las primeras 7
 // entradas de contact.form.projectTypeOptions en translations.js.
@@ -36,22 +27,14 @@ export function Contact() {
 
   const [form, setForm] = useState(EMPTY_FORM);
   const [submitted, setSubmitted] = useState(false);
-<<<<<<< HEAD
-  const [loading, setLoading] = useState(false);
-=======
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [website, setWebsite] = useState("");
->>>>>>> cc59aeea2ec80249b42dd2446de6d13772164398
 
   const headerRef = useScrollReveal();
   const cardRef = useScrollReveal({ delay: 0.05 });
 
-<<<<<<< HEAD
-  const projectTypeOptions = t('contact.form.projectTypeOptions');
-=======
   const projectTypeOptions = t("contact.form.projectTypeOptions");
->>>>>>> cc59aeea2ec80249b42dd2446de6d13772164398
 
   const options = useMemo(
     () => projectTypeOptions.map((label) => ({ value: label, label })),
@@ -84,10 +67,10 @@ export function Contact() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-<<<<<<< HEAD
-    if (!isValid || loading) return;
+    if (!isValid || isSubmitting) return;
 
-    setLoading(true);
+    setIsSubmitting(true);
+    setSubmitError(null);
 
     const payload = {
       nombre: form.name.trim(),
@@ -95,66 +78,26 @@ export function Contact() {
       tipoProyecto: effectiveProjectType.trim(),
       mensaje: form.message.trim(),
       origen: "Web LinkinCode",
+      website: website.trim(),
     };
 
     try {
       await createLeadRequest(payload);
 
       setSubmitted(true);
+      setForm(EMPTY_FORM);
+      setWebsite("");
       setTimeout(() => {
-        setForm(EMPTY_FORM);
         setSubmitted(false);
-      }, 6000);
+      }, 5000);
     } catch (error) {
-      console.error("Error al enviar el formulario de contacto:", error);
-      alert("Hubo un error al enviar tu consulta. Por favor, intentá nuevamente.");
-    } finally {
-      setLoading(false);
-=======
-    if (!isValid || isSubmitting) return;
-
-    setIsSubmitting(true);
-    setSubmitError(null);
-
-    try {
-      const response = await fetch("/api/leads", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          // Mapeamos los campos del front al esquema que espera el backend
-          nombre: form.name.trim(),
-          email: form.email.trim(),
-          tipoProyecto: effectiveProjectType.trim(),
-          mensaje: form.message.trim(),
-            website: website.trim(),
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.status === 201) {
-        setSubmitted(true);
-        setForm(EMPTY_FORM);
-        setTimeout(() => {
-          setSubmitted(false);
-        }, 5000);
-      } else {
-        // Mostramos el mensaje de error que viene del backend o uno genérico
-        setSubmitError(
-          data.message ||
-            "No pudimos enviar tu mensaje. Revisá los datos e intentá de nuevo.",
-        );
-      }
-    } catch {
-      // Error de red (backend caído, sin internet, etc.)
+      const serverMessage = error?.response?.data?.message;
       setSubmitError(
-        "Ocurrió un error de conexión. Revisá tu internet e intentá más tarde.",
+        serverMessage ||
+          "No pudimos enviar tu mensaje. Revisá los datos o intentá más tarde.",
       );
     } finally {
       setIsSubmitting(false);
->>>>>>> cc59aeea2ec80249b42dd2446de6d13772164398
     }
   };
 
@@ -279,6 +222,7 @@ export function Contact() {
                     </div>
                   )}
 
+                  {/* Campo Honeypot oculto para atrapar bots */}
                   <div
                     style={{
                       position: "absolute",
@@ -304,13 +248,6 @@ export function Contact() {
                   <Button
                     type="submit"
                     variant="brand"
-<<<<<<< HEAD
-                    disabled={!isValid || loading}
-                    className="w-full justify-center disabled:opacity-40 disabled:pointer-events-none"
-                  >
-                    {loading ? "Enviando..." : t('contact.form.submit')}{" "}
-                    <i className="fas fa-paper-plane text-sm" aria-hidden="true" />
-=======
                     disabled={!isValid || isSubmitting}
                     className="w-full justify-center disabled:opacity-40 disabled:pointer-events-none transition-all"
                   >
@@ -331,7 +268,6 @@ export function Contact() {
                         />
                       </>
                     )}
->>>>>>> cc59aeea2ec80249b42dd2446de6d13772164398
                   </Button>
                 </form>
               ) : (
