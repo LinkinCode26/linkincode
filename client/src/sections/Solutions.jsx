@@ -1,17 +1,47 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import useLanguage from "../hooks/useLanguage";
 import useScrollReveal from "../hooks/useScrollReveal";
 import useContact from "../hooks/useContact";
 import { SERVICES } from "../data/services";
 import { ACCENT_STYLES } from "../utils/accentStyles";
 import { SimulatorShell } from "../components/SimulatorShell";
-import { EcommerceSimulatorContent } from "../components/EcommerceSimulatorContent";
-import { DashboardSimulator } from "../components/DashboardSimulator";
-import { FacturacionSimulatorContent } from "../components/FacturacionSimulatorContent";
-import { StaffSimulatorContent } from "../components/StaffSimulatorContent";
-import { LandingSimulatorContent } from "../components/LandingSimulatorContent";
-import { StockSimulatorContent } from "../components/StockSimulatorContent";
-import { ApiSimulatorContent } from "../components/ApiSimulatorContent";
+
+// Carga perezosa (Lazy Loading) de los simuladores para optimizar el bundle inicial (LC-046)
+const EcommerceSimulatorContent = lazy(
+  () => import("../components/EcommerceSimulatorContent"),
+);
+const DashboardSimulator = lazy(
+  () => import("../components/DashboardSimulator"),
+);
+const FacturacionSimulatorContent = lazy(
+  () => import("../components/FacturacionSimulatorContent"),
+);
+const StaffSimulatorContent = lazy(
+  () => import("../components/StaffSimulatorContent"),
+);
+const LandingSimulatorContent = lazy(
+  () => import("../components/LandingSimulatorContent"),
+);
+const StockSimulatorContent = lazy(
+  () => import("../components/StockSimulatorContent"),
+);
+const ApiSimulatorContent = lazy(
+  () => import("../components/ApiSimulatorContent"),
+);
+
+function SimulatorLoader() {
+  return (
+    <div className="flex flex-col items-center justify-center py-16 gap-3 text-mute min-h-[300px]">
+      <i
+        className="fas fa-circle-notch fa-spin text-2xl text-brand"
+        aria-hidden="true"
+      />
+      <span className="text-xs font-bold uppercase tracking-wider">
+        Cargando simulador...
+      </span>
+    </div>
+  );
+}
 
 function DemoSimulatorContent({ content }) {
   const [simTitle, setSimTitle] = useState("");
@@ -20,7 +50,10 @@ function DemoSimulatorContent({ content }) {
   return (
     <div className="flex flex-col gap-5 py-4">
       <div>
-        <label htmlFor="sim-demo-title" className="block text-xs font-bold uppercase tracking-wider text-mute mb-2">
+        <label
+          htmlFor="sim-demo-title"
+          className="block text-xs font-bold uppercase tracking-wider text-mute mb-2"
+        >
           Título principal
         </label>
         <input
@@ -78,9 +111,6 @@ export function Solutions() {
   const tabsRef = useScrollReveal({ delay: 0.05 });
   const panelRef = useScrollReveal({ delay: 0.1 });
 
-  // Entrar/salir del simulador cambia el alto del panel (transition de
-  // 500ms al pasar de 1 a 2 columnas). Reacomodamos el scroll una vez
-  // asentado el layout.
   const scrollToRef = (ref, block) => {
     window.setTimeout(() => {
       ref.current?.scrollIntoView({ behavior: "smooth", block });
@@ -94,11 +124,8 @@ export function Solutions() {
 
   const exitSimulation = () => {
     setIsSimulating(false);
-    // Al salir, subimos hasta la altura de las tabs (no solo del panel)
-    // para mantener como referencia visual el servicio seleccionado.
     scrollToRef(tabsRef, "start");
   };
-
 
   const activeService =
     SERVICES.find((service) => service.id === activeId) ?? SERVICES[0];
@@ -109,32 +136,44 @@ export function Solutions() {
     requestQuote(activeService.id, t(`solutions.tabs.${activeService.id}`));
   };
 
-  // Cada vez que cambia de tab, reseteamos la vista de simulación
   const handleTabChange = (id) => {
     setActiveId(id);
     setIsSimulating(false);
   };
 
-  // Función para renderizar el simulador correspondiente según la tab activa
+  // Renderiza el simulador usando Suspense para soportar Lazy Loading
   const renderSimulatorContent = () => {
+    let ComponentToRender;
     switch (activeService.id) {
       case "landing":
-        return <LandingSimulatorContent />;
+        ComponentToRender = <LandingSimulatorContent />;
+        break;
       case "ecommerce":
-        return <EcommerceSimulatorContent />;
+        ComponentToRender = <EcommerceSimulatorContent />;
+        break;
       case "dashboard":
-        return <DashboardSimulator />;
+        ComponentToRender = <DashboardSimulator />;
+        break;
       case "stock":
-        return <StockSimulatorContent />;
+        ComponentToRender = <StockSimulatorContent />;
+        break;
       case "billing":
-        return <FacturacionSimulatorContent />;
+        ComponentToRender = <FacturacionSimulatorContent />;
+        break;
       case "staff":
-        return <StaffSimulatorContent />;
+        ComponentToRender = <StaffSimulatorContent />;
+        break;
       case "api":
-        return <ApiSimulatorContent />;
+        ComponentToRender = <ApiSimulatorContent />;
+        break;
       default:
-        return <DemoSimulatorContent content={content} />;
+        ComponentToRender = <DemoSimulatorContent content={content} />;
+        break;
     }
+
+    return (
+      <Suspense fallback={<SimulatorLoader />}>{ComponentToRender}</Suspense>
+    );
   };
 
   return (
@@ -206,7 +245,6 @@ export function Solutions() {
               isSimulating ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2"
             }`}
           >
-            {/* Columna de información textual (se oculta durante la simulación interactiva) */}
             {!isSimulating && (
               <div className="flex flex-col h-full">
                 <div className="flex items-center gap-3 mb-5">
@@ -248,7 +286,6 @@ export function Solutions() {
                   ))}
                 </div>
 
-                {/* CTA anclado al pie de la columna */}
                 <div className="mt-auto">
                   <button
                     type="button"
@@ -265,7 +302,6 @@ export function Solutions() {
               </div>
             )}
 
-            {/* Columna / bloque del simulador */}
             <div
               className={`transition-all duration-300 ease-in-out ${
                 isSimulating ? "w-full" : ""
@@ -319,14 +355,15 @@ export function Solutions() {
 
                           <button
                             type="button"
-                            onClick={enterSimulation}                            
+                            onClick={enterSimulation}
                             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-brand hover:opacity-90 transition-all cursor-pointer shadow-md"
                           >
                             <i
                               className="fas fa-play text-[10px]"
                               aria-hidden="true"
                             />
-                            {t("solutions.simulator.simulateTrigger") ?? "Simulá tu servicio"}
+                            {t("solutions.simulator.simulateTrigger") ??
+                              "Simulá tu servicio"}
                           </button>
                         </div>
                       );
