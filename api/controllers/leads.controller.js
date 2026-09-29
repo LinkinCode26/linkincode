@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { createLead, getFilteredLeads } from "../services/leads.service.js"; // <-- Importamos getFilteredLeads
+import { createLead, getFilteredLeads, updateLeadStatus } from "../services/leads.service.js"; // <-- Importamos getFilteredLeads
+import { id } from "zod/v4/locales";
 
 const leadSchema = z.object({
   nombre: z
@@ -81,3 +82,28 @@ export const getLeads = async (req, res, next) => {
     next(error);
   }
 };
+
+const ESTADOS_VALIDOS = ['nuevo', 'contactado', 'ganado', 'perdido'];
+
+export const patchLeadStatus = async (req, res, next) => {
+  const { estado } = req.body
+
+  if (!ESTADOS_VALIDOS.includes(estado)) {
+    return res.status(400).json({
+      status: "error",
+      message: `Estado inválido. Los valores permitidos son: ${ESTADOS_VALIDOS.join(', ')}`,
+    })
+  }
+
+  try {
+    const lead = await updateLeadStatus(req.params.id, estado)
+
+    if (!lead) {
+      return res.status(404).json({status: "error", message: "Lead no encontrado"})
+    }
+
+    return res.status(200).json({status: "ok", lead})
+  } catch (error) {
+    next(error)
+  }
+}
