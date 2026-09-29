@@ -1,20 +1,14 @@
 import "dotenv/config";
-import mongoose from "mongoose";
 import { jest } from "@jest/globals";
 import request from "supertest";
 import app from "../app.js";
 import * as leadsService from "../services/leads.service.js";
-import { connectDB } from "../config/db.js";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import { startTestDB, stopTestDB } from "./helpers/testDb.js";
 
-beforeAll(async () => {
-  await connectDB();
-});
-
-afterAll(async () => {
-  await mongoose.connection.close();
-});
+beforeAll(startTestDB, 60_000);
+afterAll(stopTestDB);
 
 describe("POST /api/leads", () => {
   it("crea un lead y responde 201 cuando el body es válido", async () => {
