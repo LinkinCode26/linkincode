@@ -4,6 +4,7 @@ import useScrollReveal from "../hooks/useScrollReveal";
 import useContact from "../hooks/useContact";
 import { Input, Select, Textarea } from "../components/FormElements";
 import { Button } from "../components/Button";
+import { createLeadRequest } from "../../src/services/authApi";
 
 // Mismo orden que SERVICES (data/services.js) y que las primeras 7
 // entradas de contact.form.projectTypeOptions en translations.js.
@@ -71,41 +72,29 @@ export function Contact() {
     setIsSubmitting(true);
     setSubmitError(null);
 
+    const payload = {
+      nombre: form.name.trim(),
+      email: form.email.trim(),
+      tipoProyecto: effectiveProjectType.trim(),
+      mensaje: form.message.trim(),
+      origen: "Web LinkinCode",
+      website: website.trim(),
+    };
+
     try {
-      const response = await fetch("/api/leads", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          // Mapeamos los campos del front al esquema que espera el backend
-          nombre: form.name.trim(),
-          email: form.email.trim(),
-          tipoProyecto: effectiveProjectType.trim(),
-          mensaje: form.message.trim(),
-            website: website.trim(),
-        }),
-      });
+      await createLeadRequest(payload);
 
-      const data = await response.json();
-
-      if (response.status === 201) {
-        setSubmitted(true);
-        setForm(EMPTY_FORM);
-        setTimeout(() => {
-          setSubmitted(false);
-        }, 5000);
-      } else {
-        // Mostramos el mensaje de error que viene del backend o uno genérico
-        setSubmitError(
-          data.message ||
-            "No pudimos enviar tu mensaje. Revisá los datos e intentá de nuevo.",
-        );
-      }
-    } catch {
-      // Error de red (backend caído, sin internet, etc.)
+      setSubmitted(true);
+      setForm(EMPTY_FORM);
+      setWebsite("");
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 5000);
+    } catch (error) {
+      const serverMessage = error?.response?.data?.message;
       setSubmitError(
-        "Ocurrió un error de conexión. Revisá tu internet e intentá más tarde.",
+        serverMessage ||
+          "No pudimos enviar tu mensaje. Revisá los datos o intentá más tarde.",
       );
     } finally {
       setIsSubmitting(false);
@@ -233,6 +222,7 @@ export function Contact() {
                     </div>
                   )}
 
+                  {/* Campo Honeypot oculto para atrapar bots */}
                   <div
                     style={{
                       position: "absolute",
