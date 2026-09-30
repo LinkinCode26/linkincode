@@ -156,3 +156,88 @@ describe("GET /api/leads", () => {
     );
   });
 });
+
+
+describe("PATCH /api/leads/:id", () => {
+  let validToken;
+  const fakeId = "507f1f77bcf86cd799439011";
+
+  beforeAll(() => {
+    validToken = jwt.sign({ id: "id_falso_123" }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it("responde 401 si no se envía el token", async () => {
+    const response = await request(app)
+      .patch(`/api/leads/${fakeId}`)
+      .send({ estado: "contactado" });
+
+    expect(response.status).toBe(401);
+  });
+
+  it("responde 400 si el estado no es válido", async () => {
+    jest.spyOn(User, "findById").mockReturnValue({
+      select: jest.fn().mockResolvedValue({ _id: "id_falso_123" }),
+    });
+
+    const response = await request(app)
+      .patch(`/api/leads/${fakeId}`)
+      .set("Authorization", `Bearer ${validToken}`)
+      .send({ estado: "loco" });
+
+    expect(response.status).toBe(400);
+    expect(response.body.status).toBe("error");
+  });
+
+  it("responde 400 si el id no tiene formato válido", async () => {
+    jest.spyOn(User, "findById").mockReturnValue({
+      select: jest.fn().mockResolvedValue({ _id: "id_falso_123" }),
+    });
+
+    const response = await request(app)
+      .patch("/api/leads/abc")
+      .set("Authorization", `Bearer ${validToken}`)
+      .send({ estado: "contactado" });
+
+    expect(response.status).toBe(400);
+  });
+
+  it("responde 404 si el lead no existe", async () => {
+    jest.spyOn(User, "findById").mockReturnValue({
+      select: jest.fn().mockResolvedValue({ _id: "id_falso_123" }),
+    });
+    jest.spyOn(leadsService, "updateLeadStatus").mockResolvedValue(null);
+
+    const response = await request(app)
+      .patch(`/api/leads/${fakeId}`)
+      .set("Authorization", `Bearer ${validToken}`)
+      .send({ estado: "contactado" });
+
+    expect(response.status).toBe(404);
+  });
+
+  it("responde 200 y actualiza el estado cuando todo es válido", async () => {
+    jest.spyOn(User, "findById").mockReturnValue({
+      select: jest.fn().mockResolvedValue({ _id: "id_falso_123" }),
+    });
+    jest.spyOn(leadsService, "updateLeadStatus").mockResolvedValue({
+      _id: fakeId,
+      nombre: "Juan Perez",
+      estado: "contactado",
+    });
+
+    const response = await request(app)
+      .patch(`/api/leads/${fakeId}`)
+      .set("Authorization", `Bearer ${validToken}`)
+      .send({ estado: "contactado" });
+
+    expect(response.status).toBe(200);
+    expect(response.body.status).toBe("ok");
+    expect(response.body.lead.estado).toBe("contactado");
+  });
+});

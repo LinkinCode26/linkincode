@@ -1,6 +1,11 @@
 import { z } from "zod";
-import { createLead, getFilteredLeads, updateLeadStatus } from "../services/leads.service.js"; // <-- Importamos getFilteredLeads
+import {
+  createLead,
+  getFilteredLeads,
+  updateLeadStatus,
+} from "../services/leads.service.js"; // <-- Importamos getFilteredLeads
 import { id } from "zod/v4/locales";
+import mongoose from "mongoose";
 
 const leadSchema = z.object({
   nombre: z
@@ -24,6 +29,12 @@ const leadSchema = z.object({
     .max(2000, "el mensaje es demasiado largo"),
   origen: z.string().optional(),
   website: z.string().optional(),
+});
+
+const estadoSchema = z.object({
+  estado: z.string().trim().toLowerCase().pipe(
+    z.enum(['nuevo', 'contactado', 'ganado', 'perdido'])
+  ),
 });
 
 export const postLead = async (req, res, next) => {
@@ -83,27 +94,37 @@ export const getLeads = async (req, res, next) => {
   }
 };
 
-const ESTADOS_VALIDOS = ['nuevo', 'contactado', 'ganado', 'perdido'];
 
 export const patchLeadStatus = async (req, res, next) => {
-  const { estado } = req.body
+  const { id } = req.params;
 
-  if (!ESTADOS_VALIDOS.includes(estado)) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
       status: "error",
-      message: `Estado inválido. Los valores permitidos son: ${ESTADOS_VALIDOS.join(', ')}`,
-    })
+      message: "El id no tiene un format valido",
+    });
+  }
+
+  const parsed = estadoSchema.safeParse(req.body);
+
+  if (!parsed.success) {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Estado inválido. Los valores permitidos son: nuevo, contactado, ganado, perdido',
+    });
   }
 
   try {
-    const lead = await updateLeadStatus(req.params.id, estado)
+    const lead = await updateLeadStatus(id, parsed.data.estado);
 
     if (!lead) {
-      return res.status(404).json({status: "error", message: "Lead no encontrado"})
+      return res
+        .status(404)
+        .json({ status: "error", message: "Lead no encontrado" });
     }
 
-    return res.status(200).json({status: "ok", lead})
+    return res.status(200).json({ status: "ok", lead });
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
