@@ -1,11 +1,11 @@
 import { z } from "zod";
+import mongoose from "mongoose";
 import {
   createLead,
   getFilteredLeads,
   updateLeadStatus,
-} from "../services/leads.service.js"; // <-- Importamos getFilteredLeads
-import { id } from "zod/v4/locales";
-import mongoose from "mongoose";
+} from "../services/leads.service.js";
+import { sendLeadNotificationToTeam, sendLeadAutoReply } from "../services/emailService.js";
 
 const leadSchema = z.object({
   nombre: z
@@ -47,19 +47,36 @@ export const postLead = async (req, res, next) => {
   if (!parsed.success) {
     return res.status(400).json({
       status: "error",
-      errors: z.flattenError(parsed.error).fieldErrors,
+      errors: parsed.error.flatten().fieldErrors,
     });
   }
 
   try {
+    // 1. Guardar primero en la base de datos
     const lead = await createLead(parsed.data);
+    const leadInfo = lead || parsed.data;
+
+    // 2. Despachar emails en segundo plano (fire-and-forget con logging de fallos)
+    // Sin 'await' para responder al cliente de inmediato sin esperar la latencia SMTP
+    Promise.allSettled([
+      sendLeadNotificationToTeam(leadInfo),
+      sendLeadAutoReply(leadInfo),
+    ]).then((results) => {
+      results.forEach((r) => {
+        if (r.status === "rejected") {
+          console.error("[Email Error]:", r.reason);
+        }
+      });
+    });
+
+    // 3. Responder de inmediato con el 201
     return res.status(201).json({ status: "ok", lead });
   } catch (error) {
     next(error);
   }
 };
 
-//Controlador para obtener leads paginados y filtrados
+// Controlador para obtener leads paginados y filtrados
 export const getLeads = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;

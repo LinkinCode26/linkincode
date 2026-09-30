@@ -4,6 +4,7 @@ import useScrollReveal from "../hooks/useScrollReveal";
 import useContact from "../hooks/useContact";
 import { Input, Select, Textarea } from "../components/FormElements";
 import { Button } from "../components/Button";
+import { createLeadRequest } from "../../src/services/authApi";
 
 // Mismo orden que SERVICES (data/services.js) y que las primeras 7
 // entradas de contact.form.projectTypeOptions en translations.js.
@@ -28,6 +29,7 @@ export function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [website, setWebsite] = useState("");
 
   const headerRef = useScrollReveal();
   const cardRef = useScrollReveal({ delay: 0.05 });
@@ -70,40 +72,29 @@ export function Contact() {
     setIsSubmitting(true);
     setSubmitError(null);
 
+    const payload = {
+      nombre: form.name.trim(),
+      email: form.email.trim(),
+      tipoProyecto: effectiveProjectType.trim(),
+      mensaje: form.message.trim(),
+      origen: "Web LinkinCode",
+      website: website.trim(),
+    };
+
     try {
-      const response = await fetch("/api/leads", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          // Mapeamos los campos del front al esquema que espera el backend
-          nombre: form.name.trim(),
-          email: form.email.trim(),
-          tipoProyecto: effectiveProjectType.trim(),
-          mensaje: form.message.trim(),
-        }),
-      });
+      await createLeadRequest(payload);
 
-      const data = await response.json();
-
-      if (response.status === 201) {
-        setSubmitted(true);
-        setForm(EMPTY_FORM);
-        setTimeout(() => {
-          setSubmitted(false);
-        }, 5000);
-      } else {
-        // Mostramos el mensaje de error que viene del backend o uno genérico
-        setSubmitError(
-          data.message ||
-            "No pudimos enviar tu mensaje. Revisá los datos e intentá de nuevo.",
-        );
-      }
-    } catch {
-      // Error de red (backend caído, sin internet, etc.)
+      setSubmitted(true);
+      setForm(EMPTY_FORM);
+      setWebsite("");
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 5000);
+    } catch (error) {
+      const serverMessage = error?.response?.data?.message;
       setSubmitError(
-        "Ocurrió un error de conexión. Revisá tu internet e intentá más tarde.",
+        serverMessage ||
+          "No pudimos enviar tu mensaje. Revisá los datos o intentá más tarde.",
       );
     } finally {
       setIsSubmitting(false);
@@ -230,6 +221,29 @@ export function Contact() {
                       <p>{submitError}</p>
                     </div>
                   )}
+
+                  {/* Campo Honeypot oculto para atrapar bots */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: "-9999px",
+                      width: "1px",
+                      height: "1px",
+                      overflow: "hidden",
+                    }}
+                    aria-hidden="true"
+                  >
+                    <label htmlFor="website">No completar este campo</label>
+                    <input
+                      type="text"
+                      id="website"
+                      name="website"
+                      value={website}
+                      onChange={(e) => setWebsite(e.target.value)}
+                      tabIndex="-1"
+                      autoComplete="off"
+                    />
+                  </div>
 
                   <Button
                     type="submit"

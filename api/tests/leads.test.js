@@ -1,19 +1,24 @@
 import "dotenv/config";
-import mongoose from "mongoose";
 import { jest } from "@jest/globals";
 import request from "supertest";
-import app from "../app.js";
-import * as leadsService from "../services/leads.service.js";
-import { connectDB } from "../config/db.js";
 import jwt from "jsonwebtoken";
+import app from "../app.js";
 import User from "../models/User.js";
+import * as leadsService from "../services/leads.service.js";
+import * as emailService from "../services/emailService.js";
+import { startTestDB, stopTestDB } from "./helpers/testDb.js";
 
-beforeAll(async () => {
-  await connectDB();
+beforeAll(startTestDB, 60_000);
+afterAll(stopTestDB);
+
+// Mockeamos el envío de emails por defecto en todos los tests para evitar conexiones reales
+beforeEach(() => {
+  jest.spyOn(emailService, "sendLeadNotificationToTeam").mockResolvedValue({ messageId: "mock-team-id" });
+  jest.spyOn(emailService, "sendLeadAutoReply").mockResolvedValue({ messageId: "mock-reply-id" });
 });
 
-afterAll(async () => {
-  await mongoose.connection.close();
+afterEach(() => {
+  jest.restoreAllMocks();
 });
 
 describe("POST /api/leads", () => {
@@ -39,9 +44,7 @@ describe("POST /api/leads", () => {
   });
 
   it("responde 500 cuando el service falla", async () => {
-    jest
-      .spyOn(leadsService, "createLead")
-      .mockRejectedValue(new Error("Mongo caído"));
+    jest.spyOn(leadsService, "createLead").mockRejectedValue(new Error("Mongo caído"));
 
     const response = await request(app).post("/api/leads").send({
       nombre: "Juan Perez",
@@ -51,8 +54,24 @@ describe("POST /api/leads", () => {
     });
     expect(response.status).toBe(500);
     expect(response.body.status).toBe("error");
+  });
 
-    leadsService.createLead.mockRestore();
+  it("responde 201 y guarda el lead aunque el envío de emails falle (criterio de resiliencia)", async () => {
+    // Sobrescribimos el mock únicamente para este test, simulando caída del SMTP
+    jest.spyOn(emailService, "sendLeadNotificationToTeam").mockRejectedValue(new Error("SMTP Connection Failed"));
+    jest.spyOn(emailService, "sendLeadAutoReply").mockRejectedValue(new Error("SMTP Auth Timeout"));
+
+    const response = await request(app).post("/api/leads").send({
+      nombre: "Carlos Resiliente",
+      email: "carlos.resiliente@ejemplo.com",
+      tipoProyecto: "Desarrollo Web",
+      mensaje: "Probando tolerancia a fallos de correo",
+    });
+
+    expect(response.status).toBe(201);
+    expect(response.body.status).toBe("ok");
+    expect(response.body.lead).toBeDefined();
+    expect(response.body.lead.nombre).toBe("Carlos Resiliente");
   });
 
   it("descarta silenciosamente cuando el honeypot viene lleno, sin llamar a createLead", async () => {
