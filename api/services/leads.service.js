@@ -14,3 +14,12 @@ export const getFilteredLeads = async (queryFilters, skip, limit) => {
   const total = await Lead.countDocuments(queryFilters);
   return { leads, total };
 };
+
+export const updateLeadStatus = async (id, estado) => {
+  const lead = await Lead.findByIdAndUpdate(
+    id,
+    { estado },
+    { returnDocument: 'after', runValidators: true },
+  );
+  return lead;
+};
