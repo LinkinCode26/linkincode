@@ -4,6 +4,7 @@ import {
   createLead,
   getFilteredLeads,
   updateLeadStatus,
+  getLeadCountsByProject,
 } from "../services/leads.service.js";
 import { sendLeadNotificationToTeam, sendLeadAutoReply } from "../services/emailService.js";
 
@@ -141,6 +142,15 @@ export const patchLeadStatus = async (req, res, next) => {
     }
 
     return res.status(200).json({ status: "ok", lead });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getLeadStats = async (req, res, next) => {
+  try {
+    const data = await getLeadCountsByProject();
+    return res.status(200).json({ status: "ok", data });
   } catch (error) {
     next(error);
   }

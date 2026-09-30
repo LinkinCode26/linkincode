@@ -40,8 +40,27 @@ export const adminEs = {
     signedInAs: "Sesión iniciada como",
     logout: "Cerrar sesión",
     leadsTitle: "Consultas recibidas",
-    leadsPlaceholder:
-      "Acá va a aparecer el listado de consultas del formulario de contacto.",
+    leads: {
+      all: "Todos",
+      servicesLabel: "Filtrar por servicio",
+      statusLabel: "Estado",
+      statusAll: "Todos los estados",
+      status: {
+        nuevo: "Nuevo",
+        contactado: "Contactado",
+        ganado: "Ganado",
+        perdido: "Perdido",
+      },
+      empty: "No hay consultas que coincidan con estos filtros.",
+      loadError: "No pudimos cargar las consultas.",
+      retry: "Reintentar",
+      updateError:
+        "No pudimos actualizar el estado. Se restauró el valor anterior.",
+      prev: "Anterior",
+      next: "Siguiente",
+      page: "Página",
+      of: "de",
+    },
   },
 };
 
@@ -83,6 +102,25 @@ export const adminEn = {
     signedInAs: "Signed in as",
     logout: "Sign out",
     leadsTitle: "Received inquiries",
-    leadsPlaceholder: "The list of contact form inquiries will appear here.",
+    leads: {
+      all: "All",
+      servicesLabel: "Filter by service",
+      statusLabel: "Status",
+      statusAll: "All statuses",
+      status: {
+        nuevo: "New",
+        contactado: "Contacted",
+        ganado: "Won",
+        perdido: "Lost",
+      },
+      empty: "No inquiries match these filters.",
+      loadError: "We couldn't load the inquiries.",
+      retry: "Try again",
+      updateError: "We couldn't update the status. The previous value was restored.",
+      prev: "Previous",
+      next: "Next",
+      page: "Page",
+      of: "of",
+    },
   },
 };
