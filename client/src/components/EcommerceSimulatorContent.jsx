@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ShoppingCart, Trash2 } from "lucide-react";
 import useLanguage from "../hooks/useLanguage";
 import { products } from "../data/mock/products";
 
@@ -6,14 +7,14 @@ export function EcommerceSimulatorContent() {
   const { t } = useLanguage();
   const [simTitle, setSimTitle] = useState("");
   const [simColor, setSimColor] = useState("brand");
-  const [cart, setCart] = useState([]); // [{ ...product, qty }]
+  const [cart, setCart] = useState([]);
 
   const handleAddToCart = (product) =>
     setCart((prev) => {
       const existing = prev.find((item) => item.id === product.id);
       if (existing) {
         return prev.map((item) =>
-          item.id === product.id ? { ...item, qty: item.qty + 1 } : item
+          item.id === product.id ? { ...item, qty: item.qty + 1 } : item,
         );
       }
       return [...prev, { ...product, qty: 1 }];
@@ -22,7 +23,10 @@ export function EcommerceSimulatorContent() {
     setCart((prev) => prev.filter((item) => item.id !== productId));
 
   const cartItemCount = cart.reduce((total, item) => total + item.qty, 0);
-  const cartTotal = cart.reduce((total, item) => total + item.price * item.qty, 0);
+  const cartTotal = cart.reduce(
+    (total, item) => total + item.price * item.qty,
+    0,
+  );
 
   const colorStyles = {
     brand: "bg-brand text-white hover:bg-brand/90",
@@ -86,7 +90,7 @@ export function EcommerceSimulatorContent() {
               "Mi Tienda"}
           </span>
           <div className="relative flex items-center gap-2">
-            <i className="fas fa-shopping-cart text-mute" aria-hidden="true" />
+            <ShoppingCart className="w-5 h-5 text-mute" />
             <span
               className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${activeColorStyle}`}
             >
@@ -100,7 +104,6 @@ export function EcommerceSimulatorContent() {
 
         <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {products.map((product) => {
-            // Obtenemos el nombre traducido usando el ID del producto
             const translatedName =
               t(`solutions.simulator.ecommerce.products.${product.id}`) ||
               product.name;
@@ -151,7 +154,9 @@ export function EcommerceSimulatorContent() {
                     <span className="text-ink">
                       {item.name}
                       {item.qty > 1 && (
-                        <span className="ml-1.5 text-xs text-mute">x{item.qty}</span>
+                        <span className="ml-1.5 text-xs text-mute">
+                          x{item.qty}
+                        </span>
                       )}
                     </span>
                     <div className="flex items-center gap-3">
@@ -164,7 +169,7 @@ export function EcommerceSimulatorContent() {
                         aria-label={`Quitar ${item.name} del carrito`}
                         className="text-red-500 hover:text-red-700"
                       >
-                        <i className="fas fa-trash-alt text-xs" aria-hidden="true" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>

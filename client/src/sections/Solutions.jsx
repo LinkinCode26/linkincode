@@ -1,4 +1,5 @@
 import { useState, lazy, Suspense } from "react";
+import { Loader2, Check, ArrowRight, ArrowLeft, Play } from "lucide-react";
 import useLanguage from "../hooks/useLanguage";
 import useScrollReveal from "../hooks/useScrollReveal";
 import useContact from "../hooks/useContact";
@@ -6,7 +7,7 @@ import { SERVICES } from "../data/services";
 import { ACCENT_STYLES } from "../utils/accentStyles";
 import { SimulatorShell } from "../components/SimulatorShell";
 
-// Carga perezosa (Lazy Loading) de los simuladores para optimizar el bundle inicial (LC-046)
+// Carga perezosa (Lazy Loading) de los simuladores para optimizar el bundle inicial
 const EcommerceSimulatorContent = lazy(
   () => import("../components/EcommerceSimulatorContent"),
 );
@@ -32,10 +33,7 @@ const ApiSimulatorContent = lazy(
 function SimulatorLoader() {
   return (
     <div className="flex flex-col items-center justify-center py-16 gap-3 text-mute min-h-[300px]">
-      <i
-        className="fas fa-circle-notch fa-spin text-2xl text-brand"
-        aria-hidden="true"
-      />
+      <Loader2 className="w-6 h-6 animate-spin text-brand" />
       <span className="text-xs font-bold uppercase tracking-wider">
         Cargando simulador...
       </span>
@@ -131,6 +129,7 @@ export function Solutions() {
     SERVICES.find((service) => service.id === activeId) ?? SERVICES[0];
   const accent = ACCENT_STYLES[activeService.accent];
   const content = t(`solutions.services.${activeService.id}`);
+  const ActiveIcon = activeService.icon;
 
   const handleRequestQuote = () => {
     requestQuote(activeService.id, t(`solutions.tabs.${activeService.id}`));
@@ -202,6 +201,8 @@ export function Solutions() {
         >
           {SERVICES.map((service) => {
             const isActive = service.id === activeId;
+            const TabIcon = service.icon;
+
             return (
               <button
                 key={service.id}
@@ -221,10 +222,7 @@ export function Solutions() {
                       : "bg-surface/50 border-line text-mute hover:text-ink hover:border-brand/40"
                   }`}
               >
-                <i
-                  className={`fas ${service.icon} shrink-0`}
-                  aria-hidden="true"
-                />
+                <TabIcon className="w-4 h-4 shrink-0" />
                 <span className="font-bold text-sm text-center leading-snug">
                   {t(`solutions.tabs.${service.id}`)}
                 </span>
@@ -267,10 +265,7 @@ export function Solutions() {
                       key={bullet}
                       className="flex gap-3 items-center text-sm text-ink"
                     >
-                      <i
-                        className="fas fa-check text-accent"
-                        aria-hidden="true"
-                      />
+                      <Check className="w-4 h-4 text-accent shrink-0" />
                       {bullet}
                     </li>
                   ))}
@@ -292,11 +287,7 @@ export function Solutions() {
                     onClick={handleRequestQuote}
                     className={`inline-flex items-center gap-2 px-6 py-3.5 text-white font-bold text-sm rounded-xl transition-all shadow-lg cursor-pointer ${accent.button}`}
                   >
-                    {content.cta}{" "}
-                    <i
-                      className="fas fa-arrow-right text-xs"
-                      aria-hidden="true"
-                    />
+                    {content.cta} <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -313,10 +304,7 @@ export function Solutions() {
                   onClick={exitSimulation}
                   className="mb-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-mute hover:text-ink transition-colors cursor-pointer"
                 >
-                  <i
-                    className="fas fa-arrow-left text-[10px]"
-                    aria-hidden="true"
-                  />
+                  <ArrowLeft className="w-3 h-3" />
                   {content.heading}
                 </button>
               )}
@@ -326,12 +314,9 @@ export function Solutions() {
                   className={`h-full rounded-2xl border-2 border-dashed ${accent.border} bg-surface/40 flex flex-col items-center justify-center text-center gap-4 p-8`}
                 >
                   <div
-                    className={`w-14 h-14 rounded-2xl ${accent.iconBg} flex items-center justify-center ${accent.text} text-2xl`}
+                    className={`w-14 h-14 rounded-2xl ${accent.iconBg} flex items-center justify-center ${accent.text}`}
                   >
-                    <i
-                      className={`fas ${activeService.icon}`}
-                      aria-hidden="true"
-                    />
+                    <ActiveIcon className="w-6 h-6" />
                   </div>
 
                   {(() => {
@@ -358,10 +343,7 @@ export function Solutions() {
                             onClick={enterSimulation}
                             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-brand hover:opacity-90 transition-all cursor-pointer shadow-md"
                           >
-                            <i
-                              className="fas fa-play text-[10px]"
-                              aria-hidden="true"
-                            />
+                            <Play className="w-3 h-3 fill-current" />
                             {t("solutions.simulator.simulateTrigger") ??
                               "Simulá tu servicio"}
                           </button>

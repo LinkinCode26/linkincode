@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { RotateCcw, Maximize2, Minimize2, X } from "lucide-react";
 import { useSimulator } from "../hooks/useSimulator";
 import useLanguage from "../hooks/useLanguage";
 
@@ -7,10 +8,19 @@ export function SimulatorShell({ title, children, onExit }) {
     useSimulator();
   const { t } = useLanguage();
 
-  const defaultTitle = t("solutions.simulator.liveEditing", "SIMULANDO EN VIVO");
+  const defaultTitle = t(
+    "solutions.simulator.liveEditing",
+    "SIMULANDO EN VIVO",
+  );
   const resetLabel = t("solutions.simulator.resetLabel") || "Reiniciar";
-  const fullscreenLabel = t("solutions.simulator.fullscreenLabel", "Pantalla completa");
-  const exitFullscreenLabel = t("solutions.simulator.exitFullscreenLabel", "Salir de pantalla completa");
+  const fullscreenLabel = t(
+    "solutions.simulator.fullscreenLabel",
+    "Pantalla completa",
+  );
+  const exitFullscreenLabel = t(
+    "solutions.simulator.exitFullscreenLabel",
+    "Salir de pantalla completa",
+  );
   const exitLabel = t("solutions.simulator.exitLabel") || "Salir del simulador";
 
   useEffect(() => {
@@ -34,11 +44,6 @@ export function SimulatorShell({ title, children, onExit }) {
     onExit?.();
   };
 
-  // Sin createPortal: ahora que el panel padre ya no atrapa los
-  // position:fixed (ver .reveal.in en index.css), alcanza con cambiar las
-  // clases de este mismo div. Es el mismo nodo siempre — nunca cambia de
-  // tipo ni de contenedor — así que React nunca lo desmonta al entrar o
-  // salir de pantalla completa, y el estado de cada simulador se conserva.
   return (
     <div
       className={
@@ -53,7 +58,10 @@ export function SimulatorShell({ title, children, onExit }) {
           <span className="flex h-2 w-2 rounded-full bg-accent animate-pulse shrink-0"></span>
           <span className="text-[11px] font-bold uppercase tracking-widest text-accent-text truncate">
             {isFullscreen
-              ? t("solutions.simulator.fullscreenTitle", "SIMULANDO EN PANTALLA COMPLETA")
+              ? t(
+                  "solutions.simulator.fullscreenTitle",
+                  "SIMULANDO EN PANTALLA COMPLETA",
+                )
               : title || defaultTitle}
           </span>
         </div>
@@ -65,7 +73,7 @@ export function SimulatorShell({ title, children, onExit }) {
             aria-label={resetLabel}
             className="flex items-center gap-1.5 hover:text-ink transition-colors cursor-pointer"
           >
-            <i className="fas fa-rotate-right text-[10px]" aria-hidden="true" />
+            <RotateCcw className="w-3.5 h-3.5" />
             <span className="hidden sm:inline" aria-hidden="true">
               {resetLabel}
             </span>
@@ -77,10 +85,11 @@ export function SimulatorShell({ title, children, onExit }) {
             aria-label={isFullscreen ? exitFullscreenLabel : fullscreenLabel}
             className="flex items-center gap-1.5 hover:text-ink transition-colors cursor-pointer"
           >
-            <i
-              className={`fas ${isFullscreen ? "fa-compress" : "fa-expand"} text-[10px]`}
-              aria-hidden="true"
-            />
+            {isFullscreen ? (
+              <Minimize2 className="w-3.5 h-3.5" />
+            ) : (
+              <Maximize2 className="w-3.5 h-3.5" />
+            )}
             <span className="hidden sm:inline" aria-hidden="true">
               {isFullscreen ? exitFullscreenLabel : fullscreenLabel}
             </span>
@@ -93,7 +102,7 @@ export function SimulatorShell({ title, children, onExit }) {
               aria-label={exitLabel}
               className="flex items-center gap-1.5 text-mute hover:text-red-400 transition-colors cursor-pointer pl-3 sm:pl-4 border-l border-line"
             >
-              <i className="fas fa-xmark text-sm" aria-hidden="true" />
+              <X className="w-4 h-4" />
               <span className="hidden sm:inline" aria-hidden="true">
                 {exitLabel}
               </span>
