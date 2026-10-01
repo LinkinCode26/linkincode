@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { Send, Loader2 } from "lucide-react";
 import useLanguage from "../hooks/useLanguage";
 import { getApiEndpoints } from "../data/mock/apiEndpoints";
 
@@ -29,17 +30,18 @@ export const ApiSimulatorContent = () => {
 
   const endpoints = getApiEndpoints(activeLang);
 
-  const [selectedId, setSelectedId] = useState(endpoints[0]?.id ?? "get-productos");
+  const [selectedId, setSelectedId] = useState(
+    endpoints[0]?.id ?? "get-productos",
+  );
   const [loading, setLoading] = useState(false);
   const [resultId, setResultId] = useState(null);
   const timeoutRef = useRef(null);
 
-  const selectedEndpoint = endpoints.find((e) => e.id === selectedId) ?? endpoints[0];
-  
-  // Estado derivado: se traduce automáticamente si cambia el idioma
+  const selectedEndpoint =
+    endpoints.find((e) => e.id === selectedId) ?? endpoints[0];
+
   const result = resultId ? endpoints.find((e) => e.id === resultId) : null;
 
-  // Limpieza del timeout si el componente se desmonta
   useEffect(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -70,7 +72,8 @@ export const ApiSimulatorContent = () => {
           {endpoints.map((endpoint) => {
             const isActive = endpoint.id === selectedId;
             const methodClass =
-              METHOD_STYLES[endpoint.method] ?? "bg-surface text-mute border-line";
+              METHOD_STYLES[endpoint.method] ??
+              "bg-surface text-mute border-line";
             return (
               <button
                 key={endpoint.id}
@@ -85,10 +88,14 @@ export const ApiSimulatorContent = () => {
                     : "border-line bg-surface/40 hover:border-brand/40"
                 }`}
               >
-                <span className={`text-[11px] font-bold px-2 py-1 rounded-md border ${methodClass}`}>
+                <span
+                  className={`text-[11px] font-bold px-2 py-1 rounded-md border ${methodClass}`}
+                >
                   {endpoint.method}
                 </span>
-                <span className="text-sm text-ink font-medium">{endpoint.path}</span>
+                <span className="text-sm text-ink font-medium">
+                  {endpoint.path}
+                </span>
               </button>
             );
           })}
@@ -101,14 +108,16 @@ export const ApiSimulatorContent = () => {
         disabled={loading}
         className="self-start inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-brand hover:opacity-90 transition-all disabled:opacity-50 cursor-pointer"
       >
-        <i className="fas fa-paper-plane" aria-hidden="true" />
-        {loading ? t("solutions.simulator.api.sending") : t("solutions.simulator.api.send")}
+        <Send className="w-3.5 h-3.5" />
+        {loading
+          ? t("solutions.simulator.api.sending")
+          : t("solutions.simulator.api.send")}
       </button>
 
       <div className="rounded-xl border border-line bg-surface/60 p-4 min-h-[220px]">
         {loading && (
           <div className="flex flex-col items-center justify-center h-full py-10 gap-3 text-mute">
-            <i className="fas fa-circle-notch fa-spin text-xl" aria-hidden="true" />
+            <Loader2 className="w-5 h-5 animate-spin" />
             <span className="text-xs uppercase tracking-wider font-bold">
               {t("solutions.simulator.api.waiting")}
             </span>
@@ -124,10 +133,14 @@ export const ApiSimulatorContent = () => {
         {!loading && result && (
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between flex-wrap gap-2">
-              <span className={`text-sm font-bold ${statusColor(result.status)}`}>
+              <span
+                className={`text-sm font-bold ${statusColor(result.status)}`}
+              >
                 Status: {result.status}
               </span>
-              <span className="text-xs text-mute">{result.responseTimeMs} ms</span>
+              <span className="text-xs text-mute">
+                {result.responseTimeMs} ms
+              </span>
             </div>
 
             <div>
@@ -135,9 +148,9 @@ export const ApiSimulatorContent = () => {
                 {t("solutions.simulator.api.headers")}
               </p>
               <pre className="text-xs bg-bg border border-line rounded-lg p-3 overflow-x-auto text-mute">
-{Object.entries(result.headers ?? {})
-  .map(([key, value]) => `${key}: ${value}`)
-  .join("\n")}
+                {Object.entries(result.headers ?? {})
+                  .map(([key, value]) => `${key}: ${value}`)
+                  .join("\n")}
               </pre>
             </div>
 
@@ -146,7 +159,7 @@ export const ApiSimulatorContent = () => {
                 {t("solutions.simulator.api.body")}
               </p>
               <pre className="text-xs bg-bg border border-line rounded-lg p-3 overflow-x-auto text-ink">
-{JSON.stringify(result.responseBody, null, 2)}
+                {JSON.stringify(result.responseBody, null, 2)}
               </pre>
             </div>
 

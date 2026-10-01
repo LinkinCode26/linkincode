@@ -4,6 +4,7 @@ import { COLOR_CLASSES } from "../data/steps";
 const ProcesoStep = ({ step, title, description, isRight, delay }) => {
   const stepRef = useScrollReveal({ delay });
   const colors = COLOR_CLASSES[step.color];
+  const StepIcon = step.icon; // Lucide component
 
   return (
     <div className={`proceso-step ${isRight ? "proceso-step-right" : ""}`}>
@@ -15,7 +16,7 @@ const ProcesoStep = ({ step, title, description, isRight, delay }) => {
           <div
             className={`w-12 h-12 rounded-xl ${colors.iconBg} flex items-center justify-center ${colors.iconText} mb-4`}
           >
-            <i className={`fas ${step.icon}`} aria-hidden="true" />
+            <StepIcon className="w-6 h-6" />
           </div>
           <h3 className="font-bold text-lg text-ink mb-2">{title}</h3>
           <p className="text-sm text-mute leading-relaxed">{description}</p>
