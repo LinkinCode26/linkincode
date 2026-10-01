@@ -44,3 +44,13 @@ export const fetchMe = (token) => request("/auth/me", { token });
 // Nuevo helper para crear leads usando el mismo cliente centralizado
 export const createLeadRequest = (leadData) =>
   request("/leads", { method: "POST", body: leadData });
+
+export const fetchLeads = (token, params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  return request(`/leads${query ? `?${query}` : ""}`, { token });
+};
+
+export const fetchLeadStats = (token) => request("/leads/stats", { token });
+
+export const updateLeadStatusRequest = (token, id, estado) =>
+  request(`/leads/${id}`, { method: "PATCH", token, body: { estado } });

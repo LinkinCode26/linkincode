@@ -1,8 +1,9 @@
 import useAuth from "../hooks/useAuth";
 import useLanguage from "../hooks/useLanguage";
 import { Button } from "../components/Button";
-import { GlassCard } from "../components/GlassCard";
+import { LeadsPanel } from "../components/admin/LeadsPanel";
 import ThemeToggle from "../components/ThemeToggle";
+import LanguageDropdown from "../components/LanguageDropdown";
 import logoImg from "../assets/logo.png";
 
 // Placeholder de /admin: confirma que la ruta protegida funciona. Al
@@ -21,6 +22,7 @@ export default function AdminDashboard() {
             <span className="hidden min-w-0 truncate text-sm text-mute sm:block">
               {user?.email}
             </span>
+            <LanguageDropdown />
             <ThemeToggle />
             <Button
               variant="outline"
@@ -46,12 +48,7 @@ export default function AdminDashboard() {
           <span className="font-medium text-ink">{user?.email}</span>
         </p>
 
-        <GlassCard className="mt-10 p-6 sm:p-8">
-          <h2 className="font-display text-xl font-bold">
-            {t("admin.dashboard.leadsTitle")}
-          </h2>
-          <p className="mt-2 text-mute">{t("admin.dashboard.leadsPlaceholder")}</p>
-        </GlassCard>
+        <LeadsPanel />
       </main>
     </div>
   );

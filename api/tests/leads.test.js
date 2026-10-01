@@ -260,3 +260,36 @@ describe("PATCH /api/leads/:id", () => {
     expect(response.body.lead.estado).toBe("contactado");
   });
 });
+
+describe("GET /api/leads/stats", () => {
+  let validToken;
+
+  beforeAll(() => {
+    validToken = jwt.sign({ id: "id_falso_123" }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+  });
+
+  it("responde 401 si no se envía el token", async () => {
+    const response = await request(app).get("/api/leads/stats");
+    expect(response.status).toBe(401);
+  });
+
+  it("responde 200 con los conteos por tipoProyecto", async () => {
+    jest.spyOn(User, "findById").mockReturnValue({
+      select: jest.fn().mockResolvedValue({ _id: "id_falso_123" }),
+    });
+    jest
+      .spyOn(leadsService, "getLeadCountsByProject")
+      .mockResolvedValue([{ tipoProyecto: "Landing Pages", total: 3 }]);
+
+    const response = await request(app)
+      .get("/api/leads/stats")
+      .set("Authorization", `Bearer ${validToken}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.data).toEqual([
+      { tipoProyecto: "Landing Pages", total: 3 },
+    ]);
+  });
+});

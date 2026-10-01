@@ -23,3 +23,10 @@ export const updateLeadStatus = async (id, estado) => {
   );
   return lead;
 };
+
+export const getLeadCountsByProject = async () => {
+  const rows = await Lead.aggregate([
+    { $group: { _id: "$tipoProyecto", total: { $sum: 1 } } },
+  ]);
+  return rows.map(({ _id, total }) => ({ tipoProyecto: _id, total }));
+};
