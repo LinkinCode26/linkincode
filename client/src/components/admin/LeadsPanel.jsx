@@ -4,6 +4,7 @@ import { Button } from "../Button";
 import { GlassCard } from "../GlassCard";
 import { SERVICES } from "../../data/services";
 import { getServiceIdFromLabel } from "../../utils/leadServices";
+import { CircleAlert, LoaderCircle } from "lucide-react";
 
 const ESTADOS = ["nuevo", "contactado", "ganado", "perdido"];
 
@@ -113,7 +114,7 @@ export function LeadsPanel() {
 
       {updateFailed && (
         <p role="alert" className={`mt-6 ${errorBox}`}>
-          <i className="fas fa-circle-exclamation" aria-hidden="true" />
+          <CircleAlert className="h-5 w-5 shrink-0" aria-hidden="true" />
           {L("updateError")}
         </p>
       )}
@@ -121,7 +122,7 @@ export function LeadsPanel() {
       <div className="mt-6" aria-busy={loading}>
         {loading && leads.length === 0 ? (
           <div role="status" className="flex justify-center py-12 text-brand">
-            <i className="fas fa-circle-notch fa-spin text-2xl" aria-hidden="true" />
+            <LoaderCircle className="h-6 w-6 animate-spin" aria-hidden="true" />
             <span className="sr-only">{t("admin.loading")}</span>
           </div>
         ) : failed ? (
