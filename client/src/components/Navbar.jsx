@@ -81,7 +81,7 @@ export function Navbar() {
   return (
     <>
       {/* Header fijo superior */}
-      <header className="fixed top-0 left-0 w-full z-40 bg-[rgb(var(--nav-bg))]/80 backdrop-blur-xl border-b border-line transition-colors duration-300">
+      <header className="fixed top-0 left-0 w-full z-40 bg-nav/80 backdrop-blur-xl border-b border-line transition-colors duration-300">
         <div className="container mx-auto max-w-7xl px-6 h-20 flex items-center justify-between">
           {/* Logo con Imagen */}
           <a href="#inicio" className="flex items-center gap-3 select-none">
@@ -122,7 +122,6 @@ export function Navbar() {
             <Button
               href="#contacto"
               variant="brand"
-              size="medium"
               className={`font-bold tracking-widest text-xs uppercase px-6 py-2.5 rounded-xl shadow-lg transition-all ${
                 activeSection === "contacto"
                   ? "shadow-brand/40 ring-2 ring-brand/50 scale-105"

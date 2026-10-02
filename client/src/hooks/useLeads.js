@@ -11,7 +11,7 @@ import { buildServiceFilter, countByService } from "../utils/leadServices.js";
 const PAGE_SIZE = 10;
 
 export function useLeads() {
-  const { token, logout } = useAuth();
+  const { token, expireSession } = useAuth();
   const [filters, setFilters] = useState({ servicio: "all", estado: "all", page: 1 });
   const [attempt, setAttempt] = useState(0);
   const [result, setResult] = useState({ key: null, leads: [], pagination: null, failed: false });
@@ -29,13 +29,13 @@ export function useLeads() {
   const requestKey = JSON.stringify([query, attempt]);
   const loading = result.key !== requestKey;
 
-  // Si la API dice 401, el token ya no sirve: se cierra la sesión y
-  // ProtectedRoute redirige al login.
+  // Si la API dice 401, el token ya no sirve: se expira la sesión (con aviso
+  // en el login) y ProtectedRoute redirige.
   const handleAuthError = useCallback(
     (error) => {
-      if (error instanceof ApiError && error.status === 401) logout();
+      if (error instanceof ApiError && error.status === 401) expireSession();
     },
-    [logout],
+    [expireSession],
   );
 
   useEffect(() => {
@@ -43,6 +43,16 @@ export function useLeads() {
     fetchLeads(token, query)
       .then((res) => {
         if (cancelled) return;
+
+        // La página pedida quedó fuera de rango (ej: se movió el único lead
+        // de la última página, o ya no hay resultados). Se salta a la última
+        // página válida en vez de mostrar una lista vacía sin paginación.
+        const lastPage = Math.max(res.pagination.totalPages, 1);
+        if (query.page > lastPage) {
+          setFilters((f) => ({ ...f, page: lastPage }));
+          return;
+        }
+
         setResult({ key: requestKey, leads: res.data, pagination: res.pagination, failed: false });
       })
       .catch((error) => {
@@ -55,10 +65,16 @@ export function useLeads() {
     };
   }, [token, query, requestKey, handleAuthError]);
 
-  // Los contadores no dependen de los filtros: se piden una vez (y al reintentar).
+  // Los contadores respetan el filtro de estado (para que los chips no
+  // contradigan la lista) pero no el de servicio: cada chip cuenta su servicio.
+  // Se vuelven a pedir al cambiar el estado y al reintentar.
+  const { estado: estadoFilter } = filters;
+
   useEffect(() => {
     let cancelled = false;
-    fetchLeadStats(token)
+    const params = estadoFilter !== "all" ? { estado: estadoFilter } : {};
+
+    fetchLeadStats(token, params)
       .then((res) => {
         if (!cancelled) setCounts(countByService(res.data));
       })
@@ -68,17 +84,31 @@ export function useLeads() {
     return () => {
       cancelled = true;
     };
-  }, [token, attempt]);
+  }, [token, attempt, estadoFilter]);
 
   const setServicio = useCallback(
-    (servicio) => setFilters((f) => ({ ...f, servicio, page: 1 })),
+    (servicio) => {
+      setUpdateFailed(false);
+      setFilters((f) => ({ ...f, servicio, page: 1 }));
+    },
     [],
   );
+
   const setEstado = useCallback(
-    (estado) => setFilters((f) => ({ ...f, estado, page: 1 })),
+    (estado) => {
+      setUpdateFailed(false);
+      setFilters((f) => ({ ...f, estado, page: 1 }));
+    },
     [],
   );
-  const setPage = useCallback((page) => setFilters((f) => ({ ...f, page })), []);
+
+  const setPage = useCallback(
+    (page) => {
+      setUpdateFailed(false);
+      setFilters((f) => ({ ...f, page }));
+    },
+    [],
+  );
   const retry = useCallback(() => setAttempt((n) => n + 1), []);
 
   const patchLocal = useCallback((id, estado) => {
@@ -101,6 +131,13 @@ export function useLeads() {
 
       try {
         await updateLeadStatusRequest(token, lead._id, estado);
+
+        // Con un filtro de estado activo, el lead ya no coincide con el
+        // filtro: se recarga para que la lista, el total y las páginas
+        // reflejen la realidad.
+        if (filters.estado !== "all" && filters.estado !== estado) {
+          setAttempt((n) => n + 1);
+        }
       } catch (error) {
         patchLocal(lead._id, previous);
         handleAuthError(error);
@@ -109,7 +146,7 @@ export function useLeads() {
         setPendingIds((ids) => ids.filter((id) => id !== lead._id));
       }
     },
-    [token, patchLocal, handleAuthError],
+    [token, filters.estado, patchLocal, handleAuthError],
   );
 
   return {

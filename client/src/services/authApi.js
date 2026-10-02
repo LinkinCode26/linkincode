@@ -50,7 +50,10 @@ export const fetchLeads = (token, params = {}) => {
   return request(`/leads${query ? `?${query}` : ""}`, { token });
 };
 
-export const fetchLeadStats = (token) => request("/leads/stats", { token });
+export const fetchLeadStats = (token, params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  return request(`/leads/stats${query ? `?${query}` : ""}`, { token });
+};
 
 export const updateLeadStatusRequest = (token, id, estado) =>
   request(`/leads/${id}`, { method: "PATCH", token, body: { estado } });
