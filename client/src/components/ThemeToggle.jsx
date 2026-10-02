@@ -1,4 +1,5 @@
 import useTheme from '../hooks/useTheme';
+import { Moon, Sun } from "lucide-react";
 
 export const ThemeToggle = ({ className = '' }) => {
   const { theme, toggleTheme } = useTheme();
@@ -12,7 +13,11 @@ export const ThemeToggle = ({ className = '' }) => {
       className={`theme-toggle-track ${className}`}
     >
       <span className="theme-toggle-dot">
-        <i className={isDark ? 'fas fa-moon' : 'fas fa-sun'} />
+        {isDark ? (
+          <Moon className="h-3 w-3" aria-hidden="true" />
+        ) : (
+          <Sun className="h-3 w-3" aria-hidden="true" />
+        )}
       </span>
     </button>
   );

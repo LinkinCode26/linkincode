@@ -23,50 +23,72 @@ afterEach(() => {
 
 describe("POST /api/leads", () => {
   it("crea un lead y responde 201 cuando el body es válido", async () => {
-    const response = await request(app).post("/api/leads").send({
-      nombre: "Juan Perez",
-      email: "juan@ejemplo.com",
-      tipoProyecto: "Landing Page",
-      mensaje: "Quiero una landing page",
-    });
+    const response = await request(app)
+      .post("/api/leads")
+      .set("X-Forwarded-For", "10.7.0.1")
+      .send({
+        nombre: "Juan Perez",
+        email: "juan@ejemplo.com",
+        tipoProyecto: "Landing Page",
+        mensaje: "Quiero una landing page",
+      });
+
     expect(response.status).toBe(201);
     expect(response.body.status).toBe("ok");
     expect(response.body.lead.nombre).toBe("Juan Perez");
   });
 
   it("responde 400 cuando falta un campo requerido", async () => {
-    const response = await request(app).post("/api/leads").send({
-      nombre: "Juan Perez",
-    });
+    const response = await request(app)
+      .post("/api/leads")
+      .set("X-Forwarded-For", "10.7.0.2")
+      .send({
+        nombre: "Juan Perez",
+      });
+
     expect(response.status).toBe(400);
     expect(response.body.status).toBe("error");
     expect(response.body.errors).toHaveProperty("email");
   });
 
   it("responde 500 cuando el service falla", async () => {
-    jest.spyOn(leadsService, "createLead").mockRejectedValue(new Error("Mongo caído"));
+    jest
+      .spyOn(leadsService, "createLead")
+      .mockRejectedValue(new Error("Mongo caído"));
 
-    const response = await request(app).post("/api/leads").send({
-      nombre: "Juan Perez",
-      email: "juan@ejemplo.com",
-      tipoProyecto: "Landing Page",
-      mensaje: "Quiero una landing page",
-    });
+    const response = await request(app)
+      .post("/api/leads")
+      .set("X-Forwarded-For", "10.7.0.3")
+      .send({
+        nombre: "Juan Perez",
+        email: "juan@ejemplo.com",
+        tipoProyecto: "Landing Page",
+        mensaje: "Quiero una landing page",
+      });
+
     expect(response.status).toBe(500);
     expect(response.body.status).toBe("error");
   });
 
   it("responde 201 y guarda el lead aunque el envío de emails falle (criterio de resiliencia)", async () => {
     // Sobrescribimos el mock únicamente para este test, simulando caída del SMTP
-    jest.spyOn(emailService, "sendLeadNotificationToTeam").mockRejectedValue(new Error("SMTP Connection Failed"));
-    jest.spyOn(emailService, "sendLeadAutoReply").mockRejectedValue(new Error("SMTP Auth Timeout"));
+    jest
+      .spyOn(emailService, "sendLeadNotificationToTeam")
+      .mockRejectedValue(new Error("SMTP Connection Failed"));
 
-    const response = await request(app).post("/api/leads").send({
-      nombre: "Carlos Resiliente",
-      email: "carlos.resiliente@ejemplo.com",
-      tipoProyecto: "Desarrollo Web",
-      mensaje: "Probando tolerancia a fallos de correo",
-    });
+    jest
+      .spyOn(emailService, "sendLeadAutoReply")
+      .mockRejectedValue(new Error("SMTP Auth Timeout"));
+
+    const response = await request(app)
+      .post("/api/leads")
+      .set("X-Forwarded-For", "10.7.0.4")
+      .send({
+        nombre: "Carlos Resiliente",
+        email: "carlos.resiliente@ejemplo.com",
+        tipoProyecto: "Desarrollo Web",
+        mensaje: "Probando tolerancia a fallos de correo",
+      });
 
     expect(response.status).toBe(201);
     expect(response.body.status).toBe("ok");
@@ -77,13 +99,16 @@ describe("POST /api/leads", () => {
   it("descarta silenciosamente cuando el honeypot viene lleno, sin llamar a createLead", async () => {
     const createLeadSpy = jest.spyOn(leadsService, "createLead");
 
-    const response = await request(app).post("/api/leads").send({
-      nombre: "Juan Perez",
-      email: "juan@ejemplo.com",
-      tipoProyecto: "Landing Page",
-      mensaje: "Quiero una landing page",
-      website: "http://spam.com",
-    });
+    const response = await request(app)
+      .post("/api/leads")
+      .set("X-Forwarded-For", "10.7.0.5")
+      .send({
+        nombre: "Juan Perez",
+        email: "juan@ejemplo.com",
+        tipoProyecto: "Landing Page",
+        mensaje: "Quiero una landing page",
+        website: "http://spam.com",
+      });
 
     expect(response.status).toBe(201);
     expect(response.body.status).toBe("ok");
@@ -292,4 +317,31 @@ describe("GET /api/leads/stats", () => {
       { tipoProyecto: "Landing Pages", total: 3 },
     ]);
   });
+  it("pasa el filtro de estado al service", async () => {
+    jest.spyOn(User, "findById").mockReturnValue({
+      select: jest.fn().mockResolvedValue({ _id: "id_falso_123" }),
+    });
+    const spy = jest
+      .spyOn(leadsService, "getLeadCountsByProject")
+      .mockResolvedValue([]);
+
+    const response = await request(app)
+      .get("/api/leads/stats?estado=nuevo")
+      .set("Authorization", `Bearer ${validToken}`);
+
+    expect(response.status).toBe(200);
+    expect(spy).toHaveBeenCalledWith("nuevo");
+  });
+
+  it("responde 400 si el estado es inválido", async () => {
+    jest.spyOn(User, "findById").mockReturnValue({
+      select: jest.fn().mockResolvedValue({ _id: "id_falso_123" }),
+    });
+
+    const response = await request(app)
+      .get("/api/leads/stats?estado=loco")
+      .set("Authorization", `Bearer ${validToken}`);
+
+    expect(response.status).toBe(400);
+  });  
 });

@@ -2,27 +2,47 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { AuthContext } from "./auth-context.js";
 import { ApiError, fetchMe, loginRequest } from "../services/authApi.js";
 import {
+  getToken,
+  isTokenValid,
   clearToken,
   getTokenExpiry,
-  getValidStoredToken,
   saveToken,
 } from "../utils/tokenStorage.js";
 
-// status:
-//  - "checking":        hay un token guardado y se está verificando con la API
-//  - "authenticated":   sesión válida
-//  - "unauthenticated": sin sesión
+const MAX_TIMEOUT_MS = 2 ** 31 - 1;
+
 const UNAUTHENTICATED = { token: null, user: null, status: "unauthenticated" };
 
-function getInitialSession() {
-  const token = getValidStoredToken(); // descarta tokens vencidos o ilegibles
-  return token ? { token, user: null, status: "checking" } : UNAUTHENTICATED;
+// Función pura: sin efectos secundarios (StrictMode ejecuta el initializer dos veces).
+// Devuelve la sesión inicial y si el token guardado estaba vencido o era ilegible.
+function readInitialSession() {
+  const stored = getToken();
+  if (!stored) return { session: UNAUTHENTICATED, expired: false };
+  if (isTokenValid(stored))
+    return { session: { token: stored, user: null, status: "checking" }, expired: false };
+  return { session: UNAUTHENTICATED, expired: true }; // token vencido o ilegible
 }
 
 export function AuthProvider({ children }) {
-  const [session, setSession] = useState(getInitialSession);
-  const [sessionExpired, setSessionExpired] = useState(false);
+  const [initial] = useState(readInitialSession);
+  const [session, setSession] = useState(initial.session);
+  const [sessionExpired, setSessionExpired] = useState(initial.expired);
   const { token, status } = session;
+
+  // Si al montar detectamos un token vencido/ilegible, lo limpiamos del storage.
+  // Va en un efecto (no en el initializer) para que el initializer sea puro.
+  useEffect(() => {
+    if (initial.expired) clearToken();
+  }, [initial.expired]);
+
+  // Cierre de sesión "no voluntario" (token vencido o rechazado por la API):
+  // a diferencia de logout(), deja sessionExpired en true para que el login
+  // muestre el aviso "Tu sesión expiró".
+  const expireSession = useCallback(() => {
+    clearToken();
+    setSessionExpired(true);
+    setSession(UNAUTHENTICATED);
+  }, []);
 
   // 1) Al cargar con un token guardado, la API confirma que la firma es
   //    válida y que el usuario sigue existiendo. Si falla por cualquier
@@ -48,7 +68,7 @@ export function AuthProvider({ children }) {
   }, [status, token]);
 
   // 2) Cierra la sesión en el momento exacto en que vence el token
-  //    (la API los emite con 1 día de vida).
+  //    (la API los emite con 1 día de vida, configurable con JWT_EXPIRES_IN).
   useEffect(() => {
     if (status !== "authenticated") return;
     const expiresAt = getTokenExpiry(token);
@@ -56,15 +76,16 @@ export function AuthProvider({ children }) {
 
     const timer = window.setTimeout(
       () => {
-        clearToken();
-        setSessionExpired(true);
-        setSession(UNAUTHENTICATED);
+        // Si el delay se recortó por MAX_TIMEOUT_MS, el token aún no venció:
+        // en ese caso la API responderá 401 en la próxima request y el flujo
+        // de error se encargará de expirar la sesión.
+        if (Date.now() >= expiresAt) expireSession();
       },
-      Math.max(expiresAt - Date.now(), 0),
+      Math.min(Math.max(expiresAt - Date.now(), 0), MAX_TIMEOUT_MS),
     );
 
     return () => window.clearTimeout(timer);
-  }, [status, token]);
+  }, [status, token, expireSession]);
 
   const login = useCallback(async (email, password) => {
     const data = await loginRequest(email, password);
@@ -94,8 +115,9 @@ export function AuthProvider({ children }) {
       sessionExpired,
       login,
       logout,
+      expireSession,
     }),
-    [status, token, session.user, sessionExpired, login, logout],
+    [status, token, session.user, sessionExpired, login, logout, expireSession],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

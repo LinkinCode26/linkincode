@@ -4,7 +4,9 @@ import useScrollReveal from "../hooks/useScrollReveal";
 import useContact from "../hooks/useContact";
 import { Input, Select, Textarea } from "../components/FormElements";
 import { Button } from "../components/Button";
-import { createLeadRequest } from "../../src/services/authApi";
+import { createLeadRequest } from "../services/authApi";
+import { Check, CircleAlert, Globe, LoaderCircle, Mail, Send } from "lucide-react";
+import WhatsAppIcon from "../components/icons/WhatsAppIcon";
 
 // Mismo orden que SERVICES (data/services.js) y que las primeras 7
 // entradas de contact.form.projectTypeOptions en translations.js.
@@ -91,10 +93,10 @@ export function Contact() {
         setSubmitted(false);
       }, 5000);
     } catch (error) {
-      const serverMessage = error?.response?.data?.message;
       setSubmitError(
-        serverMessage ||
-          "No pudimos enviar tu mensaje. Revisá los datos o intentá más tarde.",
+        error?.status === 429
+          ? error.message
+          : "No pudimos enviar tu mensaje. Revisá los datos o intentá más tarde.",
       );
     } finally {
       setIsSubmitting(false);
@@ -129,7 +131,7 @@ export function Contact() {
               <div className="space-y-6">
                 <div className="flex items-center gap-5">
                   <div className="w-12 h-12 rounded-2xl bg-surface border border-line flex items-center justify-center text-brand">
-                    <i className="fas fa-envelope text-xl" aria-hidden="true" />
+                    <Mail className="h-5 w-5" aria-hidden="true" />
                   </div>
                   <div>
                     <p className="text-xs font-bold uppercase tracking-widest text-mute">
@@ -140,7 +142,7 @@ export function Contact() {
                 </div>
                 <div className="flex items-center gap-5">
                   <div className="w-12 h-12 rounded-2xl bg-surface border border-line flex items-center justify-center text-accent">
-                    <i className="fab fa-whatsapp text-xl" aria-hidden="true" />
+                    <WhatsAppIcon className="h-5 w-5" />
                   </div>
                   <div>
                     <p className="text-xs font-bold uppercase tracking-widest text-mute">
@@ -151,7 +153,7 @@ export function Contact() {
                 </div>
                 <div className="flex items-center gap-5">
                   <div className="w-12 h-12 rounded-2xl bg-surface border border-line flex items-center justify-center text-brand">
-                    <i className="fas fa-globe text-xl" aria-hidden="true" />
+                    <Globe className="h-5 w-5" aria-hidden="true" />
                   </div>
                   <div>
                     <p className="text-xs font-bold uppercase tracking-widest text-mute">
@@ -214,10 +216,7 @@ export function Contact() {
 
                   {submitError && (
                     <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm flex items-center gap-3">
-                      <i
-                        className="fas fa-exclamation-circle"
-                        aria-hidden="true"
-                      />
+                      <CircleAlert className="h-4 w-4 shrink-0" aria-hidden="true" />
                       <p>{submitError}</p>
                     </div>
                   )}
@@ -253,19 +252,13 @@ export function Contact() {
                   >
                     {isSubmitting ? (
                       <>
-                        <i
-                          className="fas fa-circle-notch fa-spin mr-2"
-                          aria-hidden="true"
-                        />
+                        <LoaderCircle className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
                         Enviando...
                       </>
                     ) : (
                       <>
                         {t("contact.form.submit")}{" "}
-                        <i
-                          className="fas fa-paper-plane text-sm ml-2"
-                          aria-hidden="true"
-                        />
+                        <Send className="ml-2 h-4 w-4" aria-hidden="true" />
                       </>
                     )}
                   </Button>
@@ -273,7 +266,7 @@ export function Contact() {
               ) : (
                 <div className="text-center py-12">
                   <div className="w-16 h-16 rounded-full bg-gradient-to-br from-brand to-accent flex items-center justify-center text-white text-2xl mx-auto mb-5">
-                    <i className="fas fa-check" aria-hidden="true" />
+                    <Check className="h-6 w-6" aria-hidden="true" />
                   </div>
                   <h3 className="font-display font-bold text-2xl text-ink mb-2">
                     {t("contact.success.title")}

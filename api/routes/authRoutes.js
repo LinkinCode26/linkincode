@@ -9,15 +9,13 @@ const router = express.Router();
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5,
-  message: {
-    message:
-      "Demasiados intentos de inicio de sesión. Por favor intenta de nuevo en 15 minutos.",
-  },
+  skipSuccessfulRequests: true, // solo cuentan los intentos fallidos
+  message: { message: "Demasiados intentos de inicio de sesión. Por favor intenta de nuevo en 15 minutos." },
   standardHeaders: true,
   legacyHeaders: false,
 });
 
-router.post("/register", register);
+router.post("/register", protect, register); // solo un admin logueado crea otro admin
 router.post("/login", loginLimiter, login);
 router.get("/me", protect, me);
 

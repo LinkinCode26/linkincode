@@ -8,6 +8,8 @@ import {
 } from "../services/leads.service.js";
 import { sendLeadNotificationToTeam, sendLeadAutoReply } from "../services/emailService.js";
 
+const ESTADOS = ["nuevo", "contactado", "ganado", "perdido"];
+
 const leadSchema = z.object({
   nombre: z
     .string()
@@ -33,9 +35,37 @@ const leadSchema = z.object({
 });
 
 const estadoSchema = z.object({
-  estado: z.string().trim().toLowerCase().pipe(
-    z.enum(['nuevo', 'contactado', 'ganado', 'perdido'])
-  ),
+  estado: z.string().trim().toLowerCase().pipe(z.enum(ESTADOS)),
+});
+
+// El filtro de tipoProyecto se usa como $regex en Mongo: un patrón mal
+// formado (ej: "(") lo hacía fallar con 500.
+const isValidRegex = (value) => {
+  try {
+    new RegExp(value);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+// page y limit caen a un valor por defecto si vienen mal (-1, "abc", etc.).
+// estado y tipoProyecto devuelven 400 si son inválidos o vienen repetidos
+// (?estado=a&estado=b llega como array y no pasa el schema).
+const leadsQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).catch(1),
+  limit: z.coerce.number().int().min(1).max(50).catch(10),
+  tipoProyecto: z
+    .string()
+    .trim()
+    .max(100)
+    .refine(isValidRegex, "filtro inválido")
+    .optional(),
+  estado: z.enum(ESTADOS).optional(),
+});
+
+const statsQuerySchema = z.object({
+  estado: z.enum(ESTADOS).optional(),
 });
 
 export const postLead = async (req, res, next) => {
@@ -79,20 +109,25 @@ export const postLead = async (req, res, next) => {
 
 // Controlador para obtener leads paginados y filtrados
 export const getLeads = async (req, res, next) => {
+  const parsed = leadsQuerySchema.safeParse(req.query);
+
+  if (!parsed.success) {
+    return res.status(400).json({
+      status: "error",
+      errors: parsed.error.flatten().fieldErrors,
+    });
+  }
+
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const { page, limit, tipoProyecto, estado } = parsed.data;
     const skip = (page - 1) * limit;
 
     const queryFilters = {};
-    if (req.query.tipoProyecto) {
-      queryFilters.tipoProyecto = {
-        $regex: req.query.tipoProyecto,
-        $options: "i",
-      };
+    if (tipoProyecto) {
+      queryFilters.tipoProyecto = { $regex: tipoProyecto, $options: "i" };
     }
-    if (req.query.estado) {
-      queryFilters.estado = req.query.estado;
+    if (estado) {
+      queryFilters.estado = estado;
     }
 
     const { leads, total } = await getFilteredLeads(queryFilters, skip, limit);
@@ -112,14 +147,13 @@ export const getLeads = async (req, res, next) => {
   }
 };
 
-
 export const patchLeadStatus = async (req, res, next) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
       status: "error",
-      message: "El id no tiene un format valido",
+      message: "El id no tiene un formato válido",
     });
   }
 
@@ -127,8 +161,8 @@ export const patchLeadStatus = async (req, res, next) => {
 
   if (!parsed.success) {
     return res.status(400).json({
-      status: 'error',
-      message: 'Estado inválido. Los valores permitidos son: nuevo, contactado, ganado, perdido',
+      status: "error",
+      message: "Estado inválido. Los valores permitidos son: nuevo, contactado, ganado, perdido",
     });
   }
 
@@ -148,8 +182,17 @@ export const patchLeadStatus = async (req, res, next) => {
 };
 
 export const getLeadStats = async (req, res, next) => {
+  const parsed = statsQuerySchema.safeParse(req.query);
+
+  if (!parsed.success) {
+    return res.status(400).json({
+      status: "error",
+      errors: parsed.error.flatten().fieldErrors,
+    });
+  }
+
   try {
-    const data = await getLeadCountsByProject();
+    const data = await getLeadCountsByProject(parsed.data.estado);
     return res.status(200).json({ status: "ok", data });
   } catch (error) {
     next(error);

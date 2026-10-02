@@ -10,6 +10,7 @@
   --color-ink: var(--ink);
   --color-mute: var(--mute);
   --color-line: var(--line);
+  --color-nav: var(--nav-bg);
 
   --font-sans: "Inter", sans-serif;
   --font-display: "Space Grotesk", sans-serif;
