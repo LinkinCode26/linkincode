@@ -4,13 +4,14 @@ import { ACCENT_STYLES } from '../utils/accentStyles';
 export function SimulatorPlaceholder({ service }) {
   const { t } = useLanguage();
   const accent = ACCENT_STYLES[service.accent] ?? ACCENT_STYLES.brand;
+  const Icon = service.icon;
 
   return (
     <div
       className={`rounded-2xl border-2 border-dashed ${accent.border} bg-surface/40 flex flex-col items-center justify-center text-center gap-4 px-8 py-16 min-h-[320px]`}
     >
-      <div className={`w-14 h-14 rounded-2xl ${accent.iconBg} flex items-center justify-center ${accent.text} text-2xl`}>
-        <i className={`fas ${service.icon}`} aria-hidden="true" />
+      <div className={`w-14 h-14 rounded-2xl ${accent.iconBg} flex items-center justify-center ${accent.text}`}>
+        <Icon className="h-7 w-7" aria-hidden="true" />
       </div>
       <div>
         <p className="font-display font-bold text-lg text-ink mb-1">

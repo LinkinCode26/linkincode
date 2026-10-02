@@ -4,6 +4,7 @@ import { Button } from '../components/Button';
 import { GlassCard } from '../components/GlassCard';
 import { TEAM, avatarSrc } from '../data/team';
 import heroImage from '../assets/hero.png';
+import { ArrowRight, Lock, ShieldCheck, Zap } from "lucide-react";
 
 // El boceto resalta en negrita la primera parte de "4 amigos, un mismo
 // objetivo..." (antes de la coma). Como la traducción viene como un solo
@@ -57,14 +58,14 @@ export function Hero() {
                 size="large"
                 className="shadow-xl shadow-brand/30"
               >
-                {t('hero.ctaPrimary')} <i className="fas fa-arrow-right text-sm" aria-hidden="true" />
+                {t('hero.ctaPrimary')} <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Button>
 
               <a
                 href="#contacto"
                 className="flex items-center gap-3 px-6 py-4 sm:py-5 rounded-2xl border border-line bg-surface/70 backdrop-blur-md hover:border-brand/50 transition-all"
               >
-                <i className="fas fa-shield-halved text-accent text-xl" aria-hidden="true" />
+                <ShieldCheck className="h-5 w-5 text-accent" aria-hidden="true" />
                 <span className="text-sm font-medium text-mute">{t('hero.ctaSecondary')}</span>
               </a>
             </div>
@@ -94,7 +95,7 @@ export function Hero() {
                 <span className="w-[11px] h-[11px] rounded-full bg-yellow-400/70" />
                 <span className="w-[11px] h-[11px] rounded-full bg-green-400/70" />
                 <div className="ml-4 flex-1 bg-bg/60 border border-line rounded-lg px-3 py-1.5 text-[11px] text-mute font-mono flex items-center gap-2">
-                  <i className="fas fa-lock text-[9px]" aria-hidden="true" /> {t('hero.browserUrl')}
+                  <Lock className="h-2.5 w-2.5" aria-hidden="true" /> {t('hero.browserUrl')}
                 </div>
               </div>
               <img className="w-full h-[380px] object-cover" src={heroImage} alt="Panel de control de Linkincode" />
@@ -102,7 +103,7 @@ export function Hero() {
 
             <GlassCard className="absolute -bottom-8 -left-8 p-5 flex items-center gap-4 z-10">
               <div className="w-11 h-11 rounded-xl bg-accent/15 flex items-center justify-center text-accent">
-                <i className="fas fa-bolt" aria-hidden="true" />
+                <Zap className="h-5 w-5" aria-hidden="true" />
               </div>
               <div>
                 <p className="font-bold text-sm text-ink">{t('hero.deliveryTitle')}</p>

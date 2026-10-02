@@ -1,5 +1,6 @@
 import useLanguage from '../hooks/useLanguage';
 import useScrollReveal from '../hooks/useScrollReveal';
+import { ArrowRight } from "lucide-react";
 
 export function CtaPrefooter() {
   const { t } = useLanguage();
@@ -30,7 +31,7 @@ export function CtaPrefooter() {
               href="#contacto"
               className="inline-flex items-center gap-3 px-8 py-4 bg-white text-brand font-bold rounded-2xl hover:scale-105 transition-transform shadow-xl"
             >
-              {t('ctaPrefooter.button')} <i className="fas fa-arrow-right text-sm" aria-hidden="true" />
+              {t('ctaPrefooter.button')} <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </a>
           </div>
         </div>

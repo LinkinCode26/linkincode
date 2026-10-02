@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import useLanguage from "../hooks/useLanguage";
+import { Globe } from "lucide-react";
 
 // Los nombres de cada idioma se muestran en su propio idioma (endónimo),
 // por eso no salen del diccionario de traducciones.
@@ -61,7 +62,7 @@ export function LanguageDropdown({ className = "" }) {
         aria-expanded={open}
         className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-line text-[11px] font-bold uppercase tracking-wider text-mute hover:text-ink hover:border-brand transition-all"
       >
-        <i className="fas fa-globe text-[11px]" aria-hidden="true" />
+        <Globe className="h-3 w-3" aria-hidden="true" />
         {active.code}
       </button>
 

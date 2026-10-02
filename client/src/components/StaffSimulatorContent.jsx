@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import useLanguage from "../hooks/useLanguage";
 import { employees } from "../data/mock/employees";
+import { Check, X } from "lucide-react";
 
 const DAY_COUNT = 7;
 
@@ -149,16 +150,17 @@ export function StaffSimulatorContent() {
               <button
                 type="button"
                 onClick={() => toggleAttendance(emp.id)}
-                className={`w-full sm:w-auto shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
+                className={`w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
                   isPresent
                     ? "bg-accent/15 text-accent"
                     : "bg-red-400/10 text-red-400"
                 }`}
               >
-                <i
-                  className={`fas ${isPresent ? "fa-check" : "fa-xmark"} mr-1.5`}
-                  aria-hidden="true"
-                />
+                {isPresent ? (
+                  <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                ) : (
+                  <X className="h-3.5 w-3.5" aria-hidden="true" />
+                )}
                 {isPresent
                   ? t("solutions.simulator.staff.present")
                   : t("solutions.simulator.staff.absent")}

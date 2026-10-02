@@ -17,6 +17,7 @@ import {
 import useLanguage from "../hooks/useLanguage";
 import { DATE_RANGES, getDashboardDataByRange } from "../data/mock/dashboardMetrics";
 import { formatMetric } from "../utils/formatters";
+import { TrendingUp, TrendingDown } from "lucide-react";
 
 const CHART_COLORS = ["var(--brand)", "var(--accent)", "#f59e0b", "#a855f7"];
 const TRANSITION_MS = 320;
@@ -49,10 +50,11 @@ function KpiCard({ kpi, label, formatValue }) {
           positive ? "text-accent bg-accent/10" : "text-red-400 bg-red-400/10"
         }`}
       >
-        <i
-          className={`fas ${positive ? "fa-arrow-trend-up" : "fa-arrow-trend-down"} text-[9px]`}
-          aria-hidden="true"
-        />
+        {positive ? (
+          <TrendingUp className="h-3 w-3" aria-hidden="true" />
+        ) : (
+          <TrendingDown className="h-3 w-3" aria-hidden="true" />
+        )}
         {Math.abs(kpi.delta)}%
       </span>
     </div>

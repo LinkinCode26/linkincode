@@ -8,6 +8,7 @@ import ThemeToggle from "../components/ThemeToggle";
 import { AuthField } from "../components/admin/AuthField";
 import { FullScreenLoader } from "../components/admin/FullScreenLoader";
 import logoImg from "../assets/logo.png";
+import { ArrowLeft, CircleAlert, Clock, Eye, EyeOff, LoaderCircle, Lock } from "lucide-react";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -122,7 +123,7 @@ export default function AdminLogin() {
             to="/"
             className="inline-flex items-center gap-2 rounded-lg py-2 text-sm font-medium text-mute transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
           >
-            <i className="fas fa-arrow-left text-xs" aria-hidden="true" />
+            <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
             {t("admin.login.backToSite")}
           </Link>
           <div className="flex items-center gap-3">
@@ -146,7 +147,7 @@ export default function AdminLogin() {
               role="status"
               className="mt-6 flex gap-3 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-400 [[data-theme=light]_&]:text-amber-800"
             >
-              <i className="fas fa-clock mt-0.5" aria-hidden="true" />
+              <Clock className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
               <span>{t("admin.login.sessionExpired")}</span>
             </div>
           )}
@@ -157,7 +158,7 @@ export default function AdminLogin() {
                 role="alert"
                 className="flex gap-3 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-400 [[data-theme=light]_&]:text-red-700"
               >
-                <i className="fas fa-circle-exclamation mt-0.5" aria-hidden="true" />
+                <CircleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
                 <span>{formError}</span>
               </div>
             )}
@@ -197,10 +198,11 @@ export default function AdminLogin() {
                   }
                   className="flex h-11 w-11 items-center justify-center rounded-lg text-mute transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-brand"
                 >
-                  <i
-                    className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
-                    aria-hidden="true"
-                  />
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" aria-hidden="true" />
+                  ) : (
+                    <Eye className="h-5 w-5" aria-hidden="true" />
+                  )}
                 </button>
               }
             />
@@ -212,14 +214,14 @@ export default function AdminLogin() {
               className="w-full aria-disabled:cursor-not-allowed aria-disabled:opacity-70"
             >
               {loading && (
-                <i className="fas fa-circle-notch fa-spin" aria-hidden="true" />
+                <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" />
               )}
               {loading ? t("admin.login.submitting") : t("admin.login.submit")}
             </Button>
           </form>
 
           <p className="mt-6 flex items-center gap-2 text-xs text-mute">
-            <i className="fas fa-lock" aria-hidden="true" />
+            <Lock className="h-3.5 w-3.5" aria-hidden="true" />
             {t("admin.login.restricted")}
           </p>
         </div>

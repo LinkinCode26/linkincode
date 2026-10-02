@@ -5,6 +5,7 @@ import { LeadsPanel } from "../components/admin/LeadsPanel";
 import ThemeToggle from "../components/ThemeToggle";
 import LanguageDropdown from "../components/LanguageDropdown";
 import logoImg from "../assets/logo.png";
+import { LogOut } from "lucide-react";
 
 // Placeholder de /admin: confirma que la ruta protegida funciona. Al
 // cerrar sesión, ProtectedRoute redirige solo a /admin/login.
@@ -30,7 +31,7 @@ export default function AdminDashboard() {
               onClick={() => logout()}
               aria-label={t("admin.dashboard.logout")}
             >
-              <i className="fas fa-right-from-bracket" aria-hidden="true" />
+              <LogOut className="h-4 w-4" aria-hidden="true" />
               <span className="hidden sm:inline">
                 {t("admin.dashboard.logout")}
               </span>
