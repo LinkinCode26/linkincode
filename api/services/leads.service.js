@@ -7,7 +7,7 @@ export const createLead = async (data) => {
 
 export const getFilteredLeads = async (queryFilters, skip, limit) => {
   const leads = await Lead.find(queryFilters)
-    .sort({ createdAt: -1 })
+    .sort({ createdAt: -1, _id: -1 })
     .skip(skip)
     .limit(limit);
 
@@ -24,8 +24,9 @@ export const updateLeadStatus = async (id, estado) => {
   return lead;
 };
 
-export const getLeadCountsByProject = async () => {
+export const getLeadCountsByProject = async (estado) => {
   const rows = await Lead.aggregate([
+    ...(estado ? [{ $match: { estado } }] : []),
     { $group: { _id: "$tipoProyecto", total: { $sum: 1 } } },
   ]);
   return rows.map(({ _id, total }) => ({ tipoProyecto: _id, total }));

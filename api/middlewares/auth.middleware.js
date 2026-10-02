@@ -13,7 +13,7 @@ export const protect = async (req, res, next) => {
 
   let decoded;
   try {
-    decoded = jwt.verify(header.slice(7), process.env.JWT_SECRET);
+    decoded = jwt.verify(header.slice(7), process.env.JWT_SECRET, { algorithms: ["HS256"] });
   } catch {
     return res.status(401).json({ message: "Token inválido o expirado" });
   }

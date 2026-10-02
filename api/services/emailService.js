@@ -10,13 +10,23 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+/**
+ * Escapa caracteres peligrosos para evitar inyección de HTML
+ */
+const escapeHtml = (value = "") =>
+  String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 
 /**
  * Mail interno al equipo con todos los datos del lead
  */
 export async function sendLeadNotificationToTeam(lead) {
   console.log("➡️ [Nodemailer] Intentando enviar mail interno al equipo...");
-  
+
   const htmlContent = `
     <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.5;">
       <h2 style="color: #0d6efd; border-bottom: 2px solid #eee; padding-bottom: 8px;">
@@ -27,23 +37,23 @@ export async function sendLeadNotificationToTeam(lead) {
       <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
         <tr style="background-color: #f8f9fa;">
           <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold; width: 35%;">Nombre:</td>
-          <td style="padding: 10px; border: 1px solid #dee2e6;">${lead.nombre}</td>
+          <td style="padding: 10px; border: 1px solid #dee2e6;">${escapeHtml(lead.nombre)}</td>
         </tr>
         <tr>
           <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Email:</td>
-          <td style="padding: 10px; border: 1px solid #dee2e6;"><a href="mailto:${lead.email}">${lead.email}</a></td>
+          <td style="padding: 10px; border: 1px solid #dee2e6;"><a href="mailto:${escapeHtml(lead.email)}">${escapeHtml(lead.email)}</a></td>
         </tr>
         <tr style="background-color: #f8f9fa;">
           <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Tipo de Proyecto:</td>
-          <td style="padding: 10px; border: 1px solid #dee2e6;">${lead.tipoProyecto}</td>
+          <td style="padding: 10px; border: 1px solid #dee2e6;">${escapeHtml(lead.tipoProyecto)}</td>
         </tr>
         <tr>
           <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Mensaje:</td>
-          <td style="padding: 10px; border: 1px solid #dee2e6;">${lead.mensaje}</td>
+          <td style="padding: 10px; border: 1px solid #dee2e6; white-space: pre-wrap;">${escapeHtml(lead.mensaje)}</td>
         </tr>
         <tr style="background-color: #f8f9fa;">
           <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Origen:</td>
-          <td style="padding: 10px; border: 1px solid #dee2e6;">${lead.origen || "Web / No especificado"}</td>
+          <td style="padding: 10px; border: 1px solid #dee2e6;">${escapeHtml(lead.origen || "Web / No especificado")}</td>
         </tr>
         <tr>
           <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Fecha:</td>
@@ -76,8 +86,8 @@ export async function sendLeadAutoReply(lead) {
 
   const htmlContent = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 25px; border: 1px solid #e2e8f0; border-radius: 8px; color: #2d3748;">
-      <h2 style="color: #1a202c; margin-top: 0;">¡Hola ${lead.nombre}!</h2>
-      <p style="font-size: 15px;">Muchas gracias por comunicarte con nosotros por tu proyecto de <strong>${lead.tipoProyecto}</strong>.</p>
+      <h2 style="color: #1a202c; margin-top: 0;">¡Hola ${escapeHtml(lead.nombre)}!</h2>
+      <p style="font-size: 15px;">Muchas gracias por comunicarte con nosotros por tu proyecto de <strong>${escapeHtml(lead.tipoProyecto)}</strong>.</p>
       <p style="font-size: 15px;">Hemos recibido tu consulta correctamente y nuestro equipo ya la está revisando.</p>
       
       <div style="background-color: #ebf8ff; border-left: 4px solid #3182ce; padding: 15px; margin: 20px 0; border-radius: 4px;">
