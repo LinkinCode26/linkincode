@@ -8,7 +8,9 @@
     "dev": "nodemon index.js",
     "start": "node index.js",
     "lint": "eslint .",
-    "build": "echo 'No build required for API'"
+    "build": "echo 'No build required for API'",
+    "create-admin": "node scripts/create-admin.js",
+    "seed:leads": "node scripts/seed-leads.js"
   },
   "keywords": [],
   "author": "",
