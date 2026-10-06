@@ -1,0 +1,481 @@
+{
+  "info": {
+    "_postman_id": "c7a8d541-6e3e-4b2a-85d4-42f0a1c1d901",
+    "name": "LinkinCode API",
+    "description": "Colección completa de endpoints para Backend API (Auth, Leads, Health) con ejemplos de request y response.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Comprueba el estado del servidor y la conexión a MongoDB."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/health",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "health"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"ok\",\n  \"db\": \"connected\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"usuario@ejemplo.com\",\n  \"password\": \"Password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Crea una cuenta nueva de usuario."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"_id\": \"660c1f54b3a1a3d9e4a8b123\",\n  \"email\": \"usuario@ejemplo.com\"\n}"
+            },
+            {
+              "name": "400 Bad Request - Usuario duplicado",
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"El usuario ya existe\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.token) {",
+                  "        pm.environment.set(\"token\", jsonData.token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"usuario@ejemplo.com\",\n  \"password\": \"Password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Autenticación de usuario. Guarda automáticamente el token si la respuesta es 200."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"_id\": \"660c1f54b3a1a3d9e4a8b123\",\n  \"email\": \"usuario@ejemplo.com\",\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGMxZjU0YjNhMWEzZDllNGE4YjEyMyIsImlhdCI6MTYxNjIzOTAyMn0.signature\"\n}"
+            },
+            {
+              "name": "401 Unauthorized",
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Email o contrase\\u00f1a incorrectos\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Current User (Me)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Obtiene la información del usuario autenticado."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"_id\": \"660c1f54b3a1a3d9e4a8b123\",\n  \"email\": \"usuario@ejemplo.com\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Leads",
+      "item": [
+        {
+          "name": "Create Lead (Public)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Agust\\u00edn Ruarte\",\n  \"email\": \"agustin@ejemplo.com\",\n  \"tipoProyecto\": \"Desarrollo Web\",\n  \"mensaje\": \"Hola, me gustar\\u00eda solicitar una cotizaci\\u00f3n para un sistema web.\",\n  \"origen\": \"landing-page\",\n  \"website\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/leads",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "leads"
+              ]
+            },
+            "description": "Envío de formulario público de contacto."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"ok\",\n  \"lead\": {\n    \"_id\": \"660c2394b3a1a3d9e4a8b456\",\n    \"nombre\": \"Agust\\u00edn Ruarte\",\n    \"email\": \"agustin@ejemplo.com\",\n    \"tipoProyecto\": \"Desarrollo Web\",\n    \"mensaje\": \"Hola, me gustar\\u00eda solicitar una cotizaci\\u00f3n para un sistema web.\",\n    \"origen\": \"landing-page\",\n    \"estado\": \"nuevo\",\n    \"createdAt\": \"2026-10-05T15:30:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "400 Bad Request - Validación",
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"errors\": {\n    \"email\": [\n      \"el email no es v\\u00e1lido\"\n    ],\n    \"nombre\": [\n      \"el nombre es obligatorio\"\n    ]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Leads (Paginated & Filtered)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/leads?page=1&limit=10&estado=nuevo",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "leads"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "estado",
+                  "value": "nuevo"
+                },
+                {
+                  "key": "tipoProyecto",
+                  "value": "Web",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Listado de leads paginados y con filtros opcionales."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"ok\",\n  \"data\": [\n    {\n      \"_id\": \"660c2394b3a1a3d9e4a8b456\",\n      \"nombre\": \"Agust\\u00edn Ruarte\",\n      \"email\": \"agustin@ejemplo.com\",\n      \"tipoProyecto\": \"Desarrollo Web\",\n      \"mensaje\": \"Hola...\",\n      \"estado\": \"nuevo\",\n      \"createdAt\": \"2026-10-05T15:30:00.000Z\"\n    }\n  ],\n  \"pagination\": {\n    \"totalItems\": 25,\n    \"currentPage\": 1,\n    \"totalPages\": 3,\n    \"pageSize\": 10\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Lead Stats",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/leads/stats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "leads",
+                "stats"
+              ],
+              "query": [
+                {
+                  "key": "estado",
+                  "value": "ganado",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Estadísticas agrupadas por tipo de proyecto."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"ok\",\n  \"data\": [\n    {\n      \"tipoProyecto\": \"Desarrollo Web\",\n      \"total\": 12\n    },\n    {\n      \"tipoProyecto\": \"Consultor\\u00eda\",\n      \"total\": 5\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Patch Lead Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"contactado\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/leads/660c2394b3a1a3d9e4a8b456",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "leads",
+                "660c2394b3a1a3d9e4a8b456"
+              ]
+            },
+            "description": "Actualiza el estado de un lead existente."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"ok\",\n  \"lead\": {\n    \"_id\": \"660c2394b3a1a3d9e4a8b456\",\n    \"nombre\": \"Agust\\u00edn Ruarte\",\n    \"estado\": \"contactado\"\n  }\n}"
+            },
+            {
+              "name": "400 Bad Request - Estado inválido",
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"Estado inv\\u00e1lido. Los valores permitidos son: nuevo, contactado, ganado, perdido\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
