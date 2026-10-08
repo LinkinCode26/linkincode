@@ -4,36 +4,53 @@ Extraídos directamente del `:root` y `[data-theme="light"]` del CSS del boceto 
 
 ## Modo oscuro (default)
 
-| Variable    | RGB              | Hex       | Uso                                                    |
-|-------------|-------------------|-----------|---------------------------------------------------------|
-| `--bg`      | `10 14 23`        | `#0A0E17` | Fondo general de la página                              |
-| `--surface` | `17 24 39`        | `#111827` | Fondo de cards, secciones y superficies elevadas         |
-| `--brand`   | `59 130 246`      | `#3B82F6` | Color primario (botones, links activos, acentos azules)  |
-| `--accent`  | `6 182 212`       | `#06B6D4` | Color secundario/acento (badges, íconos, degradados)     |
-| `--ink`     | `241 245 249`     | `#F1F5F9` | Texto principal                                          |
-| `--mute`    | `148 163 184`     | `#94A3B8` | Texto secundario / descripciones                         |
-| `--line`    | `30 41 59`        | `#1E293B` | Bordes y separadores sutiles                             |
+| Variable        | RGB            | Hex       | Uso                                                                    |
+|-----------------|----------------|-----------|------------------------------------------------------------------------|
+| `--bg`          | `10 14 23`     | `#0A0E17` | Fondo general de la página                                             |
+| `--surface`     | `17 24 39`     | `#111827` | Fondo de cards, secciones y superficies elevadas                       |
+| `--brand`       | `59 130 246`   | `#3B82F6` | Color primario (botones, links activos, acentos azules)                |
+| `--accent`      | `6 182 212`    | `#06B6D4` | Color secundario/acento (badges, íconos, degradados)                   |
+| `--ink`         | `241 245 249`  | `#F1F5F9` | Texto principal                                                        |
+| `--mute`        | `148 163 184`  | `#94A3B8` | Texto secundario / descripciones                                       |
+| `--line`        | `30 41 59`     | `#1E293B` | Bordes y separadores sutiles                                           |
+| `--line-strong` | `100 116 139`  | `#64748B` | Borde de controles interactivos (inputs, botones outline, chips, tabs) |
 
 ## Modo claro
 
-| Variable    | RGB              | Hex       | Uso                                                    |
-|-------------|-------------------|-----------|---------------------------------------------------------|
-| `--bg`      | `248 250 252`     | `#F8FAFC` | Fondo general de la página                              |
-| `--surface` | `239 246 255`     | `#EFF6FF` | Fondo de cards, secciones y superficies elevadas         |
-| `--brand`   | `37 99 235`       | `#2563EB` | Color primario                                           |
-| `--accent`  | `8 145 178`       | `#0891B2` | Color secundario/acento                                  |
-| `--ink`     | `15 23 42`        | `#0F172A` | Texto principal                                          |
-| `--mute`    | `71 85 105`       | `#475569` | Texto secundario / descripciones                         |
-| `--line`    | `226 232 240`     | `#E2E8F0` | Bordes y separadores sutiles                             |
+| Variable        | RGB            | Hex       | Uso                                                                    |
+|-----------------|----------------|-----------|------------------------------------------------------------------------|
+| `--bg`          | `248 250 252`  | `#F8FAFC` | Fondo general de la página                                             |
+| `--surface`     | `239 246 255`  | `#EFF6FF` | Fondo de cards, secciones y superficies elevadas                       |
+| `--brand`       | `37 99 235`    | `#2563EB` | Color primario                                                         |
+| `--accent`      | `8 145 178`    | `#0891B2` | Color secundario/acento                                                |
+| `--ink`         | `15 23 42`     | `#0F172A` | Texto principal                                                        |
+| `--mute`        | `71 85 105`    | `#475569` | Texto secundario / descripciones                                       |
+| `--line`        | `226 232 240`  | `#E2E8F0` | Bordes y separadores sutiles                                           |
+| `--line-strong` | `100 116 139`  | `#64748B` | Borde de controles interactivos (inputs, botones outline, chips, tabs) |
 
 ## Tokens adicionales (usados en navbar y marquee de tecnologías)
 
-| Variable      | Oscuro (RGB / Hex)              | Claro (RGB / Hex)                | Uso                                      |
-|---------------|----------------------------------|-----------------------------------|-------------------------------------------|
-| `--nav-bg`    | `4 6 12` / `#04060C`             | `255 255 255` / `#FFFFFF`         | Fondo del navbar fijo                     |
-| `--nav-line`  | `59 130 246` / `#3B82F6`         | `37 99 235` / `#2563EB`           | Borde del navbar                          |
-| `--pill-bg`   | `10 14 23` / `#0A0E17`           | `255 255 255` / `#FFFFFF`         | Fondo de los "pills" del marquee de tech  |
-| `--pill-glow` | `56 189 248` / `#38BDF8`         | `37 99 235` / `#2563EB`           | Resplandor/glow de los pills              |
+| Variable      | Oscuro (RGB / Hex)       | Claro (RGB / Hex)         | Uso                                      |
+|---------------|--------------------------|---------------------------|------------------------------------------|
+| `--nav-bg`    | `4 6 12` / `#04060C`     | `255 255 255` / `#FFFFFF` | Fondo del navbar fijo                    |
+| `--nav-line`  | `59 130 246` / `#3B82F6` | `37 99 235` / `#2563EB`   | Borde del navbar                         |
+| `--pill-bg`   | `10 14 23` / `#0A0E17`   | `255 255 255` / `#FFFFFF` | Fondo de los "pills" del marquee de tech |
+| `--pill-glow` | `56 189 248` / `#38BDF8` | `37 99 235` / `#2563EB`   | Resplandor/glow de los pills             |
+
+## Bordes: `--line` vs `--line-strong`
+
+`--line` es decorativo (separadores, cards, paneles, badges, bloques de código). Contra el fondo da ~1.2:1 en ambos temas, a propósito: separa sin pesar.
+
+`--line-strong` es para todo control que el usuario manipula (inputs, selects, textareas, botones outline o de ícono, chips y tabs inactivos, swatches). WCAG 1.4.11 pide 3:1 para el borde de un componente de UI, y este valor lo cumple en los dos temas:
+
+| Tema   | vs `--bg` | vs `--surface` |
+|--------|-----------|----------------|
+| Claro  | 4.55:1    | 4.37:1         |
+| Oscuro | 4.06:1    | 3.73:1         |
+
+Clase de Tailwind: `border-line-strong`.
+
+No bajarle la opacidad a un borde interactivo: con `opacity-70` cae a ~2.6:1 y deja de cumplir. Hasta `opacity-90` (~3.7:1) se mantiene.
 
 ## Formato de uso
 

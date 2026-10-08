@@ -63,7 +63,7 @@ export function Hero() {
 
               <a
                 href="#contacto"
-                className="flex items-center gap-3 px-6 py-4 sm:py-5 rounded-2xl border border-line bg-surface/70 backdrop-blur-md hover:border-brand/50 transition-all"
+                className="flex items-center gap-3 px-6 py-4 sm:py-5 rounded-2xl border border-line-strong bg-surface/70 backdrop-blur-md hover:border-brand/50 transition-all"
               >
                 <ShieldCheck className="h-5 w-5 text-accent" aria-hidden="true" />
                 <span className="text-sm font-medium text-mute">{t('hero.ctaSecondary')}</span>

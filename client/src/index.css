@@ -12,6 +12,7 @@
   --color-line: var(--line);
   --color-nav: var(--nav-bg);
   --color-line-strong: var(--line-strong);
+  --shadow-card: var(--card-shadow);
 
   --font-sans: "Inter", sans-serif;
   --font-display: "Space Grotesk", sans-serif;
@@ -51,6 +52,7 @@
   --mute: rgb(148 163 184);
   --line: rgb(30 41 59);
   --line-strong: rgb(100 116 139);
+  --card-shadow: none;
   --nav-bg: rgb(4 6 12);
   --nav-line: rgb(59 130 246);
   --pill-bg: rgb(10 14 23);
@@ -71,6 +73,8 @@
   --ink: rgb(15 23 42);
   --mute: rgb(71 85 105);
   --line: rgb(226 232 240);
+  --card-shadow:
+    0 1px 2px rgb(15 23 42 / 0.06), 0 8px 24px rgb(15 23 42 / 0.08);
   --nav-bg: rgb(255 255 255);
   --nav-line: rgb(37 99 235);
   --pill-bg: rgb(255 255 255);

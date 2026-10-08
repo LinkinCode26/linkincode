@@ -85,7 +85,7 @@ export const ApiSimulatorContent = () => {
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-left transition-colors cursor-pointer ${
                   isActive
                     ? "border-brand bg-surface"
-                    : "border-line bg-surface/40 hover:border-brand/40"
+                    : "border-line-strong bg-surface/40 hover:border-brand/40"
                 }`}
               >
                 <span

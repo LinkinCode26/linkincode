@@ -12,7 +12,7 @@ export function AuthField({ id, label, error, trailing, className = "", ...props
 
   const stateClasses = error
     ? "border-red-500 focus-visible:ring-red-500/30"
-    : "border-line focus:border-brand focus-visible:ring-brand/30";
+    : "border-line-strong focus:border-brand focus-visible:ring-brand/30";
 
   return (
     <div className={className}>

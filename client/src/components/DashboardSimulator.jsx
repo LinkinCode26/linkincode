@@ -154,7 +154,7 @@ export function DashboardSimulator() {
               className={`px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider border transition-all disabled:cursor-wait ${
                 isActive
                   ? "bg-brand/15 border-brand text-brand"
-                  : "bg-surface border-line text-mute hover:text-ink hover:border-brand/40"
+                  : "bg-surface border-line-strong text-mute hover:text-ink hover:border-brand/40"
               }`}
             >
               {t(`solutions.simulator.dashboard.ranges.${id}`)}

@@ -71,7 +71,7 @@ export function LeadsPanel() {
             id="leads-estado"
             value={filters.estado}
             onChange={(e) => setEstado(e.target.value)}
-            className="bg-surface border border-line rounded-xl px-4 py-2.5 text-sm text-ink outline-none transition-colors focus:border-brand"
+            className="bg-surface border border-line-strong rounded-xl px-4 py-2.5 text-sm text-ink outline-none transition-colors focus:border-brand"
           >
             <option value="all">{L("statusAll")}</option>
             {ESTADOS.map((estado) => (
@@ -100,7 +100,7 @@ export function LeadsPanel() {
               className={`flex items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-bold transition-all ${
                 isActive
                   ? "bg-brand/15 border-brand text-brand"
-                  : "bg-surface border-line text-mute hover:text-ink hover:border-brand/40"
+                  : "bg-surface border-line-strong text-mute hover:text-ink hover:border-brand/40"
               }`}
             >
               {chip.label}

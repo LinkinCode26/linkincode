@@ -49,7 +49,7 @@ export function SimulatorShell({ title, children, onExit }) {
       className={
         isFullscreen
           ? "fixed inset-0 z-[100] bg-bg flex flex-col overflow-y-auto overscroll-contain p-4 sm:p-6 lg:p-10"
-          : "relative bg-surface rounded-2xl border border-line p-6 flex flex-col shadow-lg transition-all duration-300"
+          : "relative bg-surface rounded-2xl border border-line p-6 flex flex-col shadow-card transition-all duration-300"
       }
       style={isFullscreen ? { minHeight: "100dvh" } : undefined}
     >

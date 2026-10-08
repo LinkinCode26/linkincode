@@ -35,7 +35,7 @@ export function Button({
     // igual que se hizo con --brand-text) antes de usarlo con texto blanco.
     accent: "bg-accent hover:bg-accent/90 text-white shadow-accent/25",
     outline:
-      "border border-line bg-surface/70 backdrop-blur-md hover:border-brand/50 text-mute hover:text-ink shadow-none",
+      "border border-line-strong bg-surface/70 backdrop-blur-md hover:border-brand/50 text-mute hover:text-ink shadow-none",
   };
 
   const combinedClassName = `${baseStyles} ${sizeStyles[size]} ${variants[variant]} ${className}`;
