@@ -4,6 +4,9 @@ on:
   pull_request:
     branches:
       - develop
+      - main
+  # Permite que cd.yml reutilice este mismo pipeline como paso previo al deploy
+  workflow_call:
 
 jobs:
   # ==========================================
@@ -66,7 +69,7 @@ jobs:
       - name: Ejecutar tests de integración (Jest + Supertest)
         run: npm test
         env:
-          JWT_SECRET: secreto_de_ci        
+          JWT_SECRET: secreto_de_ci
 
       # Si no hay script de build, corre solo si existe sin romper el pipeline
       - name: Validar Build (si aplica)
