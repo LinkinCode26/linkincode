@@ -11,8 +11,8 @@ export function AuthField({ id, label, error, trailing, className = "", ...props
   const errorId = error ? `${id}-error` : undefined;
 
   const stateClasses = error
-    ? "border-red-500 focus-visible:ring-red-500/30"
-    : "border-line-strong focus:border-brand focus-visible:ring-brand/30";
+    ? "border-red-500 focus-visible:ring-red-500"
+    : "border-line-strong focus:border-brand focus-visible:ring-brand";
 
   return (
     <div className={className}>

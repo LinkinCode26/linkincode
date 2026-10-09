@@ -9,13 +9,14 @@ import { CircleAlert, LoaderCircle } from "lucide-react";
 const ESTADOS = ["nuevo", "contactado", "ganado", "perdido"];
 
 const ESTADO_STYLES = {
-  nuevo: "bg-brand/15 border-brand/30 text-brand",
+  nuevo:
+    "bg-brand/15 border-current text-brand [[data-theme=light]_&]:text-brand-text",
   contactado:
-    "bg-amber-500/15 border-amber-500/30 text-amber-400 [[data-theme=light]_&]:text-amber-800",
+    "bg-amber-500/15 border-current text-amber-400 [[data-theme=light]_&]:text-amber-800",
   ganado:
-    "bg-emerald-500/15 border-emerald-500/30 text-emerald-400 [[data-theme=light]_&]:text-emerald-800",
+    "bg-emerald-500/15 border-current text-emerald-400 [[data-theme=light]_&]:text-emerald-800",
   perdido:
-    "bg-red-500/15 border-red-500/30 text-red-400 [[data-theme=light]_&]:text-red-700",
+    "bg-red-500/15 border-current text-red-400 [[data-theme=light]_&]:text-red-700",
 };
 
 export function LeadsPanel() {
@@ -181,12 +182,12 @@ export function LeadsPanel() {
                       value={lead.estado}
                       disabled={pendingIds.includes(lead._id)}
                       onChange={(e) => changeStatus(lead, e.target.value)}
-                      className={`w-full rounded-xl border px-3 py-2 text-xs font-bold uppercase tracking-wider outline-none transition-colors focus-visible:ring-2 focus-visible:ring-brand/30 disabled:opacity-60 lg:w-auto ${
+                      className={`w-full rounded-xl border px-3 py-2 text-xs cursor-pointer font-bold uppercase tracking-wider outline-none transition-colors focus-visible:ring-2 focus-visible:ring-brand disabled:opacity-60 lg:w-auto ${
                         ESTADO_STYLES[lead.estado] ?? ESTADO_STYLES.nuevo
                       }`}
                     >
                       {ESTADOS.map((estado) => (
-                        <option key={estado} value={estado} className="bg-surface text-ink">
+                        <option key={estado} value={estado} className="bg-surface cursor-pointer text-ink">
                           {L(`status.${estado}`)}
                         </option>
                       ))}

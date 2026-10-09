@@ -52,6 +52,56 @@ Clase de Tailwind: `border-line-strong`.
 
 No bajarle la opacidad a un borde interactivo: con `opacity-70` cae a ~2.6:1 y deja de cumplir. Hasta `opacity-90` (~3.7:1) se mantiene.
 
+
+
+## Controles de estado y foco
+
+### Chips y selects de estado (`LeadsPanel`)
+
+El borde de un select de estado no usa un color con opacidad baja (`border-brand/30`):
+sobre `--surface` clara da ~1.5:1 y no cumple WCAG 1.4.11 (3:1). Tampoco alcanza con
+subir la opacidad: `amber-500` y `emerald-500` puros dan ~2–2.5:1 sobre fondo claro
+aun al 100%.
+
+Regla: el borde usa el color del texto con `border-current`. Esos colores dan entre
+4.8:1 y 10.6:1 contra `--surface`, así que el borde queda por encima de 3:1 sin
+definir un tono nuevo por estado.
+
+| Estado       | Texto oscuro  | Texto claro                     |
+|--------------|---------------|---------------------------------|
+| `nuevo`      | `brand`       | `brand-text` (no `brand`)       |
+| `contactado` | `amber-400`   | `amber-800`                     |
+| `ganado`     | `emerald-400` | `emerald-800`                   |
+| `perdido`    | `red-400`     | `red-700`                       |
+
+El relleno tintado (`bg-*/15`) sigue siendo decorativo: nunca debe ser la única pista
+de que el elemento es interactivo.
+
+### Indicador de foco
+
+El anillo de foco es un componente de UI y también debe cumplir 3:1 contra el fondo.
+Un `ring-brand/30` da ~1.5:1 y no es visible para quien navega con teclado.
+
+- Usar `focus-visible:ring-2 focus-visible:ring-brand` (opacidad completa).
+- En estado de error: `focus-visible:ring-red-500`.
+- Prohibido bajarle la opacidad al anillo de foco (`ring-*/30`, `/50`, etc.).
+- Aplica a inputs y selects con `outline-none`: si se quita el outline nativo, el anillo
+  es obligatorio.
+
+Excepción: los estados decorativos que no son foco (ej: el `ring-brand/50` del botón
+Contacto activo en la navbar) pueden usar opacidad.
+
+## Sombra de cards: `--shadow-card`
+
+Las cards de primer nivel (las que se apoyan directo sobre el fondo de la página) usan
+`shadow-card`. En modo claro `--surface` casi no se distingue de `--bg` (1.04:1) y el
+borde `--line` tampoco alcanza, así que la separación la da la sombra. En modo oscuro
+el token vale `none`.
+
+Regla: `shadow-card` solo en cards de primer nivel. Los paneles anidados dentro de otra
+card (KPIs, filas de lista, resultados de un simulador) no llevan sombra, porque una
+sombra sobre otra se ve pesada.
+
 ## Formato de uso
 
 Las variables se declaran **ya envueltas en `rgb()`** (ej: `--bg: rgb(10 14 23);`), no como tripleta cruda.
