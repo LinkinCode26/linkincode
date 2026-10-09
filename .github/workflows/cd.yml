@@ -1,0 +1,84 @@
+name: CD Pipeline (Deploy a producción)
+
+# Se ejecuta al mergear (push) a main.
+# Orden: tests -> deploy. Si los tests fallan, ningún deploy se ejecuta.
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+# Un solo deploy a producción a la vez; si llegan dos merges seguidos,
+# el segundo espera al primero (no se cancela un deploy a mitad de camino).
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  # ==========================================
+  # 1. TESTS (gate obligatorio)
+  #    Reutiliza ci.yml: lint + build del front, lint + tests del back.
+  # ==========================================
+  tests:
+    name: Tests
+    uses: ./.github/workflows/ci.yml
+
+  # ==========================================
+  # 2. BACKEND -> Render (deploy hook)
+  #    Requiere Auto-Deploy en "Off" en Render (ver README / instrucciones).
+  # ==========================================
+  deploy-backend:
+    name: Deploy backend (Render)
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Disparar deploy en Render
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo "::error::Falta el secret RENDER_DEPLOY_HOOK_URL"
+            exit 1
+          fi
+          # ref = commit exacto que pasó los tests
+          curl --fail --silent --show-error --output /dev/null \
+            --retry 3 --retry-delay 5 \
+            -X POST "${RENDER_DEPLOY_HOOK_URL}&ref=${GITHUB_SHA}"
+          echo "Deploy de Render disparado para ${GITHUB_SHA}"
+
+  # ==========================================
+  # 3. FRONTEND -> Vercel (CLI, build prebuilt)
+  #    El build real corre acá, desde el commit testeado.
+  # ==========================================
+  deploy-frontend:
+    name: Deploy frontend (Vercel)
+    needs: tests
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar Vercel CLI
+        run: npm install --global vercel@latest
+
+      # Se ejecuta desde la raíz del repo: el Root Directory (client)
+      # ya está definido en la configuración del proyecto en Vercel.
+      - name: Traer configuración del proyecto
+        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+
+      - name: Build
+        run: vercel build --prod --token="$VERCEL_TOKEN"
+
+      - name: Deploy a producción
+        run: vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"
