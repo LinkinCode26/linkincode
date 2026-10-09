@@ -73,7 +73,7 @@ export function Select({
         id={selectId}
         aria-invalid={hasError || undefined}
         aria-errormessage={hasError ? `${selectId}-error` : undefined}
-        className={`${baseInput} ${borderState}`}
+        className={`${baseInput} ${borderState} cursor-pointer disabled:cursor-not-allowed`}
         {...props}
       >
         <option value="">{placeholder ?? "Seleccioná una opción"}</option>

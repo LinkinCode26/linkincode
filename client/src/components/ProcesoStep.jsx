@@ -12,7 +12,7 @@ const ProcesoStep = ({ step, title, description, isRight, delay }) => {
         <div className={`proceso-dot ${colors.dot} text-white`}>
           {step.number}
         </div>
-        <div className="proceso-card p-6 sm:p-7 rounded-2xl border border-line bg-bg shadow-card">
+        <div className="proceso-card p-6 sm:p-7 rounded-2xl border border-line hover:scale-105 hover:-translate-y-1 transition-all duration-300 bg-bg shadow-card">
           <div
             className={`w-12 h-12 rounded-xl ${colors.iconBg} flex items-center justify-center ${colors.iconText} mb-4`}
           >

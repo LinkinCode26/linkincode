@@ -212,7 +212,7 @@ export function Solutions() {
                 aria-selected={isActive}
                 aria-controls={`panel-${service.id}`}
                 onClick={() => handleTabChange(service.id)}
-                className={`flex items-center justify-center gap-2 px-4 py-4 rounded-xl border transition-colors duration-300
+                className={`flex items-center cursor-pointer justify-center gap-2 px-4 py-4 rounded-xl border transition-colors duration-300
                   w-[calc((100%-8px)/2)] 
                   sm:w-[calc((100%-16px)/3)] 
                   lg:w-[calc((100%-24px)/4)]
@@ -239,7 +239,8 @@ export function Solutions() {
           className="bg-bg rounded-[2.5rem] border border-line p-7 sm:p-12 shadow-card"
         >
           <div
-            className={`grid gap-8 lg:gap-12 items-stretch transition-[grid-template-columns] duration-500 ease-in-out ${
+            key={`${activeService.id}-${isSimulating ? "sim" : "info"}`}
+            className={`grid gap-8 lg:gap-12 items-stretch motion-safe:animate-fade-up ${
               isSimulating ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2"
             }`}
           >
