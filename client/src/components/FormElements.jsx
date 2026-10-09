@@ -9,7 +9,7 @@ export function Input({ id, label, hasError = false, className = "", ...props })
     "w-full bg-surface border rounded-xl px-5 py-4 text-ink outline-none transition-all";
   const borderState = hasError
     ? "border-red-500 focus:border-red-500"
-    : "border-line focus:border-brand";
+    : "border-line-strong focus:border-brand";
 
   // Fallback a props.name si no viene id (útil cuando el form usa name).
   const inputId = id ?? props.name;
@@ -55,7 +55,7 @@ export function Select({
     "w-full bg-surface border rounded-xl px-5 py-4 text-ink outline-none transition-all";
   const borderState = hasError
     ? "border-red-500 focus:border-red-500"
-    : "border-line focus:border-brand";
+    : "border-line-strong focus:border-brand";
 
   const selectId = id ?? props.name;
 
@@ -104,7 +104,7 @@ export function Textarea({
     "w-full bg-surface border rounded-xl px-5 py-4 text-ink outline-none transition-all";
   const borderState = hasError
     ? "border-red-500 focus:border-red-500"
-    : "border-line focus:border-brand";
+    : "border-line-strong focus:border-brand";
 
   const textareaId = id ?? props.name;
 

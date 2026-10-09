@@ -55,7 +55,7 @@ export const StockSimulatorContent = () => {
           type="button"
           onClick={() => handleStockChange(product.id, -1)}
           aria-label={`Restar una unidad de ${translatedName}`}
-          className="w-8 h-8 rounded-lg bg-bg border border-line text-red-400 [[data-theme=light]_&]:text-red-700 font-bold hover:bg-red-400/10 hover:border-red-400/40 transition-colors cursor-pointer"
+          className="w-8 h-8 rounded-lg bg-bg border border-line-strong text-red-400 [[data-theme=light]_&]:text-red-700 font-bold hover:bg-red-400/10 hover:border-red-400/40 transition-colors cursor-pointer"
         >
           −
         </button>
@@ -66,7 +66,7 @@ export const StockSimulatorContent = () => {
           type="button"
           onClick={() => handleStockChange(product.id, 1)}
           aria-label={`Sumar una unidad de ${translatedName}`}
-          className="w-8 h-8 rounded-lg bg-bg border border-line text-emerald-500 [[data-theme=light]_&]:text-emerald-700 font-bold hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-colors cursor-pointer"
+          className="w-8 h-8 rounded-lg bg-bg border border-line-strong text-emerald-500 [[data-theme=light]_&]:text-emerald-700 font-bold hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-colors cursor-pointer"
         >
           +
         </button>

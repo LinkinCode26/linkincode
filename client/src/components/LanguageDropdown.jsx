@@ -60,7 +60,7 @@ export function LanguageDropdown({ className = "" }) {
         onClick={() => setOpen((prev) => !prev)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-line text-[11px] font-bold uppercase tracking-wider text-mute hover:text-ink hover:border-brand transition-all"
+        className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-line-strong text-[11px] font-bold uppercase tracking-wider text-mute hover:text-ink hover:border-brand transition-all"
       >
         <Globe className="h-3 w-3" aria-hidden="true" />
         {active.code}
@@ -127,7 +127,7 @@ export function LanguageToggleMobile({ className = "" }) {
             className={`px-3 py-1.5 rounded-lg border text-[11px] font-bold transition-all ${
               isActive
                 ? "bg-surface border-brand text-brand"
-                : "border-line text-mute"
+                : "border-line-strong text-mute"
             }`}
           >
             {LANGUAGE_LABELS[code].code}

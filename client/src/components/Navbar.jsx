@@ -81,7 +81,7 @@ export function Navbar() {
   return (
     <>
       {/* Header fijo superior */}
-      <header className="fixed top-0 left-0 w-full z-40 bg-nav/80 backdrop-blur-xl border-b border-line transition-colors duration-300">
+      <header className="fixed top-0 left-0 w-full z-40 bg-nav/80 backdrop-blur-xl border-b border-line shadow-card transition-colors duration-300">
         <div className="container mx-auto max-w-7xl px-6 h-20 flex items-center justify-between">
           {/* Logo con Imagen */}
           <a href="#inicio" className="flex items-center gap-3 select-none">
@@ -137,7 +137,7 @@ export function Navbar() {
             <button
               type="button"
               onClick={() => setIsOpen(true)}
-              className="p-2.5 rounded-xl border border-line bg-surface/60 text-mute hover:text-ink hover:border-brand/40 transition-colors"
+              className="p-2.5 rounded-xl border border-line-strong bg-surface/60 text-mute hover:text-ink hover:border-brand/40 transition-colors"
               aria-label="Abrir menú"
               aria-expanded={isOpen}
               aria-controls="mobile-drawer"
@@ -191,7 +191,7 @@ export function Navbar() {
             <button
               type="button"
               onClick={closeDrawer}
-              className="w-9 h-9 flex items-center justify-center rounded-xl border border-line bg-bg text-mute hover:text-ink hover:border-brand/40 transition-colors shadow-sm"
+              className="w-9 h-9 flex items-center justify-center rounded-xl border border-line-strong bg-bg text-mute hover:text-ink hover:border-brand/40 transition-colors shadow-sm"
               aria-label="Cerrar menú"
             >
               <svg

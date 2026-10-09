@@ -119,20 +119,20 @@ export function FacturacionSimulatorContent() {
             onChange={(e) => setCliente({ ...cliente, nombre: e.target.value })}
             placeholder={b("clientNamePlaceholder")}
             aria-label={b("clientNamePlaceholder")}
-            className="sm:col-span-2 bg-surface border border-line rounded-xl px-4 py-3 text-sm text-ink placeholder:text-mute focus:outline-none focus:border-brand transition-colors"
+            className="sm:col-span-2 bg-surface border border-line-strong rounded-xl px-4 py-3 text-sm text-ink placeholder:text-mute focus:outline-none focus:border-brand transition-colors"
           />
           <input
             value={cliente.cuit}
             onChange={(e) => setCliente({ ...cliente, cuit: e.target.value })}
             placeholder={b("taxIdPlaceholder")}
             aria-label={b("taxIdPlaceholder")}
-            className="bg-surface border border-line rounded-xl px-4 py-3 text-sm text-ink placeholder:text-mute focus:outline-none focus:border-brand transition-colors"
+            className="bg-surface border border-line-strong rounded-xl px-4 py-3 text-sm text-ink placeholder:text-mute focus:outline-none focus:border-brand transition-colors"
           />
           <select
             value={cliente.condicion}
             onChange={(e) => setCliente({ ...cliente, condicion: e.target.value })}
             aria-label={b("clientSection")}
-            className="bg-surface border border-line rounded-xl px-4 py-3 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
+            className="bg-surface border border-line-strong rounded-xl px-4 py-3 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
           >
             <option value="finalConsumer">{b("taxConditions.finalConsumer")}</option>
             <option value="registered">{b("taxConditions.registered")}</option>
@@ -154,7 +154,7 @@ export function FacturacionSimulatorContent() {
               onClick={() => setTipoComprobante(tLetter)}
               aria-pressed={tipoComprobante === tLetter}
               className={`flex-1 rounded-xl border py-2.5 text-xs sm:text-sm font-bold transition-colors ${
-                tipoComprobante === tLetter ? "border-brand bg-brand text-white" : "border-line text-mute hover:text-ink"
+                tipoComprobante === tLetter ? "border-brand bg-brand text-white" : "border-line-strong text-mute hover:text-ink"
               }`}
             >
               {b("invoiceLabel")} {tLetter}
@@ -184,7 +184,7 @@ export function FacturacionSimulatorContent() {
                 onChange={(e) => actualizarItem(it.id, "description", e.target.value)}
                 placeholder={b("descriptionPlaceholder")}
                 aria-label={b("descriptionPlaceholder")}
-                className="w-full sm:w-auto flex-1 bg-surface border border-line rounded-lg px-3 py-2 text-sm text-ink placeholder:text-mute focus:outline-none focus:border-brand transition-colors"
+                className="w-full sm:w-auto flex-1 bg-surface border border-line-strong rounded-lg px-3 py-2 text-sm text-ink placeholder:text-mute focus:outline-none focus:border-brand transition-colors"
               />
 
               {/* Solución al review: sm:contents para no romper la grilla */}
@@ -195,7 +195,7 @@ export function FacturacionSimulatorContent() {
                   value={it.quantity}
                   onChange={(e) => actualizarItem(it.id, "quantity", Number(e.target.value))}
                   aria-label={quantityLabel}
-                  className="w-16 sm:w-full bg-surface border border-line rounded-lg px-2 py-2 text-right text-sm text-ink focus:outline-none focus:border-brand transition-colors"
+                  className="w-16 sm:w-full bg-surface border border-line-strong rounded-lg px-2 py-2 text-right text-sm text-ink focus:outline-none focus:border-brand transition-colors"
                 />
                 <input
                   type="number"
@@ -204,7 +204,7 @@ export function FacturacionSimulatorContent() {
                   onChange={(e) => actualizarItem(it.id, "price", Number(e.target.value))}
                   placeholder={b("pricePlaceholder")}
                   aria-label={b("pricePlaceholder")}
-                  className="w-28 sm:w-full bg-surface border border-line rounded-lg px-2 py-2 text-right text-sm text-ink placeholder:text-mute focus:outline-none focus:border-brand transition-colors"
+                  className="w-28 sm:w-full bg-surface border border-line-strong rounded-lg px-2 py-2 text-right text-sm text-ink placeholder:text-mute focus:outline-none focus:border-brand transition-colors"
                 />
                 <button
                   type="button"

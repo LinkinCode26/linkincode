@@ -60,7 +60,7 @@ function DemoSimulatorContent({ content }) {
           value={simTitle}
           onChange={(e) => setSimTitle(e.target.value)}
           placeholder="Escribí tu propio título..."
-          className="w-full bg-surface border border-line rounded-xl px-4 py-3 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
+          className="w-full bg-surface border border-line-strong rounded-xl px-4 py-3 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
         />
       </div>
       <div>
@@ -197,7 +197,7 @@ export function Solutions() {
           ref={tabsRef}
           role="tablist"
           aria-label={t("solutions.title")}
-          className="scroll-mt-24 flex flex-wrap justify-center gap-2 mb-14 bg-bg border border-line rounded-2xl p-2 max-w-5xl mx-auto"
+          className="scroll-mt-24 flex flex-wrap justify-center gap-2 mb-14 bg-bg border border-line shadow-card rounded-2xl p-2 max-w-5xl mx-auto"
         >
           {SERVICES.map((service) => {
             const isActive = service.id === activeId;
@@ -219,7 +219,7 @@ export function Solutions() {
                   ${
                     isActive
                       ? "bg-surface border-brand text-brand shadow-lg shadow-brand/15"
-                      : "bg-surface/50 border-line text-mute hover:text-ink hover:border-brand/40"
+                      : "bg-surface/50 border-line-strong text-mute hover:text-ink hover:border-brand/40"
                   }`}
               >
                 <TabIcon className="w-4 h-4 shrink-0" />
@@ -236,7 +236,7 @@ export function Solutions() {
           id={`panel-${activeService.id}`}
           role="tabpanel"
           aria-labelledby={`tab-${activeService.id}`}
-          className="bg-bg rounded-[2.5rem] border border-line p-7 sm:p-12 shadow-2xl"
+          className="bg-bg rounded-[2.5rem] border border-line p-7 sm:p-12 shadow-card"
         >
           <div
             className={`grid gap-8 lg:gap-12 items-stretch transition-[grid-template-columns] duration-500 ease-in-out ${

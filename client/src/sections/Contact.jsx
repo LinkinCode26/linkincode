@@ -111,7 +111,7 @@ export function Contact() {
       <div className="container mx-auto px-6 max-w-7xl">
         <div
           ref={cardRef}
-          className="bg-surface/70 backdrop-blur-md border border-line shadow-2xl rounded-[2.5rem] sm:rounded-[3rem] p-8 sm:p-14 lg:p-20 overflow-hidden relative"
+          className="bg-surface/70 backdrop-blur-md border border-line shadow-card rounded-[2.5rem] sm:rounded-[3rem] p-8 sm:p-14 lg:p-20 overflow-hidden relative"
         >
           <div className="absolute top-0 right-0 w-[40%] h-full bg-brand/10 blur-[100px] -z-10" />
 

@@ -56,7 +56,7 @@ export function EcommerceSimulatorContent() {
               t("solutions.simulator.ecommerce.placeholder") ||
               "Ej: Juan Pérez..."
             }
-            className="w-full bg-bg border border-line rounded-xl px-4 py-2.5 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
+            className="w-full bg-bg border border-line-strong rounded-xl px-4 py-2.5 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
           />
         </div>
         <div>

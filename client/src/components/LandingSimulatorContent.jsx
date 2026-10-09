@@ -79,7 +79,7 @@ export function LandingSimulatorContent() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder={t("solutions.simulator.inputPlaceholder")}
-            className="w-full bg-surface border border-line rounded-xl px-4 py-3 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
+            className="w-full bg-surface border border-line-strong rounded-xl px-4 py-3 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
           />
         </div>
 
@@ -96,7 +96,7 @@ export function LandingSimulatorContent() {
             value={subtitle}
             onChange={(e) => setSubtitle(e.target.value)}
             placeholder={t("solutions.simulator.subtitlePlaceholder")}
-            className="w-full bg-surface border border-line rounded-xl px-4 py-3 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
+            className="w-full bg-surface border border-line-strong rounded-xl px-4 py-3 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
           />
         </div>
 
@@ -113,7 +113,7 @@ export function LandingSimulatorContent() {
             value={ctaText}
             onChange={(e) => setCtaText(e.target.value)}
             placeholder={t("solutions.simulator.ctaPlaceholder")}
-            className="w-full bg-surface border border-line rounded-xl px-4 py-3 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
+            className="w-full bg-surface border border-line-strong rounded-xl px-4 py-3 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
           />
         </div>
 
@@ -154,7 +154,7 @@ export function LandingSimulatorContent() {
                 className={`w-8 h-8 rounded-full ${option.dotClass} border-2 transition-transform ${
                   bgColorId === option.id
                     ? "scale-110 border-white shadow-lg"
-                    : "border-line opacity-70"
+                    : "border-line-strong opacity-90"
                 }`}
               />
             ))}

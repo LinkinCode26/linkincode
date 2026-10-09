@@ -74,7 +74,7 @@ export default function AboutUs() {
         </div>
 
         {/* Bloque Stats */}
-        <div className="bg-surface/70 backdrop-blur-md border border-line shadow-xl rounded-[2rem] p-8 sm:p-12 mb-16">
+        <div className="bg-surface/70 backdrop-blur-md border border-line shadow-card rounded-[2rem] p-8 sm:p-12 mb-16">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat) => (
               <div key={stat.id} className="text-center">
@@ -99,7 +99,7 @@ export default function AboutUs() {
             {teamMembers.map((member) => (
               <div
                 key={member.id}
-                className="bg-surface/70 backdrop-blur-md rounded-3xl border border-line p-7 flex flex-col items-center text-center shadow-lg hover:border-brand/50 hover:-translate-y-1.5 transition-all duration-300 group"
+                className="bg-surface/70 backdrop-blur-md rounded-3xl border border-line p-7 flex flex-col items-center text-center shadow-card hover:border-brand/50 hover:-translate-y-1.5 transition-all duration-300 group"
               >
                 {/* Avatar circular */}
                 <div className="w-36 h-36 sm:w-40 sm:h-40 mb-5 rounded-full overflow-hidden border-2 border-line group-hover:border-brand shadow-inner transition-colors">

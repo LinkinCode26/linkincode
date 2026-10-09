@@ -99,14 +99,14 @@ export default function Footer() {
                 <a
                   href="/#"
                   aria-label="GitHub"
-                  className="w-11 h-11 rounded-xl bg-surface border border-line flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all"
+                  className="w-11 h-11 rounded-xl bg-surface border border-line-strong flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all"
                 >
                   <GithubIcon className="w-5 h-5" />
                 </a>
                 <a
                   href="/#"
                   aria-label="LinkedIn"
-                  className="w-11 h-11 rounded-xl bg-surface border border-line flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all"
+                  className="w-11 h-11 rounded-xl bg-surface border border-line-strong flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all"
                 >
                   <LinkedinIcon className="w-5 h-5" />
                 </a>
@@ -115,14 +115,14 @@ export default function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={t("common.contactWhatsapp")}
-                  className="w-11 h-11 rounded-xl bg-surface border border-line flex items-center justify-center text-mute hover:text-white hover:bg-[#25D366] hover:border-[#25D366] transition-all"
+                  className="w-11 h-11 rounded-xl bg-surface border border-line-strong flex items-center justify-center text-mute hover:text-white hover:bg-[#25D366] hover:border-[#25D366] transition-all"
                 >
                   <WhatsAppIcon className="w-5 h-5" />
                 </a>
                 <a
                   href="/#"
                   aria-label="Instagram"
-                  className="w-11 h-11 rounded-xl bg-surface border border-line flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all"
+                  className="w-11 h-11 rounded-xl bg-surface border border-line-strong flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all"
                 >
                   <InstagramIcon className="w-5 h-5" />
                 </a>
@@ -237,7 +237,7 @@ export default function Footer() {
         onClick={scrollToTop}
         tabIndex={showBackToTop ? 0 : -1}
         aria-hidden={!showBackToTop}
-        className={`fixed right-6 bottom-24 z-50 w-11 h-11 rounded-full bg-surface/70 backdrop-blur-md border border-line text-ink flex items-center justify-center transition-all duration-300 ${showBackToTop ? "opacity-100 pointer-events-auto translate-y-0" : "opacity-0 pointer-events-none translate-y-2"}`}
+        className={`fixed right-6 bottom-24 z-50 w-11 h-11 rounded-full bg-surface/70 backdrop-blur-md border border-line-strong text-ink flex items-center justify-center transition-all duration-300 ${showBackToTop ? "opacity-100 pointer-events-auto translate-y-0" : "opacity-0 pointer-events-none translate-y-2"}`}
         aria-label={t("common.backToTop")}
       >
         <ArrowUp className="w-5 h-5" />
