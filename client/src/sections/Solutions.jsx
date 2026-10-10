@@ -212,7 +212,7 @@ export function Solutions() {
                 aria-selected={isActive}
                 aria-controls={`panel-${service.id}`}
                 onClick={() => handleTabChange(service.id)}
-                className={`flex items-center justify-center gap-2 px-4 py-4 rounded-xl border transition-colors duration-300
+                className={`flex items-center cursor-pointer justify-center gap-2 px-4 py-4 rounded-xl border transition-colors duration-300
                   w-[calc((100%-8px)/2)] 
                   sm:w-[calc((100%-16px)/3)] 
                   lg:w-[calc((100%-24px)/4)]
@@ -239,7 +239,8 @@ export function Solutions() {
           className="bg-bg rounded-[2.5rem] border border-line p-7 sm:p-12 shadow-card"
         >
           <div
-            className={`grid gap-8 lg:gap-12 items-stretch transition-[grid-template-columns] duration-500 ease-in-out ${
+            key={`${activeService.id}-${isSimulating ? "sim" : "info"}`}
+            className={`grid gap-8 lg:gap-12 items-stretch motion-safe:animate-fade-up ${
               isSimulating ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2"
             }`}
           >
@@ -302,7 +303,7 @@ export function Solutions() {
                 <button
                   type="button"
                   onClick={exitSimulation}
-                  className="mb-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-mute hover:text-ink transition-colors cursor-pointer"
+                  className="mb-4 inline-flex  items-center gap-2 text-xs font-bold uppercase tracking-wider text-mute hover:text-ink transition-colors cursor-pointer"
                 >
                   <ArrowLeft className="w-3 h-3" />
                   {content.heading}
@@ -341,7 +342,7 @@ export function Solutions() {
                           <button
                             type="button"
                             onClick={enterSimulation}
-                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-brand hover:opacity-90 transition-all cursor-pointer shadow-md"
+                            className="inline-flex hover:scale-105 active:scale-95 items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-brand hover:opacity-90 transition-all cursor-pointer shadow-md"
                           >
                             <Play className="w-3 h-3 fill-current" />
                             {t("solutions.simulator.simulateTrigger") ??
