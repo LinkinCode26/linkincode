@@ -303,7 +303,7 @@ export function Solutions() {
                 <button
                   type="button"
                   onClick={exitSimulation}
-                  className="mb-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-mute hover:text-ink transition-colors cursor-pointer"
+                  className="mb-4 inline-flex  items-center gap-2 text-xs font-bold uppercase tracking-wider text-mute hover:text-ink transition-colors cursor-pointer"
                 >
                   <ArrowLeft className="w-3 h-3" />
                   {content.heading}
@@ -342,7 +342,7 @@ export function Solutions() {
                           <button
                             type="button"
                             onClick={enterSimulation}
-                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-brand hover:opacity-90 transition-all cursor-pointer shadow-md"
+                            className="inline-flex hover:scale-105 active:scale-95 items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-brand hover:opacity-90 transition-all cursor-pointer shadow-md"
                           >
                             <Play className="w-3 h-3 fill-current" />
                             {t("solutions.simulator.simulateTrigger") ??
