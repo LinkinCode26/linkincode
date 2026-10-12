@@ -5,7 +5,14 @@ import useContact from "../hooks/useContact";
 import { Input, Select, Textarea } from "../components/FormElements";
 import { Button } from "../components/Button";
 import { createLeadRequest } from "../services/authApi";
-import { Check, CircleAlert, Globe, LoaderCircle, Mail, Send } from "lucide-react";
+import {
+  Check,
+  CircleAlert,
+  Globe,
+  LoaderCircle,
+  Mail,
+  Send,
+} from "lucide-react";
 import WhatsAppIcon from "../components/icons/WhatsAppIcon";
 
 // Mismo orden que SERVICES (data/services.js) y que las primeras 7
@@ -137,7 +144,9 @@ export function Contact() {
                     <p className="text-xs font-bold uppercase tracking-widest text-mute">
                       {t("contact.emailLabel")}
                     </p>
-                    <p className="text-ink font-medium">hola@linkincode.dev</p>
+                    <p className="text-ink font-medium">
+                      linkincode26@gmail.com
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-5">
@@ -216,7 +225,10 @@ export function Contact() {
 
                   {submitError && (
                     <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm flex items-center gap-3">
-                      <CircleAlert className="h-4 w-4 shrink-0" aria-hidden="true" />
+                      <CircleAlert
+                        className="h-4 w-4 shrink-0"
+                        aria-hidden="true"
+                      />
                       <p>{submitError}</p>
                     </div>
                   )}
@@ -252,7 +264,10 @@ export function Contact() {
                   >
                     {isSubmitting ? (
                       <>
-                        <LoaderCircle className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                        <LoaderCircle
+                          className="mr-2 h-4 w-4 animate-spin"
+                          aria-hidden="true"
+                        />
                         Enviando...
                       </>
                     ) : (

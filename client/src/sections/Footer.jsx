@@ -99,7 +99,7 @@ export default function Footer() {
                 <a
                   href="/#"
                   aria-label="GitHub"
-                  className="w-11 h-11 rounded-xl bg-surface border border-line-strong flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all"
+                  className="w-11 h-11 rounded-xl bg-surface border border-line-strong flex items-center justify-center text-mute hover:text-white hover:bg-[#484f58] hover:border-[#484f58] [[data-theme=light]_&]:hover:bg-[#24292f] [[data-theme=light]_&]:hover:border-[#24292f] transition-all"
                 >
                   <GithubIcon className="w-5 h-5" />
                 </a>
@@ -122,7 +122,7 @@ export default function Footer() {
                 <a
                   href="/#"
                   aria-label="Instagram"
-                  className="w-11 h-11 rounded-xl bg-surface border border-line-strong flex items-center justify-center text-mute hover:text-white hover:bg-brand hover:border-brand transition-all"
+                  className="w-11 h-11 rounded-xl bg-surface border border-line-strong flex items-center justify-center text-mute hover:text-white hover:bg-pink-500 hover:border-pink-500 transition-all"
                 >
                   <InstagramIcon className="w-5 h-5" />
                 </a>
@@ -180,7 +180,7 @@ export default function Footer() {
                     className="flex items-start gap-3 text-mute hover:text-brand transition-colors"
                   >
                     <Mail className="w-4 h-4 mt-0.5 text-accent" />{" "}
-                    hola@linkincode.dev
+                    linkincode26@gmail.com
                   </a>
                 </li>
                 <li>
