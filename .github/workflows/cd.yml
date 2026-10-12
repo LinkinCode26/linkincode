@@ -70,7 +70,7 @@ jobs:
           node-version: 20
 
       - name: Instalar Vercel CLI
-        run: npm install --global vercel@latest
+        run: npm install --global vercel@60.1.3
 
       # Se ejecuta desde la raíz del repo: el Root Directory (client)
       # ya está definido en la configuración del proyecto en Vercel.
