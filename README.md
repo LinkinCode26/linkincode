@@ -12,8 +12,8 @@ Este repositorio contiene el **sitio web público** de LinkinCode (con simulador
 | :--- | :--- |
 | Sitio web | https://linkincode.com (también `www.linkincode.com` y `linkincodepage.vercel.app`) |
 | Panel admin | https://linkincode.com/admin/login |
-| API | `https://<TU-SERVICIO>.onrender.com/api` ← completar con la URL real de Render |
-| Health check | `https://<TU-SERVICIO>.onrender.com/api/health` |
+| API | https://linkincode.onrender.com/api |
+| Health check | https://linkincode.onrender.com/api/health |
 
 > Los dominios del sitio salen de la lista de orígenes permitidos en `api/app.js`. Si cambia el dominio, hay que actualizar esa lista (ver [guía de deploy](docs/DEPLOY.md#7-cors-y-dominios)).
 
