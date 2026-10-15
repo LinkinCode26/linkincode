@@ -104,7 +104,7 @@ export default function AdminLogin() {
         <img
           src={logoImg}
           alt=""
-          className="absolute left-12 top-12 h-14 w-auto xl:left-16 xl:top-16"
+          className="logo-img absolute left-12 top-12 h-14 w-auto xl:left-16 xl:top-16"
         />
 
         <div className="relative max-w-md">
@@ -133,7 +133,7 @@ export default function AdminLogin() {
         </div>
 
         <div className="mx-auto my-auto w-full max-w-sm py-10">
-          <img src={logoImg} alt="Linkincode" className="mb-8 h-12 w-auto lg:hidden" />
+          <img src={logoImg} alt="Linkincode" className="logo-img mb-8 h-12 w-auto lg:hidden" />
 
           <h1 className="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
             {t("admin.login.title")}
