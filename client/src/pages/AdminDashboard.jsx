@@ -17,7 +17,7 @@ export default function AdminDashboard() {
     <div className="min-h-dvh bg-bg text-ink font-sans">
       <header className="sticky top-0 z-10 border-b border-line bg-bg/80 backdrop-blur-xl">
         <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
-          <img src={logoImg} alt="Linkincode" className="h-12 w-auto" />
+          <img src={logoImg} alt="Linkincode" className="logo-img h-12 w-auto" />
 
           <div className="flex min-w-0 items-center gap-2 sm:gap-4">
             <span className="hidden min-w-0 truncate text-sm text-mute sm:block">

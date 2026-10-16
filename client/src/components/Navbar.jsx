@@ -90,7 +90,7 @@ export function Navbar() {
               alt="LinkinCode Logo"
               width="183"
               height="64"
-              className="h-16 w-auto object-contain hover:opacity-90 transition-opacity"
+              className="logo-img h-16 w-auto object-contain hover:opacity-90 transition-opacity"
             />
           </a>
 
