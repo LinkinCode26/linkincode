@@ -1,10 +1,4 @@
 // Diccionario de textos estáticos del sitio, en español e inglés.
-// Estructura en namespaces por sección para que coincida 1:1 con las
-// secciones del boceto (nav, hero, tech, solutions, process, about,
-// team, contact, ctaPrefooter, footer, common).
-//
-// Uso: const { t } = useLanguage(); t('hero.subtitle')
-
 import { adminEs, adminEn } from "./admin.js";
 
 const es = {
