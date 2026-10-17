@@ -145,7 +145,7 @@ export function Contact() {
                       {t("contact.emailLabel")}
                     </p>
                     <p className="text-ink font-medium">
-                      linkincode26@gmail.com
+                      contacto@linkincode.com
                     </p>
                   </div>
                 </div>
@@ -157,7 +157,8 @@ export function Contact() {
                     <p className="text-xs font-bold uppercase tracking-widest text-mute">
                       {t("contact.whatsappLabel")}
                     </p>
-                    <p className="text-ink font-medium">+54 9 11 0000-0000</p>
+                    <p className="text-ink font-medium">+54 9 11 7144-9296
+</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-5">
