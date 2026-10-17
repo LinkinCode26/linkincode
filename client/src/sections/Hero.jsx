@@ -3,7 +3,7 @@ import useScrollReveal from '../hooks/useScrollReveal';
 import { Button } from '../components/Button';
 import { GlassCard } from '../components/GlassCard';
 import { TEAM, avatarSrc } from '../data/team';
-import heroImage from '../assets/hero.png';
+import heroImage from '../assets/dashboard-mobile.webp';
 import { ArrowRight, Lock, ShieldCheck, Zap } from "lucide-react";
 
 // El boceto resalta en negrita la primera parte de "4 amigos, un mismo
