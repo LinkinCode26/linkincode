@@ -314,20 +314,27 @@ const es = {
 
   process: {
     eyebrow: "Cómo trabajamos",
-    title: "Un proceso simple y transparente",
+    title: "De tu idea al lanzamiento en 4 pasos",
     steps: [
-      { title: "Reunión Diagnóstico", description: "Entendemos tu necesidad." },
       {
-        title: "Propuesta y Diseño",
-        description: "Definimos alcance, tiempos y presupuesto.",
+        title: "Reunión de diagnóstico",
+        description:
+          "Escuchamos tu idea, entendemos tu negocio y definimos qué problema hay que resolver.",
       },
       {
-        title: "Desarrollo e Implementación",
-        description: "Creamos y lanzamos la solución.",
+        title: "Propuesta y diseño",
+        description:
+          "Definimos alcance, tiempos y presupuesto, y diseñamos la solución antes de escribir código.",
       },
       {
-        title: "Capacitación y Soporte",
-        description: "Te acompañamos en el uso.",
+        title: "Desarrollo e implementación",
+        description:
+          "Construimos por etapas y te mostramos avances. Todo se revisa y se prueba antes de lanzar.",
+      },
+      {
+        title: "Lanzamiento y soporte",
+        description:
+          "Ponemos todo en línea, te enseñamos a usarlo y seguimos disponibles para dudas y ajustes.",
       },
     ],
   },
@@ -762,22 +769,29 @@ const en = {
     },
   },
 
-  process: {
+   process: {
     eyebrow: "How we work",
-    title: "A simple, transparent process",
+    title: "From idea to launch in 4 steps",
     steps: [
-      { title: "Discovery Call", description: "We understand what you need." },
       {
-        title: "Proposal & Design",
-        description: "We define scope, timeline and budget.",
+        title: "Discovery call",
+        description:
+          "We listen to your idea, understand your business and define the problem to solve.",
       },
       {
-        title: "Development & Implementation",
-        description: "We build and launch the solution.",
+        title: "Proposal & design",
+        description:
+          "We define scope, timeline and budget, and design the solution before writing code.",
       },
       {
-        title: "Training & Support",
-        description: "We support you along the way.",
+        title: "Development & implementation",
+        description:
+          "We build in stages and show you progress along the way. Everything is reviewed and tested before launch.",
+      },
+      {
+        title: "Launch & support",
+        description:
+          "We put everything online, show you how to use it and stay available for questions and adjustments.",
       },
     ],
   },
