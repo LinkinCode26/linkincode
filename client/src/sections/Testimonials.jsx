@@ -53,7 +53,7 @@ export function Testimonials() {
 
                 {/* Comentario */}
                 <p className="text-mute text-sm sm:text-base leading-relaxed mb-8">
-                  "{item.content}"
+                  &quot;{item.content}&quot;
                 </p>
               </div>
 
