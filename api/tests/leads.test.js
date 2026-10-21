@@ -13,8 +13,12 @@ afterAll(stopTestDB);
 
 // Mockeamos el envío de emails por defecto en todos los tests para evitar conexiones reales
 beforeEach(() => {
-  jest.spyOn(emailService, "sendLeadNotificationToTeam").mockResolvedValue({ messageId: "mock-team-id" });
-  jest.spyOn(emailService, "sendLeadAutoReply").mockResolvedValue({ messageId: "mock-reply-id" });
+  jest
+    .spyOn(emailService, "sendLeadNotificationToTeam")
+    .mockResolvedValue({ messageId: "mock-team-id" });
+  jest
+    .spyOn(emailService, "sendLeadAutoReply")
+    .mockResolvedValue({ messageId: "mock-reply-id" });
 });
 
 afterEach(() => {
@@ -29,6 +33,7 @@ describe("POST /api/leads", () => {
       .send({
         nombre: "Juan Perez",
         email: "juan@ejemplo.com",
+        telefono: "+54 11 1234 5678",
         tipoProyecto: "Landing Page",
         mensaje: "Quiero una landing page",
       });
@@ -62,6 +67,7 @@ describe("POST /api/leads", () => {
       .send({
         nombre: "Juan Perez",
         email: "juan@ejemplo.com",
+        telefono: "+54 11 1234 5678",
         tipoProyecto: "Landing Page",
         mensaje: "Quiero una landing page",
       });
@@ -71,7 +77,6 @@ describe("POST /api/leads", () => {
   });
 
   it("responde 201 y guarda el lead aunque el envío de emails falle (criterio de resiliencia)", async () => {
-    // Sobrescribimos el mock únicamente para este test, simulando caída del SMTP
     jest
       .spyOn(emailService, "sendLeadNotificationToTeam")
       .mockRejectedValue(new Error("SMTP Connection Failed"));
@@ -86,6 +91,7 @@ describe("POST /api/leads", () => {
       .send({
         nombre: "Carlos Resiliente",
         email: "carlos.resiliente@ejemplo.com",
+        telefono: "+54 11 1234 5678",
         tipoProyecto: "Desarrollo Web",
         mensaje: "Probando tolerancia a fallos de correo",
       });
@@ -105,6 +111,7 @@ describe("POST /api/leads", () => {
       .send({
         nombre: "Juan Perez",
         email: "juan@ejemplo.com",
+        telefono: "+54 11 1234 5678",
         tipoProyecto: "Landing Page",
         mensaje: "Quiero una landing page",
         website: "http://spam.com",
@@ -200,7 +207,6 @@ describe("GET /api/leads", () => {
     );
   });
 });
-
 
 describe("PATCH /api/leads/:id", () => {
   let validToken;
@@ -317,6 +323,7 @@ describe("GET /api/leads/stats", () => {
       { tipoProyecto: "Landing Pages", total: 3 },
     ]);
   });
+
   it("pasa el filtro de estado al service", async () => {
     jest.spyOn(User, "findById").mockReturnValue({
       select: jest.fn().mockResolvedValue({ _id: "id_falso_123" }),
@@ -343,5 +350,5 @@ describe("GET /api/leads/stats", () => {
       .set("Authorization", `Bearer ${validToken}`);
 
     expect(response.status).toBe(400);
-  });  
+  });
 });
