@@ -161,6 +161,22 @@ export function LeadsPanel() {
                       >
                         {lead.email}
                       </a>
+                      {lead.telefono && (
+                        <>
+                          <span className="text-mute/40 hidden sm:inline">
+                            •
+                          </span>
+                          <a
+                            href={`https://wa.me/${lead.telefono.replace(/[^\d]/g, "")}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Abrir en WhatsApp"
+                            className="truncate text-sm text-mute transition-colors hover:text-brand"
+                          >
+                            {lead.telefono}
+                          </a>
+                        </>
+                      )}
                     </div>
                     <p className="mt-1 text-[11px] font-bold uppercase tracking-wider text-accent-text">
                       {serviceLabel}
@@ -187,7 +203,11 @@ export function LeadsPanel() {
                       }`}
                     >
                       {ESTADOS.map((estado) => (
-                        <option key={estado} value={estado} className="bg-surface cursor-pointer text-ink">
+                        <option
+                          key={estado}
+                          value={estado}
+                          className="bg-surface cursor-pointer text-ink"
+                        >
                           {L(`status.${estado}`)}
                         </option>
                       ))}
@@ -212,7 +232,8 @@ export function LeadsPanel() {
             {L("prev")}
           </Button>
           <span>
-            {L("page")} {pagination.currentPage} {L("of")} {pagination.totalPages}
+            {L("page")} {pagination.currentPage} {L("of")}{" "}
+            {pagination.totalPages}
           </span>
           <Button
             variant="outline"
