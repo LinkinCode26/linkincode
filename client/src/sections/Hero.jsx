@@ -5,7 +5,7 @@ import { GlassCard } from '../components/GlassCard';
 import { TEAM, avatarSrc } from '../data/team';
 import heroImage from '../assets/dashboard-mobile.webp';
 import { ArrowRight, Lock, ShieldCheck, Zap } from "lucide-react";
-
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // El boceto resalta en negrita la primera parte de "4 amigos, un mismo
 // objetivo..." (antes de la coma). Como la traducción viene como un solo
 // string, separamos ahí para conservar el mismo énfasis visual en ambos
@@ -16,12 +16,48 @@ function splitCaption(caption) {
   return [caption.slice(0, commaIndex), caption.slice(commaIndex)];
 }
 
+function RotatingWord({ words }) {
+  const [index, setIndex] = useState(0);
+  const [width, setWidth] = useState(undefined);
+  const itemRefs = useRef([]);
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const id = setInterval(() => setIndex((i) => (i + 1) % words.length), 2600);
+    return () => clearInterval(id);
+  }, [words.length]);
+
+  useLayoutEffect(() => {
+    const el = itemRefs.current[index];
+    if (el) setWidth(el.offsetWidth);
+  }, [index, words]);
+
+  return (
+    <span
+      className="inline-grid justify-items-start align-baseline transition-[width] duration-600 ease-out"
+      style={{ width }}
+    >
+      {words.map((word, i) => (
+        <span
+          key={word}
+          ref={(el) => (itemRefs.current[i] = el)}
+          aria-hidden={i !== index}
+          className={`col-start-1 row-start-1 whitespace-nowrap text-accent-text font-semibold transition-all duration-300 ${
+            i === index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-1'
+          }`}
+        >
+          {word}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 export function Hero() {
   const { t } = useLanguage();
   const textRef = useScrollReveal();
   const mockupRef = useScrollReveal({ delay: 0.15 });
 
-  const [boldCaption, restCaption] = splitCaption(t('hero.teamCaption'));
 
   return (
     <section id="inicio" className="relative pt-40 sm:pt-48 pb-24 sm:pb-32 overflow-hidden">
@@ -82,8 +118,10 @@ export function Hero() {
                 ))}
               </div>
               <p className="text-sm text-mute leading-relaxed">
-                <span className="text-ink font-bold">{boldCaption}</span>{' '}
-                {restCaption}
+                <span className="text-ink font-bold">{t('hero.teamCaptionLead')}</span>{' '}
+                {t('hero.teamCaptionPre')}{' '}
+                <RotatingWord words={t('hero.teamCaptionWords')} />{' '}
+                {t('hero.teamCaptionPost')}
               </p>
             </div>
           </div>
@@ -98,7 +136,7 @@ export function Hero() {
                   <Lock className="h-2.5 w-2.5" aria-hidden="true" /> {t('hero.browserUrl')}
                 </div>
               </div>
-              <img className="w-full h-[380px] object-cover" src={heroImage} alt="Panel de control de Linkincode" />
+              <img className="w-full h-[380px] object-cover" src={heroImage} alt="Panel de control de LinkinCode" />
             </div>
 
             <GlassCard className="absolute -bottom-8 -left-8 p-5 flex items-center gap-4 z-10">

@@ -21,7 +21,10 @@ const es = {
       "Transformamos tus ideas en plataformas a medida, e-commerce y sistemas de gestión. Código robusto y diseño enfocado en multiplicar tus ventas y automatizar procesos.",
     ctaPrimary: "Ver soluciones",
     ctaSecondary: "Código revisado y probado",
-    teamCaption: "4 amigos, un mismo objetivo: tu proyecto bien hecho.",
+    teamCaptionLead: "Un equipo, un objetivo:",
+    teamCaptionPre: "tu",
+    teamCaptionWords: ["sistema", "e-commerce", "software", "sitio web"],
+    teamCaptionPost: "bien hecho.",
     browserUrl: "app.linkincode.dev/dashboard",
     deliveryTitle: "Entregas ágiles",
     deliverySubtitle: "Comunicación directa 24/7",
@@ -177,10 +180,12 @@ const es = {
         send: "Enviar solicitud",
         sending: "Enviando...",
         waiting: "Esperando respuesta del servidor...",
-        placeholder: 'Elegí un endpoint y tocá "Enviar solicitud" para ver la respuesta simulada.',
+        placeholder:
+          'Elegí un endpoint y tocá "Enviar solicitud" para ver la respuesta simulada.',
         headers: "Headers",
         body: "Body",
-        disclaimer: "Simulación de respuestas — no se conecta a ningún backend real.",
+        disclaimer:
+          "Simulación de respuestas — no se conecta a ningún backend real.",
       },
       stock: {
         units: "u.",
@@ -191,7 +196,8 @@ const es = {
           "prod-4": "Teclado Mecánico",
         },
       },
-      disclaimer: "Simulación visual — no se envía ni almacena en nuestros servidores.",
+      disclaimer:
+        "Simulación visual — no se envía ni almacena en nuestros servidores.",
       ecommerce: {
         clientName: "Nombre del cliente",
         placeholder: "Ej: Juan Pérez...",
@@ -253,7 +259,8 @@ const es = {
             "Dic",
           ],
         },
-        disclaimer: "Datos simulados con fines demostrativos — no representan información real ni se envían a ningún servidor.",
+        disclaimer:
+          "Datos simulados con fines demostrativos — no representan información real ni se envían a ningún servidor.",
       },
       billing: {
         clientSection: "Cliente",
@@ -275,7 +282,8 @@ const es = {
         vat: "IVA (21%)",
         total: "Total",
         errorMissingClient: "Falta el nombre o razón social del cliente.",
-        errorMissingItems: "Revisá que todos los ítems tengan descripción y precio.",
+        errorMissingItems:
+          "Revisá que todos los ítems tengan descripción y precio.",
         emitButton: "Emitir factura",
         authorizedBadge: "autorizada",
         caeLabel: "CAE",
@@ -298,7 +306,8 @@ const es = {
           atencion: "Atención al cliente",
           administracion: "Administración",
         },
-        disclaimer: "Datos de personal simulados con fines demostrativos — no representan empleados reales ni se envían a ningún servidor.",
+        disclaimer:
+          "Datos de personal simulados con fines demostrativos — no representan empleados reales ni se envían a ningún servidor.",
       },
     },
   },
@@ -309,19 +318,23 @@ const es = {
     steps: [
       {
         title: "Reunión de diagnóstico",
-        description: "Escuchamos tu idea, entendemos tu negocio y definimos qué problema hay que resolver.",
+        description:
+          "Escuchamos tu idea, entendemos tu negocio y definimos qué problema hay que resolver.",
       },
       {
         title: "Propuesta y diseño",
-        description: "Definimos alcance, tiempos y presupuesto, y diseñamos la solución antes de escribir código.",
+        description:
+          "Definimos alcance, tiempos y presupuesto, y diseñamos la solución antes de escribir código.",
       },
       {
         title: "Desarrollo e implementación",
-        description: "Construimos por etapas y te mostramos avances. Todo se revisa y se prueba antes de lanzar.",
+        description:
+          "Construimos por etapas y te mostramos avances. Todo se revisa y se prueba antes de lanzar.",
       },
       {
         title: "Lanzamiento y soporte",
-        description: "Ponemos todo en línea, te enseñamos a usarlo y seguimos disponibles para dudas y ajustes.",
+        description:
+          "Ponemos todo en línea, te enseñamos a usarlo y seguimos disponibles para dudas y ajustes.",
       },
     ],
   },
@@ -348,7 +361,8 @@ const es = {
   team: {
     eyebrow: "El equipo",
     title: "Las caras detrás del código",
-    subtitle: "Cuatro perfiles, un mismo compromiso: entregar software confiable.",
+    subtitle:
+      "Cuatro perfiles, un mismo compromiso: entregar software confiable.",
     members: [
       {
         name: "Santiago Molina",
@@ -377,7 +391,8 @@ const es = {
     eyebrow: "Contacto",
     titlePart1: "Construyamos algo",
     titleHighlight: "extraordinario",
-    subtitle: "Contanos sobre tu proyecto. Te respondemos en menos de 24 horas con una propuesta clara.",
+    subtitle:
+      "Contanos sobre tu proyecto. Te respondemos en menos de 24 horas con una propuesta clara.",
     emailLabel: "Escríbenos",
     whatsappLabel: "WhatsApp",
     scopeLabel: "Alcance",
@@ -411,12 +426,14 @@ const es = {
 
   ctaPrefooter: {
     title: "¿Tenés una idea? Hagámosla realidad",
-    subtitle: "Agenda una llamada gratuita de 20 minutos con nuestro equipo, sin compromiso.",
+    subtitle:
+      "Agenda una llamada gratuita de 20 minutos con nuestro equipo, sin compromiso.",
     button: "Agendar llamada",
   },
 
   footer: {
-    description: "Estudio de 4 desarrolladores Full Stack. Construimos software confiable, escalable y con estándares internacionales.",
+    description:
+      "Estudio de 4 desarrolladores Full Stack. Construimos software confiable, escalable y con estándares internacionales.",
     availability: "Disponibles para nuevos proyectos",
     columns: {
       site: {
@@ -470,7 +487,10 @@ const en = {
       "We transform your ideas into custom platforms, e-commerce, and management systems. Robust code and design focused on multiplying your sales and automating your processes.",
     ctaPrimary: "See solutions",
     ctaSecondary: "Reviewed and tested code",
-    teamCaption: "4 friends, one goal: your project done right.",
+    teamCaptionLead: "One team, one goal:",
+    teamCaptionPre: "your",
+    teamCaptionWords: ["system", "e-commerce", "software", "website"],
+    teamCaptionPost: "done right.",
     browserUrl: "app.linkincode.dev/dashboard",
     deliveryTitle: "Agile delivery",
     deliverySubtitle: "Direct communication 24/7",
@@ -623,7 +643,8 @@ const en = {
         send: "Send request",
         sending: "Sending...",
         waiting: "Waiting for server response...",
-        placeholder: 'Pick an endpoint and tap "Send request" to see the simulated response.',
+        placeholder:
+          'Pick an endpoint and tap "Send request" to see the simulated response.',
         headers: "Headers",
         body: "Body",
         disclaimer: "Simulated responses — not connected to any real backend.",
@@ -637,7 +658,8 @@ const en = {
           "prod-4": "Mechanical Keyboard",
         },
       },
-      disclaimer: "Visual simulation — nothing is sent or stored on our servers.",
+      disclaimer:
+        "Visual simulation — nothing is sent or stored on our servers.",
       ecommerce: {
         clientName: "Client name",
         placeholder: "E.g. John Doe...",
@@ -699,7 +721,8 @@ const en = {
             "Dec",
           ],
         },
-        disclaimer: "Simulated data for demonstration purposes only — it does not represent real information and is not sent to any server.",
+        disclaimer:
+          "Simulated data for demonstration purposes only — it does not represent real information and is not sent to any server.",
       },
       billing: {
         clientSection: "Client",
@@ -721,7 +744,8 @@ const en = {
         vat: "VAT (21%)",
         total: "Total",
         errorMissingClient: "The client's name or business name is missing.",
-        errorMissingItems: "Make sure every item has a description and a price.",
+        errorMissingItems:
+          "Make sure every item has a description and a price.",
         emitButton: "Issue invoice",
         authorizedBadge: "authorized",
         caeLabel: "CAE",
@@ -744,7 +768,8 @@ const en = {
           atencion: "Customer service",
           administracion: "Administration",
         },
-        disclaimer: "Simulated staff data for demonstration purposes only — it does not represent real employees and is not sent to any server.",
+        disclaimer:
+          "Simulated staff data for demonstration purposes only — it does not represent real employees and is not sent to any server.",
       },
     },
   },
@@ -755,19 +780,23 @@ const en = {
     steps: [
       {
         title: "Discovery call",
-        description: "We listen to your idea, understand your business and define the problem to solve.",
+        description:
+          "We listen to your idea, understand your business and define the problem to solve.",
       },
       {
         title: "Proposal & design",
-        description: "We define scope, timeline and budget, and design the solution before writing code.",
+        description:
+          "We define scope, timeline and budget, and design the solution before writing code.",
       },
       {
         title: "Development & implementation",
-        description: "We build in stages and show you progress along the way. Everything is reviewed and tested before launch.",
+        description:
+          "We build in stages and show you progress along the way. Everything is reviewed and tested before launch.",
       },
       {
         title: "Launch & support",
-        description: "We put everything online, show you how to use it and stay available for questions and adjustments.",
+        description:
+          "We put everything online, show you how to use it and stay available for questions and adjustments.",
       },
     ],
   },
@@ -794,7 +823,8 @@ const en = {
   team: {
     eyebrow: "The team",
     title: "The faces behind the code",
-    subtitle: "Four profiles, one shared commitment: delivering reliable software.",
+    subtitle:
+      "Four profiles, one shared commitment: delivering reliable software.",
     members: [
       {
         name: "Santiago Molina",
@@ -823,7 +853,8 @@ const en = {
     eyebrow: "Contact",
     titlePart1: "Let's build something",
     titleHighlight: "extraordinary",
-    subtitle: "Tell us about your project. We'll get back to you in under 24 hours with a clear proposal.",
+    subtitle:
+      "Tell us about your project. We'll get back to you in under 24 hours with a clear proposal.",
     emailLabel: "Email us",
     whatsappLabel: "WhatsApp",
     scopeLabel: "Reach",
@@ -862,7 +893,8 @@ const en = {
   },
 
   footer: {
-    description: "A studio of 4 full stack developers. We build reliable, scalable software to international standards.",
+    description:
+      "A studio of 4 full stack developers. We build reliable, scalable software to international standards.",
     availability: "Available for new projects",
     columns: {
       site: {
