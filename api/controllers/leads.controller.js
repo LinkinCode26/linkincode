@@ -6,7 +6,10 @@ import {
   updateLeadStatus,
   getLeadCountsByProject,
 } from "../services/leads.service.js";
-import { sendLeadNotificationToTeam, sendLeadAutoReply } from "../services/emailService.js";
+import {
+  sendLeadNotificationToTeam,
+  sendLeadAutoReply,
+} from "../services/emailService.js";
 
 const ESTADOS = ["nuevo", "contactado", "ganado", "perdido"];
 
@@ -20,6 +23,11 @@ const leadSchema = z.object({
     .email("el email no es válido")
     .trim()
     .max(150, "el email es demasiado largo"),
+  telefono: z
+    .string()
+    .trim()
+    .min(6, "el teléfono es obligatorio y debe ser válido")
+    .max(50, "el teléfono es demasiado largo"),
   tipoProyecto: z
     .string()
     .trim()
@@ -162,7 +170,8 @@ export const patchLeadStatus = async (req, res, next) => {
   if (!parsed.success) {
     return res.status(400).json({
       status: "error",
-      message: "Estado inválido. Los valores permitidos son: nuevo, contactado, ganado, perdido",
+      message:
+        "Estado inválido. Los valores permitidos son: nuevo, contactado, ganado, perdido",
     });
   }
 

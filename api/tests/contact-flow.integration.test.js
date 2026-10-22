@@ -3,9 +3,6 @@ import app from "../app.js";
 import Lead from "../models/Lead.js";
 import { startTestDB, stopTestDB, clearTestDB } from "./helpers/testDb.js";
 
-// Cada request sale con una IP distinta (X-Forwarded-For, válido porque la app
-// usa `trust proxy`). Si no, todos los tests compartirían el contador del
-// rate limiter y el sexto envío del archivo devolvería 429.
 let ipCounter = 1;
 const nextIp = () => `10.0.0.${ipCounter++}`;
 
@@ -15,6 +12,7 @@ const postLead = (body, ip = nextIp()) =>
 const validLead = (overrides = {}) => ({
   nombre: "Juan Pérez",
   email: "juan@ejemplo.com",
+  telefono: "+54 11 1234 5678",
   tipoProyecto: "Landing Pages",
   mensaje: "Necesito una landing page para mi negocio.",
   ...overrides,
@@ -34,6 +32,7 @@ describe("Flujo de contacto: POST /api/leads", () => {
       expect(res.body.lead).toMatchObject({
         nombre: "Juan Pérez",
         email: "juan@ejemplo.com",
+        telefono: "+54 11 1234 5678",
         tipoProyecto: "Landing Pages",
       });
 
@@ -44,7 +43,7 @@ describe("Flujo de contacto: POST /api/leads", () => {
   });
 
   describe("datos faltantes o inválidos", () => {
-    it.each(["nombre", "email", "tipoProyecto", "mensaje"])(
+    it.each(["nombre", "email", "telefono", "tipoProyecto", "mensaje"])(
       "responde 400 y no guarda nada cuando falta %s",
       async (field) => {
         const payload = validLead();

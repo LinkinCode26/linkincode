@@ -402,6 +402,9 @@ const es = {
       namePlaceholder: "Ej. Carlos Ruiz",
       emailLabel: "Email",
       emailPlaceholder: "carlos@empresa.com",
+      phoneCodeLabel: "Cód.",
+      phoneLabel: "WhatsApp / Teléfono",
+      phonePlaceholder: "Ej. 11 1234 5678",
       projectTypeLabel: "Tipo de proyecto",
       projectTypePlaceholder: "Seleccioná una opción",
       projectTypeOptions: [
@@ -864,6 +867,9 @@ const en = {
       namePlaceholder: "E.g. Carlos Ruiz",
       emailLabel: "Email",
       emailPlaceholder: "carlos@company.com",
+      phoneCodeLabel: "Code",
+      phoneLabel: "WhatsApp / Phone",
+      phonePlaceholder: "E.g. 11 1234 5678",
       projectTypeLabel: "Project type",
       projectTypePlaceholder: "Select an option",
       projectTypeOptions: [

@@ -13,6 +13,11 @@ const leadSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
     },
+    telefono: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     tipoProyecto: {
       type: String,
       required: true,

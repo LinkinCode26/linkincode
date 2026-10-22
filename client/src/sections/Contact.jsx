@@ -15,8 +15,7 @@ import {
 } from "lucide-react";
 import WhatsAppIcon from "../components/icons/WhatsAppIcon";
 
-// Mismo orden que SERVICES (data/services.js) y que las primeras 7
-// entradas de contact.form.projectTypeOptions en translations.js.
+// Mismo orden que SERVICES (data/services.js)
 const SERVICE_OPTION_INDEX = {
   landing: 0,
   ecommerce: 1,
@@ -27,8 +26,32 @@ const SERVICE_OPTION_INDEX = {
   billing: 6,
 };
 
-const EMPTY_FORM = { name: "", email: "", projectType: "", message: "" };
+const EMPTY_FORM = {
+  name: "",
+  email: "",
+  phoneCode: "+54", // Por defecto Argentina
+  phone: "",
+  projectType: "",
+  message: "",
+};
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Limpiamos los labels para que solo sea Emoji + Número
+// Nota: En Windows los emojis de banderas se ven como letras (ej: AR, MX),
+// pero en celulares y Mac se ven las banderas dibujadas.
+const PHONE_CODES = [
+  { value: "+54", label: "🇦🇷 +54" },
+  { value: "+34", label: "🇪🇸 +34" },
+  { value: "+52", label: "🇲🇽 +52" },
+  { value: "+56", label: "🇨🇱 +56" },
+  { value: "+57", label: "🇨🇴 +57" },
+  { value: "+51", label: "🇵🇪 +51" },
+  { value: "+598", label: "🇺🇾 +598" },
+  { value: "+595", label: "🇵🇾 +595" },
+  { value: "+591", label: "🇧🇴 +591" },
+  { value: "+593", label: "🇪🇨 +593" },
+  { value: "+1", label: "🇺🇸/🇨🇦 +1" },
+];
 
 export function Contact() {
   const { t } = useLanguage();
@@ -50,7 +73,6 @@ export function Contact() {
     [projectTypeOptions],
   );
 
-  // Deriva el valor del projectType directamente sin necesidad de useEffect
   const derivedProjectType = useMemo(() => {
     if (!requestedService?.id) return "";
     const index = SERVICE_OPTION_INDEX[requestedService.id];
@@ -60,17 +82,23 @@ export function Contact() {
   }, [requestedService, projectTypeOptions]);
 
   const handleChange = (field) => (event) => {
-    setForm((prev) => ({ ...prev, [field]: event.target.value }));
-    // Limpiamos el error previo si el usuario empieza a escribir de nuevo
+    let value = event.target.value;
+
+    // Si es el campo teléfono, permitimos solo números y espacios
+    if (field === "phone") {
+      value = value.replace(/[^\d\s-]/g, "");
+    }
+
+    setForm((prev) => ({ ...prev, [field]: value }));
     if (submitError) setSubmitError(null);
   };
 
-  // Usa el valor derivado si el usuario no ha cambiado manualmente el campo
   const effectiveProjectType = form.projectType || derivedProjectType;
 
   const isValid =
     form.name.trim().length > 0 &&
     EMAIL_RE.test(form.email.trim()) &&
+    form.phone.trim().length >= 6 &&
     effectiveProjectType.trim().length > 0 &&
     form.message.trim().length > 0;
 
@@ -81,9 +109,13 @@ export function Contact() {
     setIsSubmitting(true);
     setSubmitError(null);
 
+    // Unimos el código de país con el número para enviarlo al backend
+    const fullPhone = `${form.phoneCode} ${form.phone.trim()}`;
+
     const payload = {
       nombre: form.name.trim(),
       email: form.email.trim(),
+      telefono: fullPhone,
       tipoProyecto: effectiveProjectType.trim(),
       mensaje: form.message.trim(),
       origen: "Web LinkinCode",
@@ -157,8 +189,7 @@ export function Contact() {
                     <p className="text-xs font-bold uppercase tracking-widest text-mute">
                       {t("contact.whatsappLabel")}
                     </p>
-                    <p className="text-ink font-medium">+54 9 11 7144-9296
-</p>
+                    <p className="text-ink font-medium">+54 9 11 7144-9296</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-5">
@@ -180,28 +211,56 @@ export function Contact() {
             <div className="relative">
               {!submitted ? (
                 <form onSubmit={handleSubmit} noValidate className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Input
-                      id="contact-name"
-                      label={t("contact.form.nameLabel")}
-                      placeholder={t("contact.form.namePlaceholder")}
-                      value={form.name}
-                      onChange={handleChange("name")}
-                      required
-                      disabled={isSubmitting}
-                    />
-                    <Input
-                      id="contact-email"
-                      type="email"
-                      label={t("contact.form.emailLabel")}
-                      placeholder={t("contact.form.emailPlaceholder")}
-                      value={form.email}
-                      onChange={handleChange("email")}
-                      required
-                      disabled={isSubmitting}
-                    />
+                  {/* Fila 1: Nombre */}
+                  <Input
+                    id="contact-name"
+                    label={t("contact.form.nameLabel")}
+                    placeholder={t("contact.form.namePlaceholder")}
+                    value={form.name}
+                    onChange={handleChange("name")}
+                    required
+                    disabled={isSubmitting}
+                  />
+
+                  {/* Fila 2: Email */}
+                  <Input
+                    id="contact-email"
+                    type="email"
+                    label={t("contact.form.emailLabel")}
+                    placeholder={t("contact.form.emailPlaceholder")}
+                    value={form.email}
+                    onChange={handleChange("email")}
+                    required
+                    disabled={isSubmitting}
+                  />
+
+                  {/* Fila 3: Teléfono Compuesto */}
+                  <div className="flex gap-4">
+                    <div className="w-[120px] shrink-0">
+                      <Select
+                        id="contact-phone-code"
+                        label={t("contact.form.phoneCodeLabel")}
+                        options={PHONE_CODES}
+                        value={form.phoneCode}
+                        onChange={handleChange("phoneCode")}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <Input
+                        id="contact-phone"
+                        type="tel"
+                        label={t("contact.form.phoneLabel")}
+                        placeholder={t("contact.form.phonePlaceholder")}
+                        value={form.phone}
+                        onChange={handleChange("phone")}
+                        required
+                        disabled={isSubmitting}
+                      />
+                    </div>
                   </div>
 
+                  {/* Fila 4: Tipo de Proyecto */}
                   <Select
                     id="contact-project-type"
                     label={t("contact.form.projectTypeLabel")}
@@ -213,6 +272,7 @@ export function Contact() {
                     disabled={isSubmitting}
                   />
 
+                  {/* Fila 5: Mensaje */}
                   <Textarea
                     id="contact-message"
                     label={t("contact.form.messageLabel")}
@@ -234,7 +294,6 @@ export function Contact() {
                     </div>
                   )}
 
-                  {/* Campo Honeypot oculto para atrapar bots */}
                   <div
                     style={{
                       position: "absolute",

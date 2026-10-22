@@ -4,9 +4,16 @@ import { connectDB } from "../config/db.js";
 import Lead from "../models/Lead.js";
 
 const TIPOS = [
-  "Landing Pages", "Landing Page", "E-commerce", "APIs REST y Backends",
-  "Dashboards y Paneles Admin", "Control de Stock", "Gestión de Personal",
-  "Facturación Digital", "Digital Billing", "Proyecto a medida",
+  "Landing Pages",
+  "Landing Page",
+  "E-commerce",
+  "APIs REST y Backends",
+  "Dashboards y Paneles Admin",
+  "Control de Stock",
+  "Gestión de Personal",
+  "Facturación Digital",
+  "Digital Billing",
+  "Proyecto a medida",
 ];
 const ESTADOS = ["nuevo", "contactado", "ganado", "perdido"];
 
@@ -17,8 +24,12 @@ try {
     const docs = Array.from({ length: 30 }, (_, i) => ({
       nombre: `QA Lead ${i + 1}`,
       email: `qa${i + 1}@ejemplo.com`,
+      telefono: `+54 381 12345${i.toString().padStart(2, "0")}`,
       tipoProyecto: TIPOS[i % TIPOS.length],
-      mensaje: i % 7 === 0 ? "Mensaje largo de prueba. ".repeat(40) : `Mensaje de prueba ${i + 1}`,
+      mensaje:
+        i % 7 === 0
+          ? "Mensaje largo de prueba. ".repeat(40)
+          : `Mensaje de prueba ${i + 1}`,
       origen: "seed-qa",
       estado: ESTADOS[(i + Math.floor(i / TIPOS.length)) % ESTADOS.length],
     }));
