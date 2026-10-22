@@ -5,18 +5,53 @@ import { GlassCard } from "../components/GlassCard";
 import { TEAM, avatarSrc } from "../data/team";
 import heroImage from "../assets/dashboard-mobile.webp";
 import { ArrowRight, Lock, ShieldCheck, Zap } from "lucide-react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
+
+function RotatingWord({ words }) {
+  const [index, setIndex] = useState(0);
+  const [width, setWidth] = useState(undefined);
+  const itemRefs = useRef([]);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = setInterval(() => setIndex((i) => (i + 1) % words.length), 2600);
+    return () => clearInterval(id);
+  }, [words?.length]);
+
+  useLayoutEffect(() => {
+    const el = itemRefs.current[index];
+    if (el) setWidth(el.offsetWidth);
+  }, [index, words]);
+
+  if (!words || !Array.isArray(words)) return null;
+
+  return (
+    <span
+      className="inline-grid justify-items-start align-baseline transition-[width] duration-600 ease-out"
+      style={{ width }}
+    >
+      {words.map((word, i) => (
+        <span
+          key={word}
+          ref={(el) => (itemRefs.current[i] = el)}
+          aria-hidden={i !== index}
+          className={`col-start-1 row-start-1 whitespace-nowrap text-accent-text font-semibold transition-all duration-300 ${
+            i === index
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-1"
+          }`}
+        >
+          {word}
+        </span>
+      ))}
+    </span>
+  );
+}
 
 export function Hero() {
   const { t } = useLanguage();
   const textRef = useScrollReveal();
   const mockupRef = useScrollReveal({ delay: 0.15 });
-
-  // Separamos la traducción en la coma para mantener la negrita inicial del diseño
-  const teamCaption = t("hero.teamCaption") || "";
-  const commaIndex = teamCaption.indexOf(",");
-  const boldCaption =
-    commaIndex === -1 ? teamCaption : teamCaption.slice(0, commaIndex);
-  const restCaption = commaIndex === -1 ? "" : teamCaption.slice(commaIndex);
 
   return (
     <section
@@ -85,8 +120,12 @@ export function Hero() {
                 ))}
               </div>
               <p className="text-sm text-mute leading-relaxed">
-                <span className="text-ink font-bold">{boldCaption}</span>{" "}
-                {restCaption}
+                <span className="text-ink font-bold">
+                  {t("hero.teamCaptionLead")}
+                </span>{" "}
+                {t("hero.teamCaptionPre")}{" "}
+                <RotatingWord words={t("hero.teamCaptionWords") || []} />{" "}
+                {t("hero.teamCaptionPost")}
               </p>
             </div>
           </div>
@@ -105,7 +144,7 @@ export function Hero() {
               <img
                 className="w-full h-[380px] object-cover"
                 src={heroImage}
-                alt="Panel de control de Linkincode"
+                alt="Panel de control de LinkinCode"
               />
             </div>
 

@@ -29,6 +29,9 @@ const SERVICE_HREFS = [
 ];
 const SERVICE_ICONS = [Globe, Store, Code, PieChart, Wand2];
 
+const INSTAGRAM_URL = "https://www.instagram.com/linkincode26";
+const FACEBOOK_URL = "https://www.facebook.com/profile.php?id=61595716796837";
+
 const InstagramIcon = ({ className }) => (
   <svg
     className={className}
@@ -42,6 +45,20 @@ const InstagramIcon = ({ className }) => (
     <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
     <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+  </svg>
+);
+
+const FacebookIcon = ({ className }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
   </svg>
 );
 
@@ -70,7 +87,7 @@ export default function Footer() {
             <div className="lg:col-span-4">
               <a href="/#" className="flex items-center mb-6">
                 <h2 className="font-display text-2xl font-bold text-ink tracking-tight">
-                  Linkincode
+                  Linkincode Studio
                 </h2>
               </a>
               <p className="text-mute leading-relaxed mb-6 max-w-sm">
@@ -93,11 +110,22 @@ export default function Footer() {
                   <WhatsAppIcon className="w-5 h-5" />
                 </a>
                 <a
-                  href="/#"
+                  href={INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noreferrer"
                   aria-label="Instagram"
                   className="w-11 h-11 rounded-xl bg-surface border border-line-strong flex items-center justify-center text-mute hover:text-white hover:bg-pink-500 hover:border-pink-500 transition-all"
                 >
                   <InstagramIcon className="w-5 h-5" />
+                </a>
+                <a
+                  href={FACEBOOK_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Facebook"
+                  className="w-11 h-11 rounded-xl bg-surface border border-line-strong flex items-center justify-center text-mute hover:text-white hover:bg-[#1877F2] hover:border-[#1877F2] transition-all"
+                >
+                  <FacebookIcon className="w-5 h-5" />
                 </a>
               </div>
             </div>
