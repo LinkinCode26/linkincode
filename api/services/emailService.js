@@ -44,18 +44,22 @@ export async function sendLeadNotificationToTeam(lead) {
           <td style="padding: 10px; border: 1px solid #dee2e6;"><a href="mailto:${escapeHtml(lead.email)}">${escapeHtml(lead.email)}</a></td>
         </tr>
         <tr style="background-color: #f8f9fa;">
+          <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Teléfono:</td>
+          <td style="padding: 10px; border: 1px solid #dee2e6;">${escapeHtml(lead.telefono || "No especificado")}</td>
+        </tr>
+        <tr>
           <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Tipo de Proyecto:</td>
           <td style="padding: 10px; border: 1px solid #dee2e6;">${escapeHtml(lead.tipoProyecto)}</td>
         </tr>
-        <tr>
+        <tr style="background-color: #f8f9fa;">
           <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Mensaje:</td>
           <td style="padding: 10px; border: 1px solid #dee2e6; white-space: pre-wrap;">${escapeHtml(lead.mensaje)}</td>
         </tr>
-        <tr style="background-color: #f8f9fa;">
+        <tr>
           <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Origen:</td>
           <td style="padding: 10px; border: 1px solid #dee2e6;">${escapeHtml(lead.origen || "Web / No especificado")}</td>
         </tr>
-        <tr>
+        <tr style="background-color: #f8f9fa;">
           <td style="padding: 10px; border: 1px solid #dee2e6; font-weight: bold;">Fecha:</td>
           <td style="padding: 10px; border: 1px solid #dee2e6;">${new Date().toLocaleString("es-AR")}</td>
         </tr>
@@ -70,10 +74,16 @@ export async function sendLeadNotificationToTeam(lead) {
       subject: `[Nuevo Lead] Consulta de ${lead.nombre} (${lead.tipoProyecto})`,
       html: htmlContent,
     });
-    console.log("✅ [Nodemailer] Mail interno enviado al equipo con éxito! ID:", info.messageId);
+    console.log(
+      "✅ [Nodemailer] Mail interno enviado al equipo con éxito! ID:",
+      info.messageId,
+    );
     return info;
   } catch (error) {
-    console.error("❌ [Nodemailer] Error enviando mail al equipo:", error.message);
+    console.error(
+      "❌ [Nodemailer] Error enviando mail al equipo:",
+      error.message,
+    );
     throw error;
   }
 }
@@ -82,7 +92,9 @@ export async function sendLeadNotificationToTeam(lead) {
  * Auto-respuesta al cliente con template propio ("menos de 24hs")
  */
 export async function sendLeadAutoReply(lead) {
-  console.log(`➡️ [Nodemailer] Intentando enviar auto-respuesta al cliente (${lead.email})...`);
+  console.log(
+    `➡️ [Nodemailer] Intentando enviar auto-respuesta al cliente (${lead.email})...`,
+  );
 
   const htmlContent = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 25px; border: 1px solid #e2e8f0; border-radius: 8px; color: #2d3748;">
@@ -116,10 +128,16 @@ export async function sendLeadAutoReply(lead) {
       subject: "Recibimos tu consulta - Te responderemos pronto",
       html: htmlContent,
     });
-    console.log("✅ [Nodemailer] Auto-respuesta enviada al cliente con éxito! ID:", info.messageId);
+    console.log(
+      "✅ [Nodemailer] Auto-respuesta enviada al cliente con éxito! ID:",
+      info.messageId,
+    );
     return info;
   } catch (error) {
-    console.error("❌ [Nodemailer] Error enviando auto-respuesta al cliente:", error.message);
+    console.error(
+      "❌ [Nodemailer] Error enviando auto-respuesta al cliente:",
+      error.message,
+    );
     throw error;
   }
 }
