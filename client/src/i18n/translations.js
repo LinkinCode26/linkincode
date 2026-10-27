@@ -387,6 +387,36 @@ const es = {
     ],
   },
 
+  testimonials: {
+    eyebrow: "Testimonios",
+    title: "Lo que dicen de",
+    highlight: "nosotros",
+    subtitle:
+      "Empresas y emprendedores que confiaron en nuestro código y metodología.",
+    items: [
+      {
+        name: "Ariadna Rivarola",
+        role: "Fundadora de Margarita By Ari",
+        content:
+          "El equipo entendió a la perfección lo que necesitaba para mi marca. Ahora tengo una plataforma súper rápida y el diseño es exactamente lo que buscaba. ¡Súper recomendados!",
+        image: "", // Agustín aqui pone la foto ej: "/images/ariadna.jpg"
+      },
+      {
+        name: "Daniela Salvatierra",
+        role: "Directora en EMUNA",
+        content:
+          "Trabajar con LinkinCode fue un alivio. Automatizaron nuestros procesos y la comunicación fue excelente en cada etapa del desarrollo. Son profesionales de primer nivel.",
+        image: "",
+      },
+      {
+        name: "Nicolas Cantone",
+        role: "Creador de Chizato Zone",
+        content:
+          "Necesitaba un sistema robusto y escalable, y superaron mis expectativas. El código es impecable y el soporte post-lanzamiento me dio muchísima tranquilidad.",
+        image: "",
+      },
+    ],
+  },
   contact: {
     eyebrow: "Contacto",
     titlePart1: "Construyamos algo",
@@ -852,6 +882,36 @@ const en = {
     ],
   },
 
+  testimonials: {
+    eyebrow: "Testimonials",
+    title: "What they say about",
+    highlight: "us",
+    subtitle:
+      "Companies and entrepreneurs who trusted our code and methodology.",
+    items: [
+      {
+        name: "Ariadna Rivarola",
+        role: "Founder at Margarita By Ari",
+        content:
+          "The team perfectly understood what my brand needed. Now I have a super fast platform and the design is exactly what I was looking for. Highly recommended!",
+        image: "",
+      },
+      {
+        name: "Daniela Salvatierra",
+        role: "Director at EMUNA",
+        content:
+          "Working with LinkinCode was a relief. They automated our processes and communication was excellent at every stage of development. Top-tier professionals.",
+        image: "",
+      },
+      {
+        name: "Nicolas Cantone",
+        role: "Creator of Chizato Zone",
+        content:
+          "I needed a robust and scalable system, and they exceeded my expectations. The code is flawless and the post-launch support gave me great peace of mind.",
+        image: "",
+      },
+    ],
+  },
   contact: {
     eyebrow: "Contact",
     titlePart1: "Let's build something",

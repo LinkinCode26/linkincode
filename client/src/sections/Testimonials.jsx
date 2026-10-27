@@ -7,7 +7,20 @@ export function Testimonials() {
   const headerRef = useScrollReveal();
   const gridRef = useScrollReveal({ delay: 0.15 });
 
-  const items = t("testimonials.items") || [];
+  const rawItems = t("testimonials.items") || [];
+
+  //const items = t("testimonials.items") || [];
+
+  const images = [
+    "/testimonials/Ariadna.webp",
+    "/testimonials/Daniela.webp",
+    "/testimonials/Nicolas.webp"
+  ]
+
+  const items = rawItems.map((item, index) => ({
+    ...item,
+    image: images[index] || null
+  }));
 
   return (
     <section
@@ -59,9 +72,17 @@ export function Testimonials() {
 
               {/* Datos del cliente */}
               <div className="pt-6 border-t border-line/60 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand to-accent flex items-center justify-center text-white font-bold text-sm">
-                  {item.name.charAt(0)}
-                </div>
+                {item.image ? (
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-10 h-10 rounded-full object-cover border border-line shrink-0"
+                  />
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand to-accent flex items-center justify-center text-white font-bold text-sm shrink-0">
+                    {item.name.charAt(0)}
+                  </div>
+                )}
                 <div>
                   <h3 className="font-display font-bold text-ink text-sm">
                     {item.name}
