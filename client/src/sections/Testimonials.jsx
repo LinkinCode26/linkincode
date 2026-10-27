@@ -7,7 +7,20 @@ export function Testimonials() {
   const headerRef = useScrollReveal();
   const gridRef = useScrollReveal({ delay: 0.15 });
 
-  const items = t("testimonials.items") || [];
+  const rawItems = t("testimonials.items") || [];
+
+  //const items = t("testimonials.items") || [];
+
+  const images = [
+    "/testimonials/Ariadna.webp",
+    "/testimonials/Daniela.webp",
+    "/testimonials/Nicolas.webp"
+  ]
+
+  const items = rawItems.map((item, index) => ({
+    ...item,
+    image: images[index] || null
+  }));
 
   return (
     <section
