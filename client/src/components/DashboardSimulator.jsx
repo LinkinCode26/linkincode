@@ -196,20 +196,39 @@ export function DashboardSimulator() {
             </p>
             <div className="w-full h-56 sm:h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartRows} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
-                <CartesianGrid stroke="var(--line)" strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="label" stroke="var(--mute)" fontSize={11} tickLine={false} axisLine={false} />
-                <YAxis
+<LineChart data={chartRows} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
+                  <CartesianGrid stroke="var(--line)" strokeDasharray="3 3" vertical={false} />
+                  <XAxis
+                    dataKey="label"
+                    stroke="var(--mute)"
+                    fontSize={11}
+                    tickLine={false}
+                    axisLine={false}
+                    interval={0}
+                  />
+                  <YAxis
+                    yAxisId="ventas"
                     stroke="var(--mute)"
                     fontSize={11}
                     tickLine={false}
                     axisLine={false}
                     width={44}
                     tickFormatter={formatAxisNumber}
-                />
+                  />
+                  <YAxis
+                    yAxisId="visitas"
+                    orientation="right"
+                    stroke="var(--mute)"
+                    fontSize={11}
+                    tickLine={false}
+                    axisLine={false}
+                    width={36}
+                    tickFormatter={formatAxisNumber}
+                  />
                   <Tooltip content={<CustomTooltip locale={locale} />} />
                   <Legend wrapperStyle={{ fontSize: 11 }} />
                   <Line
+                    yAxisId="ventas"
                     type="monotone"
                     dataKey="ventas"
                     name={salesLegend}
@@ -219,6 +238,7 @@ export function DashboardSimulator() {
                     activeDot={{ r: 5 }}
                   />
                   <Line
+                    yAxisId="visitas"
                     type="monotone"
                     dataKey="visitas"
                     name={visitsLegend}
