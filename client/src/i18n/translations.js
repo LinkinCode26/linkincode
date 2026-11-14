@@ -82,13 +82,14 @@ const es = {
       },
       api: {
         badge: "Servicio 03",
-        heading: "APIs REST & Backends",
+        heading: "APIs REST & Integraciones",
         description:
-          "Desarrollamos backends robustos y escalables para empresas que ya tienen su frontend o necesitan una API para sus aplicaciones.",
+          "¿Ya tenés tu sitio web o sistemas y necesitás conectar plataformas o integrar Mercado Pago? Desarrollamos backends robustos y automatizamos el intercambio de datos entre tus herramientas.",
         bullets: [
-          "Arquitectura RESTful documentada",
-          "Autenticación JWT / OAuth",
-          "Testing automatizado y CI/CD",
+          "Integración de Mercado Pago en sitios web y tiendas online",
+          "Conexión con sistemas de gestión o bases de datos externas",
+          "Integración de APIs de terceros y servicios externos",
+          "Automatización del intercambio de información entre plataformas",
         ],
         cta: "Solicitar presupuesto",
       },
@@ -580,13 +581,14 @@ const en = {
       },
       api: {
         badge: "Service 03",
-        heading: "REST APIs & Backends",
+        heading: "REST APIs & Integrations",
         description:
-          "We build robust, scalable backends for companies that already have a frontend or need an API for their applications.",
+          "Already have a website or systems and need to connect platforms or integrate Mercado Pago? We build robust backends and automate data exchange across your workflows.",
         bullets: [
-          "Documented RESTful architecture",
-          "JWT / OAuth authentication",
-          "Automated testing and CI/CD",
+          "Mercado Pago integration for websites and online stores",
+          "Connection with management systems or external databases",
+          "Third-party API and external service integration",
+          "Automated cross-platform data exchange",
         ],
         cta: "Request a quote",
       },
