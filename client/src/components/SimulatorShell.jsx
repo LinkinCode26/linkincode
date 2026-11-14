@@ -114,6 +114,13 @@ export function SimulatorShell({ title, children, onExit }) {
       <div className="flex-1 flex flex-col min-h-0" key={resetKey}>
         {children}
       </div>
+
+      {/* Footer unificado con disclaimer de personalización */}
+      <div className="pt-4 mt-6 border-t border-line/60 text-center shrink-0">
+        <p className="text-[11px] text-mute">
+          {t("solutions.simulator.disclaimer")}
+        </p>
+      </div>
     </div>
   );
 }

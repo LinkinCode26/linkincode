@@ -197,7 +197,7 @@ const es = {
         },
       },
       disclaimer:
-        "Simulación visual — no se envía ni almacena en nuestros servidores.",
+        "Funcionalidades con fines demostrativos — se adaptan y personalizan según las necesidades de cada cliente.",
       ecommerce: {
         clientName: "Nombre del cliente",
         placeholder: "Ej: Juan Pérez...",
@@ -692,7 +692,7 @@ const en = {
         },
       },
       disclaimer:
-        "Visual simulation — nothing is sent or stored on our servers.",
+        "Demonstration features — fully adaptable and customizable to each client's needs.",
       ecommerce: {
         clientName: "Client name",
         placeholder: "E.g. John Doe...",
