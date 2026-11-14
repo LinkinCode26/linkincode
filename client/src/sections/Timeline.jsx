@@ -1,15 +1,26 @@
 import useLanguage from '../hooks/useLanguage';
 import useScrollReveal from '../hooks/useScrollReveal';
 import { steps } from '../data/steps';
-import  ProcesoStep  from '../components/ProcesoStep';
+import ProcesoStep from '../components/ProcesoStep';
 
 const Timeline = () => {
-const { t } = useLanguage();
+  const { t } = useLanguage();
   const headerRef = useScrollReveal();
   const lineRef = useScrollReveal();
 
-const stepsText = t('process.steps');
+  const stepsText = t('process.steps');
+  const lastIndex = steps.length - 1;
 
+  const renderStep = (step, index) => (
+    <ProcesoStep
+      key={step.number}
+      step={step}
+      title={stepsText[index]?.title}
+      description={stepsText[index]?.description}
+      isRight={index % 2 === 1}
+      delay={0.05 + index * 0.1}
+    />
+  );
 
   return (
     <section id="proceso" className="py-24 sm:py-32 bg-surface/40 border-y border-line">
@@ -24,24 +35,20 @@ const stepsText = t('process.steps');
         </div>
 
         <div className="proceso-timeline relative max-w-4xl mx-auto">
-          <div ref={lineRef} className="proceso-line" aria-hidden="true">
-            <span className="proceso-line-fill" />
+          {/* La línea vive solo en el "track" (pasos 1 a N-1) y se extiende
+              hasta el centro del nodo N, que queda fuera del track. */}
+          <div className="proceso-track">
+            <div ref={lineRef} className="proceso-line" aria-hidden="true">
+              <span className="proceso-line-fill" />
+            </div>
+            {steps.slice(0, lastIndex).map(renderStep)}
           </div>
 
-          {steps.map((step, index) => (
-            <ProcesoStep
-              key={step.number}
-              step={step}
-              title={stepsText[index]?.title}
-              description={stepsText[index]?.description}
-              isRight={index % 2 === 1}
-              delay={0.05 + index * 0.1}
-            />
-          ))}
+          {renderStep(steps[lastIndex], lastIndex)}
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Timeline
+export default Timeline;
