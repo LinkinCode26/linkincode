@@ -368,6 +368,9 @@ export function Solutions() {
               ) : (
                 <SimulatorShell
                   title={content.heading}
+                  simulatorName={t(
+                    `solutions.simulator.names.${activeService.id}`,
+                  )}
                   accentColor={activeService.accent}
                   onExit={exitSimulation}
                 >
