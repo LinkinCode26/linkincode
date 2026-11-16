@@ -241,14 +241,23 @@ body {
 }
 
 .proceso-timeline {
+  --proceso-node: 44px; /* diámetro del nodo: fuente única para dot y línea */
   position: relative;
+}
+
+.proceso-track {
+  position: relative;
+  padding-bottom: 2.5rem;
 }
 
 .proceso-line {
   position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 22px;
+  /* De centro del nodo 1 a centro del nodo N (que empieza donde termina el track). */
+  top: calc(var(--proceso-node) / 2);
+  bottom: calc(var(--proceso-node) / -2);
+  /* Centro de la columna del nodo menos la mitad del ancho (2px / 2).
+     Sin transform: .reveal.in lo pisaría con `transform: none`. */
+  left: calc(var(--proceso-node) / 2 - 1px);
   width: 2px;
   background: var(--line);
   overflow: hidden;
@@ -285,8 +294,8 @@ body {
 
 .proceso-dot {
   grid-column: 1;
-  width: 44px;
-  height: 44px;
+  width: var(--proceso-node);
+  height: var(--proceso-node);
   border-radius: 9999px;
   display: flex;
   align-items: center;
@@ -306,8 +315,7 @@ body {
 
 @media (min-width: 1024px) {
   .proceso-line {
-    left: 50%;
-    transform: translateX(-50%);
+    left: calc(50% - 1px);
   }
   .proceso-step-inner {
     grid-template-columns: 1fr 60px 1fr;
@@ -315,6 +323,7 @@ body {
   }
   .proceso-dot {
     grid-column: 2;
+    justify-self: center; /* centra el nodo de 44px en la columna de 60px */
     box-shadow: 0 0 0 8px var(--surface);
   }
   .proceso-card {
