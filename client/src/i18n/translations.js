@@ -97,7 +97,7 @@ const es = {
         badge: "Servicio 04",
         heading: "Dashboards & Paneles Admin",
         description:
-          "Paneles de control personalizados para visualizar métricas, KPIs y datos de negocio en tiempo real.",
+          "Paneles de control personalizados para visualizar métricas, KPIs y datos de negocio en real time.",
         bullets: [
           "Gráficos interactivos y reportes",
           "Roles de usuario y permisos",
@@ -304,6 +304,9 @@ const es = {
         present: "Presente",
         absent: "Ausente",
         hoursShort: "hs",
+        addEmployee: "Agregar empleado",
+        searchPlaceholder: "Buscar por nombre o rol...",
+        clearSearch: "Limpiar búsqueda",
         summary: {
           scheduledHours: "Horas programadas",
           workedHours: "Horas trabajadas",
@@ -315,6 +318,53 @@ const es = {
           deposito: "Depósito",
           atencion: "Atención al cliente",
           administracion: "Administración",
+        },
+        actions: {
+          viewDetail: "Ver detalle",
+          edit: "Editar",
+          delete: "Dar de baja",
+        },
+        form: {
+          createTitle: "Nuevo empleado",
+          editTitle: "Editar empleado",
+          nameLabel: "Nombre completo",
+          namePlaceholder: "Ej: Valentina Gómez",
+          roleLabel: "Rol / Área",
+          hoursLabel: "Horas por turno",
+          hoursPlaceholder: "Ej: 8",
+          cancel: "Cancelar",
+          saveCreate: "Guardar empleado",
+          saveEdit: "Guardar cambios",
+          errors: {
+            nameRequired: "Ingresá el nombre del empleado.",
+            nameMin: "El nombre debe tener al menos 2 caracteres.",
+            roleRequired: "Seleccioná un rol válido.",
+            hoursRequired: "Ingresá las horas del turno.",
+            hoursRange: "Las horas deben estar entre 1 y 24.",
+          },
+        },
+        deleteConfirm: {
+          question: "¿Dar de baja a",
+          cancel: "Cancelar",
+          confirm: "Confirmar baja",
+        },
+        detail: {
+          title: "Ficha del empleado",
+          role: "Rol",
+          dailyShift: "Jornada diaria",
+          weeklyWorked: "Horas semanales trabajadas",
+          weeklyAttendance: "Asistencia semanal",
+          dailyStatus: "Asistencia por día (clic para alternar)",
+          close: "Cerrar ficha",
+        },
+        empty: {
+          title: "No hay empleados en la nómina",
+          description:
+            "Agregá un nuevo empleado para gestionar turnos y asistencias, o usá Reiniciar arriba para restaurar la lista inicial.",
+          cta: "Agregar primer empleado",
+          noResultsTitle: "Sin coincidencias",
+          noResultsDescription:
+            "No encontramos empleados que coincidan con tu búsqueda.",
         },
         disclaimer:
           "Datos de personal simulados con fines demostrativos — no representan empleados reales ni se envían a ningún servidor.",
@@ -809,6 +859,9 @@ const en = {
         present: "Present",
         absent: "Absent",
         hoursShort: "hrs",
+        addEmployee: "Add employee",
+        searchPlaceholder: "Search by name or role...",
+        clearSearch: "Clear search",
         summary: {
           scheduledHours: "Scheduled hours",
           workedHours: "Worked hours",
@@ -820,6 +873,53 @@ const en = {
           deposito: "Warehouse",
           atencion: "Customer service",
           administracion: "Administration",
+        },
+        actions: {
+          viewDetail: "View details",
+          edit: "Edit",
+          delete: "Remove",
+        },
+        form: {
+          createTitle: "New employee",
+          editTitle: "Edit employee",
+          nameLabel: "Full name",
+          namePlaceholder: "E.g. Sarah Connor",
+          roleLabel: "Role / Department",
+          hoursLabel: "Shift hours",
+          hoursPlaceholder: "E.g. 8",
+          cancel: "Cancel",
+          saveCreate: "Save employee",
+          saveEdit: "Save changes",
+          errors: {
+            nameRequired: "Please enter the employee's name.",
+            nameMin: "Name must be at least 2 characters long.",
+            roleRequired: "Please select a valid role.",
+            hoursRequired: "Please enter the shift hours.",
+            hoursRange: "Hours must be between 1 and 24.",
+          },
+        },
+        deleteConfirm: {
+          question: "Remove",
+          cancel: "Cancel",
+          confirm: "Confirm removal",
+        },
+        detail: {
+          title: "Employee details",
+          role: "Role",
+          dailyShift: "Daily shift",
+          weeklyWorked: "Weekly worked hours",
+          weeklyAttendance: "Weekly attendance",
+          dailyStatus: "Daily attendance (click to toggle)",
+          close: "Close details",
+        },
+        empty: {
+          title: "No employees in the roster",
+          description:
+            "Add a new employee to manage shifts and attendance, or click Reset above to restore the initial list.",
+          cta: "Add first employee",
+          noResultsTitle: "No matching employees",
+          noResultsDescription:
+            "We couldn't find any employees matching your search.",
         },
         disclaimer:
           "Simulated staff data for demonstration purposes only — it does not represent real employees and is not sent to any server.",
