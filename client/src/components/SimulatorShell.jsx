@@ -3,7 +3,7 @@ import { RotateCcw, Maximize2, Minimize2, X } from "lucide-react";
 import { useSimulator } from "../hooks/useSimulator";
 import useLanguage from "../hooks/useLanguage";
 
-export function SimulatorShell({ title, children, onExit }) {
+export function SimulatorShell({ title, simulatorName, children, onExit }) {
   const { isFullscreen, toggleFullscreen, resetSimulator, resetKey } =
     useSimulator();
   const { t } = useLanguage();
@@ -58,7 +58,9 @@ export function SimulatorShell({ title, children, onExit }) {
           <span className="flex h-2 w-2 rounded-full bg-accent animate-pulse shrink-0"></span>
           <span className="text-[11px] font-bold uppercase tracking-widest text-accent-text truncate">
             {isFullscreen
-              ? t(
+              ? simulatorName ||
+                title ||
+                t(
                   "solutions.simulator.fullscreenTitle",
                   "SIMULANDO EN PANTALLA COMPLETA",
                 )
