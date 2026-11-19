@@ -1,11 +1,22 @@
 import { useCallback, useMemo, useState } from "react";
 import { products as mockProducts } from "../data/mock/products";
 
+function isoDaysAgo(days, hour = 12) {
+  const d = new Date();
+  d.setDate(d.getDate() - days);
+  d.setHours(days === 0 ? Math.min(hour, d.getHours()) : hour, 0, 0, 0);
+  return d.toISOString();
+}
+
+const ORD_1001_DATE = isoDaysAgo(5, 14);
+const ORD_1002_DATE = isoDaysAgo(0, 10);
+const ORD_1003_DATE = isoDaysAgo(1, 18);
+
 const INITIAL_ORDERS = [
   {
     id: "ord-1001",
     number: "ORD-1001",
-    date: "2026-11-14T14:20:00.000Z",
+    date: ORD_1001_DATE,
     customerName: "Martina López",
     customerEmail: "martina.lopez@ejemplo.com",
     items: [
@@ -32,7 +43,7 @@ const INITIAL_ORDERS = [
   {
     id: "ord-1002",
     number: "ORD-1002",
-    date: "2026-11-15T10:45:00.000Z",
+    date: ORD_1002_DATE,
     customerName: "Lucas Fernández",
     customerEmail: "lucas.fernandez@ejemplo.com",
     items: [
@@ -52,7 +63,7 @@ const INITIAL_ORDERS = [
   {
     id: "ord-1003",
     number: "ORD-1003",
-    date: "2026-11-15T18:10:00.000Z",
+    date: ORD_1003_DATE,
     customerName: "Sofía Pereyra",
     customerEmail: "sofia.pereyra@ejemplo.com",
     items: [

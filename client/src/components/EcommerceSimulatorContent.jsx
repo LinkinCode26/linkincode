@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import useLanguage from "../hooks/useLanguage";
 import { useEcommerceStore } from "../hooks/useEcommerceStore";
+import EcommerceDashboard from "./EcommerceDashboard";
 
 const COLOR_OPTIONS = [
   {
@@ -80,7 +81,7 @@ export function EcommerceSimulatorContent() {
 
   // Navegación Tienda vs Panel Admin (LC-010)
   const [activeView, setActiveView] = useState("store"); // "store" | "admin"
-  const [activeAdminTab, setActiveAdminTab] = useState("orders");
+  const [activeAdminTab, setActiveAdminTab] = useState("dashboard");
 
   // Flujo de Checkout y Confirmación (LC-009)
   const [checkoutStep, setCheckoutStep] = useState("browse"); // "browse" | "form" | "confirmed"
@@ -843,7 +844,8 @@ export function EcommerceSimulatorContent() {
           )}
 
           {/* Resumen rápido conectado al store compartido */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {activeAdminTab !== "dashboard" && (
+  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             <div className="bg-surface border border-line rounded-xl p-3.5">
               <span className="block text-[10px] font-bold uppercase tracking-wider text-mute">
                 {t("solutions.simulator.ecommerce.admin.kpis.revenue")}
@@ -877,6 +879,8 @@ export function EcommerceSimulatorContent() {
               </span>
             </div>
           </div>
+          )}
+
 
           {/* Contenido sincronizado del Admin según pestaña activa */}
           <div
@@ -885,7 +889,9 @@ export function EcommerceSimulatorContent() {
             aria-labelledby={`ecom-admin-tab-${activeAdminTab}`}
             className="flex flex-col gap-3"
           >
-            {activeAdminTab === "products" ? (
+            {activeAdminTab === "dashboard" ? (
+              <EcommerceDashboard orders={orders} products={products} formatPrice={formatPrice}/>
+            ) : activeAdminTab === "products" ? (
               <div className="flex flex-col gap-2.5">
                 {products.map((prod) => (
                   <div
