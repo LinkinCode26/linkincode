@@ -1,5 +1,6 @@
 // Diccionario de textos estáticos del sitio, en español e inglés.
 import { adminEs, adminEn } from "./admin.js";
+import { withEcommerceAdmin, ecommerceAdminEs, ecommerceAdminEn } from "./ecommerceAdmin.js";
 
 const es = {
   nav: {
@@ -1242,8 +1243,8 @@ const en = {
 };
 
 export const translations = {
-  es: { ...es, admin: adminEs },
-  en: { ...en, admin: adminEn },
+  es: withEcommerceAdmin({ ...es, admin: adminEs }, ecommerceAdminEs),
+  en: withEcommerceAdmin({ ...en, admin: adminEn }, ecommerceAdminEn),
 };
 
 export default translations;

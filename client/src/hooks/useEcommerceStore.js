@@ -1,31 +1,42 @@
 import { useCallback, useMemo, useState } from "react";
 import { products as mockProducts } from "../data/mock/products";
+import {
+  ORDER_STATUSES,
+  PAYMENT_METHOD_IDS,
+  PAYMENT_STATUSES,
+  PLACEHOLDER_IMAGE,
+  isActiveOrder,
+} from "../utils/ecommerce";
 
+const DEFAULT_LOW_STOCK_THRESHOLD = 5;
+
+const sum = (list, pick) => list.reduce((acc, item) => acc + pick(item), 0);
+
+const line = (productId, name, price, qty) => ({
+  productId,
+  name,
+  i18n: true, // producto original: su nombre se traduce con t()
+  price,
+  qty,
+  subtotal: price * qty,
+});
+
+// Los pedidos guardan el medio de pago como id (no como texto traducido) para
+// que se muestre en el idioma activo.
 const INITIAL_ORDERS = [
   {
     id: "ord-1001",
     number: "ORD-1001",
     date: "2026-11-14T14:20:00.000Z",
+    customerId: "cust-1",
     customerName: "Martina López",
     customerEmail: "martina.lopez@ejemplo.com",
     items: [
-      {
-        productId: "prod-1",
-        name: "Auriculares Inalámbricos",
-        price: 45000,
-        qty: 1,
-        subtotal: 45000,
-      },
-      {
-        productId: "prod-3",
-        name: "Botella Térmica 1L",
-        price: 18500,
-        qty: 1,
-        subtotal: 18500,
-      },
+      line("prod-1", "Auriculares Inalámbricos", 45000, 1),
+      line("prod-3", "Botella Térmica 1L", 18500, 1),
     ],
     total: 63500,
-    paymentMethod: "Mercado Pago",
+    paymentMethodId: "mercadopago",
     paymentStatus: "paid",
     orderStatus: "delivered",
   },
@@ -33,19 +44,12 @@ const INITIAL_ORDERS = [
     id: "ord-1002",
     number: "ORD-1002",
     date: "2026-11-15T10:45:00.000Z",
+    customerId: "cust-2",
     customerName: "Lucas Fernández",
     customerEmail: "lucas.fernandez@ejemplo.com",
-    items: [
-      {
-        productId: "prod-4",
-        name: "Teclado Mecánico",
-        price: 68000,
-        qty: 1,
-        subtotal: 68000,
-      },
-    ],
+    items: [line("prod-4", "Teclado Mecánico", 68000, 1)],
     total: 68000,
-    paymentMethod: "Tarjeta de crédito",
+    paymentMethodId: "card",
     paymentStatus: "paid",
     orderStatus: "preparing",
   },
@@ -53,59 +57,43 @@ const INITIAL_ORDERS = [
     id: "ord-1003",
     number: "ORD-1003",
     date: "2026-11-15T18:10:00.000Z",
+    customerId: "cust-3",
     customerName: "Sofía Pereyra",
     customerEmail: "sofia.pereyra@ejemplo.com",
-    items: [
-      {
-        productId: "prod-2",
-        name: "Mochila Urbana",
-        price: 39000,
-        qty: 2,
-        subtotal: 78000,
-      },
-    ],
+    items: [line("prod-2", "Mochila Urbana", 39000, 2)],
     total: 78000,
-    paymentMethod: "Transferencia",
+    paymentMethodId: "transfer",
     paymentStatus: "pending",
-    orderStatus: "pending",
+    orderStatus: "new",
   },
 ];
 
+// Solo datos de contacto: las compras, el total gastado y la última compra
+// se calculan a partir de los pedidos (así nunca quedan desincronizados cuando
+// el admin cambia un estado).
 const INITIAL_CUSTOMERS = [
   {
     id: "cust-1",
     name: "Martina López",
     email: "martina.lopez@ejemplo.com",
     phone: "+54 11 4521-8890",
-    ordersCount: 1,
-    totalSpent: 63500,
-    lastOrderDate: "2026-11-14T14:20:00.000Z",
-    orderNumbers: ["ORD-1001"],
   },
   {
     id: "cust-2",
     name: "Lucas Fernández",
     email: "lucas.fernandez@ejemplo.com",
     phone: "+54 351 612-3340",
-    ordersCount: 1,
-    totalSpent: 68000,
-    lastOrderDate: "2026-11-15T10:45:00.000Z",
-    orderNumbers: ["ORD-1002"],
   },
   {
     id: "cust-3",
     name: "Sofía Pereyra",
     email: "sofia.pereyra@ejemplo.com",
     phone: "+54 381 504-9912",
-    ordersCount: 1,
-    totalSpent: 78000,
-    lastOrderDate: "2026-11-15T18:10:00.000Z",
-    orderNumbers: ["ORD-1003"],
   },
 ];
 
 function cloneInitialProducts() {
-  return mockProducts.map((product) => ({ ...product }));
+  return mockProducts.map((product) => ({ ...product, i18n: true }));
 }
 
 function buildEmailFromName(name) {
@@ -118,38 +106,62 @@ function buildEmailFromName(name) {
   return `${slug || "cliente"}@ejemplo.com`;
 }
 
+function nextOrderNumber(orders) {
+  const max = orders.reduce(
+    (acc, order) => Math.max(acc, Number(order.number.replace(/\D/g, "")) || 0),
+    1000,
+  );
+  return max + 1;
+}
+
+// Los ids no pueden llevar "." porque se usan dentro de una clave de t().
+function createProductId() {
+  return `prod-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`;
+}
+
 export function useEcommerceStore() {
   const [products, setProducts] = useState(cloneInitialProducts);
-  const [cart, setCart] = useState([]);
+  // El carrito guarda solo { id, qty }: nombre, precio y stock se leen del
+  // catálogo en cada render, así un cambio del admin se refleja al instante.
+  const [cartLines, setCartLines] = useState([]);
   const [orders, setOrders] = useState(INITIAL_ORDERS);
-  const [customers, setCustomers] = useState(INITIAL_CUSTOMERS);
+  const [customerRecords, setCustomerRecords] = useState(INITIAL_CUSTOMERS);
   const [unseenOrdersCount, setUnseenOrdersCount] = useState(0);
 
-  const addToCart = useCallback(
-    (product) => {
-      const currentProduct = products.find((p) => p.id === product.id);
-      if (!currentProduct || currentProduct.stock <= 0) return;
+  // ---------------------------------------------------------------------
+  // Carrito (derivado del catálogo)
+  // ---------------------------------------------------------------------
+  const cart = useMemo(
+    () =>
+      cartLines.reduce((acc, cartLine) => {
+        const product = products.find((p) => p.id === cartLine.id);
+        // Producto eliminado o agotado: sale del carrito.
+        if (!product || product.stock <= 0) return acc;
+        acc.push({
+          id: product.id,
+          name: product.name,
+          i18n: product.i18n,
+          price: product.price,
+          image: product.image,
+          qty: Math.min(cartLine.qty, product.stock),
+        });
+        return acc;
+      }, []),
+    [cartLines, products],
+  );
 
-      setCart((prev) => {
-        const existing = prev.find((item) => item.id === product.id);
-        if (existing) {
-          if (existing.qty >= currentProduct.stock) return prev;
-          return prev.map((item) =>
-            item.id === product.id
-              ? { ...item, name: product.name, qty: item.qty + 1 }
-              : item,
-          );
-        }
-        return [
-          ...prev,
-          {
-            id: currentProduct.id,
-            name: product.name,
-            price: currentProduct.price,
-            image: currentProduct.image,
-            qty: 1,
-          },
-        ];
+  const addToCart = useCallback(
+    (productId) => {
+      const product = products.find((p) => p.id === productId);
+      if (!product || product.stock <= 0) return;
+
+      setCartLines((prev) => {
+        const existing = prev.find((item) => item.id === productId);
+        if (!existing) return [...prev, { id: productId, qty: 1 }];
+        if (existing.qty >= product.stock) return prev;
+        return prev.map((item) =>
+          item.id === productId ? { ...item, qty: item.qty + 1 } : item,
+        );
       });
     },
     [products],
@@ -157,14 +169,17 @@ export function useEcommerceStore() {
 
   const updateCartQty = useCallback(
     (productId, delta) => {
-      const currentProduct = products.find((p) => p.id === productId);
-      const maxStock = currentProduct ? currentProduct.stock : 0;
+      const product = products.find((p) => p.id === productId);
+      const maxStock = product ? product.stock : 0;
 
-      setCart((prev) =>
+      setCartLines((prev) =>
         prev
           .map((item) => {
             if (item.id !== productId) return item;
-            const nextQty = Math.min(maxStock, item.qty + delta);
+            const nextQty = Math.min(
+              maxStock,
+              Math.min(item.qty, maxStock) + delta,
+            );
             return nextQty > 0 ? { ...item, qty: nextQty } : null;
           })
           .filter(Boolean),
@@ -174,11 +189,20 @@ export function useEcommerceStore() {
   );
 
   const removeFromCart = useCallback((productId) => {
-    setCart((prev) => prev.filter((item) => item.id !== productId));
+    setCartLines((prev) => prev.filter((item) => item.id !== productId));
   }, []);
 
+  // ---------------------------------------------------------------------
+  // Checkout: crea el pedido, descuenta stock y crea/actualiza al cliente
+  // ---------------------------------------------------------------------
   const checkout = useCallback(
-    ({ customerName, customerEmail, paymentMethod, fallbackCustomerName }) => {
+    ({
+      customerName,
+      customerEmail,
+      customerPhone,
+      paymentMethodId,
+      fallbackCustomerName,
+    }) => {
       if (cart.length === 0) return null;
 
       const cleanName =
@@ -186,112 +210,237 @@ export function useEcommerceStore() {
       const cleanEmail =
         (customerEmail || "").trim().toLowerCase() ||
         buildEmailFromName(cleanName);
+      const cleanPhone = (customerPhone || "").trim();
 
       const orderItems = cart.map((item) => ({
         productId: item.id,
         name: item.name,
+        i18n: item.i18n,
         price: item.price,
         qty: item.qty,
         subtotal: item.price * item.qty,
       }));
-
-      const orderTotal = orderItems.reduce(
-        (sum, item) => sum + item.subtotal,
-        0,
-      );
-      const orderNumber = `ORD-${1000 + orders.length + 1}`;
+      const orderTotal = sum(orderItems, (item) => item.subtotal);
       const nowIso = new Date().toISOString();
+
+      // El cliente se identifica por email. Los ids se calculan acá afuera
+      // para que los updaters de setState sigan siendo puros.
+      const existingCustomer = customerRecords.find(
+        (c) => c.email.toLowerCase() === cleanEmail,
+      );
+      const customerId = existingCustomer
+        ? existingCustomer.id
+        : `cust-${Date.now()}`;
 
       const newOrder = {
         id: `ord-${Date.now()}`,
-        number: orderNumber,
+        number: `ORD-${nextOrderNumber(orders)}`,
         date: nowIso,
-        customerName: cleanName,
+        customerId,
+        customerName: existingCustomer ? existingCustomer.name : cleanName,
         customerEmail: cleanEmail,
         items: orderItems,
         total: orderTotal,
-        paymentMethod: paymentMethod || "Mercado Pago",
-        paymentStatus: "paid",
-        orderStatus: "preparing",
+        paymentMethodId: paymentMethodId || "mercadopago",
+        // Estado inicial: la transferencia queda pendiente de acreditación;
+        // Mercado Pago y tarjeta se aprueban en el momento.
+        paymentStatus: paymentMethodId === "transfer" ? "pending" : "paid",
+        orderStatus: "new",
       };
 
-      // 1. Registrar el nuevo pedido al inicio
       setOrders((prev) => [newOrder, ...prev]);
 
-      // 2. Descontar stock en el catálogo compartido (sin mutar el mock global)
       setProducts((prev) =>
-        prev.map((prod) => {
-          const purchased = orderItems.find((i) => i.productId === prod.id);
-          if (!purchased) return prod;
+        prev.map((product) => {
+          const purchased = orderItems.find((i) => i.productId === product.id);
+          if (!purchased) return product;
           return {
-            ...prod,
-            stock: Math.max(0, prod.stock - purchased.qty),
+            ...product,
+            stock: Math.max(0, product.stock - purchased.qty),
           };
         }),
       );
 
-      // 3. Crear o actualizar cliente
-      setCustomers((prev) => {
-        const normalizedTargetName = cleanName.toLowerCase();
-        const existingIndex = prev.findIndex(
-          (c) =>
-            c.email.toLowerCase() === cleanEmail ||
-            c.name.toLowerCase() === normalizedTargetName,
-        );
-
-        if (existingIndex >= 0) {
-          return prev.map((cust, idx) =>
-            idx === existingIndex
-              ? {
-                  ...cust,
-                  name: cleanName,
-                  email: cleanEmail,
-                  ordersCount: cust.ordersCount + 1,
-                  totalSpent: cust.totalSpent + orderTotal,
-                  lastOrderDate: nowIso,
-                  orderNumbers: [orderNumber, ...cust.orderNumbers],
-                }
-              : cust,
+      setCustomerRecords((prev) => {
+        if (existingCustomer) {
+          return prev.map((c) =>
+            c.id === existingCustomer.id
+              ? { ...c, phone: cleanPhone || c.phone }
+              : c,
           );
         }
-
         return [
           {
-            id: `cust-${Date.now()}`,
+            id: customerId,
             name: cleanName,
             email: cleanEmail,
-            phone: "+54 11 5555-0199",
-            ordersCount: 1,
-            totalSpent: orderTotal,
-            lastOrderDate: nowIso,
-            orderNumbers: [orderNumber],
+            phone: cleanPhone,
           },
           ...prev,
         ];
       });
 
-      // 4. Vaciar carrito y marcar notificación para el Panel Admin
-      setCart([]);
+      setCartLines([]);
       setUnseenOrdersCount((prev) => prev + 1);
 
       return newOrder;
     },
-    [cart, orders.length],
+    [cart, orders, customerRecords],
   );
 
   const clearUnseenOrders = useCallback(() => {
     setUnseenOrdersCount(0);
   }, []);
 
-  const cartItemCount = useMemo(
-    () => cart.reduce((total, item) => total + item.qty, 0),
+  // ---------------------------------------------------------------------
+  // Admin: pedidos
+  // ---------------------------------------------------------------------
+  const updateOrderStatus = useCallback((orderId, orderStatus) => {
+    if (!ORDER_STATUSES.includes(orderStatus)) return;
+    setOrders((prev) =>
+      prev.map((order) =>
+        order.id === orderId ? { ...order, orderStatus } : order,
+      ),
+    );
+  }, []);
+
+  const updatePaymentStatus = useCallback((orderId, paymentStatus) => {
+    if (!PAYMENT_STATUSES.includes(paymentStatus)) return;
+    setOrders((prev) =>
+      prev.map((order) =>
+        order.id === orderId ? { ...order, paymentStatus } : order,
+      ),
+    );
+  }, []);
+
+  // ---------------------------------------------------------------------
+  // Admin: productos
+  // ---------------------------------------------------------------------
+  const addProduct = useCallback(({ name, price, stock, image }) => {
+    const product = {
+      id: createProductId(),
+      name: name.trim(),
+      price: Number(price),
+      stock: Math.floor(Number(stock)),
+      lowStockThreshold: DEFAULT_LOW_STOCK_THRESHOLD,
+      image: (image || "").trim() || PLACEHOLDER_IMAGE,
+      i18n: false, // producto nuevo: no tiene clave de traducción
+    };
+    setProducts((prev) => [product, ...prev]);
+    return product;
+  }, []);
+
+  // changes puede traer: name, i18n, price, stock, image
+  const updateProduct = useCallback((productId, changes) => {
+    setProducts((prev) =>
+      prev.map((product) =>
+        product.id === productId ? { ...product, ...changes } : product,
+      ),
+    );
+  }, []);
+
+  const adjustStock = useCallback((productId, delta) => {
+    setProducts((prev) =>
+      prev.map((product) =>
+        product.id === productId
+          ? { ...product, stock: Math.max(0, product.stock + delta) }
+          : product,
+      ),
+    );
+  }, []);
+
+  const deleteProduct = useCallback((productId) => {
+    setProducts((prev) => prev.filter((product) => product.id !== productId));
+    setCartLines((prev) => prev.filter((item) => item.id !== productId));
+  }, []);
+
+  // ---------------------------------------------------------------------
+  // Datos derivados
+  // ---------------------------------------------------------------------
+  const cartItemCount = useMemo(() => sum(cart, (item) => item.qty), [cart]);
+  const cartTotal = useMemo(
+    () => sum(cart, (item) => item.price * item.qty),
     [cart],
   );
 
-  const cartTotal = useMemo(
-    () => cart.reduce((total, item) => total + item.price * item.qty, 0),
-    [cart],
+  // Cada cliente trae su historial y sus totales, calculados desde los
+  // pedidos vigentes (no cancelados y con pago no rechazado).
+  const customers = useMemo(
+    () =>
+      customerRecords.map((customer) => {
+        const history = orders
+          .filter((order) => order.customerId === customer.id)
+          .sort((a, b) => new Date(b.date) - new Date(a.date));
+        const active = history.filter(isActiveOrder);
+        return {
+          ...customer,
+          history,
+          ordersCount: active.length,
+          totalSpent: sum(active, (order) => order.total),
+          lastOrderDate: history[0]?.date ?? null,
+        };
+      }),
+    [customerRecords, orders],
   );
+
+  // Métricas del dashboard: se recalculan solas cuando cambia un estado.
+  const stats = useMemo(() => {
+    const active = orders.filter(isActiveOrder);
+    const paid = active.filter((o) => o.paymentStatus === "paid");
+    const pending = active.filter((o) => o.paymentStatus === "pending");
+
+    const ordersByStatus = Object.fromEntries(
+      ORDER_STATUSES.map((s) => [
+        s,
+        orders.filter((o) => o.orderStatus === s).length,
+      ]),
+    );
+    const paymentsByStatus = Object.fromEntries(
+      PAYMENT_STATUSES.map((s) => [
+        s,
+        orders.filter((o) => o.paymentStatus === s).length,
+      ]),
+    );
+
+    const salesByMethod = PAYMENT_METHOD_IDS.map((id) => ({
+      id,
+      total: sum(
+        paid.filter((o) => o.paymentMethodId === id),
+        (o) => o.total,
+      ),
+    }));
+
+    const productMap = new Map();
+    active.forEach((order) =>
+      order.items.forEach((item) => {
+        const entry = productMap.get(item.productId) ?? {
+          id: item.productId,
+          name: item.name,
+          i18n: item.i18n,
+          units: 0,
+          revenue: 0,
+        };
+        entry.units += item.qty;
+        entry.revenue += item.subtotal;
+        productMap.set(item.productId, entry);
+      }),
+    );
+    const topProducts = [...productMap.values()]
+      .sort((a, b) => b.units - a.units)
+      .slice(0, 5);
+
+    return {
+      revenue: sum(paid, (o) => o.total),
+      pendingRevenue: sum(pending, (o) => o.total),
+      ordersTotal: orders.length,
+      ordersByStatus,
+      paymentsByStatus,
+      salesByMethod,
+      topProducts,
+      lowStock: products.filter((p) => p.stock <= p.lowStockThreshold).length,
+      outOfStock: products.filter((p) => p.stock <= 0).length,
+    };
+  }, [orders, products]);
 
   return {
     products,
@@ -300,12 +449,19 @@ export function useEcommerceStore() {
     cartTotal,
     orders,
     customers,
+    stats,
     unseenOrdersCount,
     addToCart,
     updateCartQty,
     removeFromCart,
     checkout,
     clearUnseenOrders,
+    updateOrderStatus,
+    updatePaymentStatus,
+    addProduct,
+    updateProduct,
+    adjustStock,
+    deleteProduct,
   };
 }
 
