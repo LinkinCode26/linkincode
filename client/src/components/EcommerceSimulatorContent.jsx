@@ -17,7 +17,19 @@ import {
 } from "lucide-react";
 import useLanguage from "../hooks/useLanguage";
 import { useEcommerceStore } from "../hooks/useEcommerceStore";
-import EcommerceDashboard from "./EcommerceDashboard";
+import {
+  PAYMENT_METHOD_IDS,
+  formatPrice,
+  getDisplayName,
+  handleImageError,
+} from "../utils/ecommerce";
+import {
+  AdminDashboardTab,
+  AdminReportsTab,
+} from "./ecommerce/EcommerceAdminDashboard";
+import AdminOrdersTab from "./ecommerce/EcommerceAdminOrders";
+import AdminProductsTab from "./ecommerce/EcommerceAdminProducts";
+import AdminCustomersTab from "./ecommerce/EcommerceAdminCustomers";
 
 const COLOR_OPTIONS = [
   {
@@ -42,12 +54,6 @@ const COLOR_OPTIONS = [
   },
 ];
 
-const PAYMENT_METHODS = [
-  { id: "mercadopago", labelKey: "mercadopago" },
-  { id: "card", labelKey: "card" },
-  { id: "transfer", labelKey: "transfer" },
-];
-
 const ADMIN_TABS = [
   { id: "dashboard", icon: LayoutDashboard },
   { id: "orders", icon: ShoppingBag },
@@ -67,26 +73,34 @@ export function EcommerceSimulatorContent() {
     cartTotal,
     orders,
     customers,
+    stats,
     unseenOrdersCount,
     addToCart,
     updateCartQty,
     removeFromCart,
     checkout,
     clearUnseenOrders,
+    updateOrderStatus,
+    updatePaymentStatus,
+    addProduct,
+    updateProduct,
+    adjustStock,
+    deleteProduct,
   } = useEcommerceStore();
 
   // Personalización visual de la tienda
   const [simTitle, setSimTitle] = useState("");
   const [simColor, setSimColor] = useState("brand");
 
-  // Navegación Tienda vs Panel Admin (LC-010)
+  // Navegación Tienda vs Panel Admin
   const [activeView, setActiveView] = useState("store"); // "store" | "admin"
-  const [activeAdminTab, setActiveAdminTab] = useState("dashboard");
+  const [activeAdminTab, setActiveAdminTab] = useState("orders");
 
-  // Flujo de Checkout y Confirmación (LC-009)
+  // Flujo de Checkout y Confirmación
   const [checkoutStep, setCheckoutStep] = useState("browse"); // "browse" | "form" | "confirmed"
   const [buyerName, setBuyerName] = useState("");
   const [buyerEmail, setBuyerEmail] = useState("");
+  const [buyerPhone, setBuyerPhone] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("mercadopago");
   const [lastConfirmedOrder, setLastConfirmedOrder] = useState(null);
 
@@ -97,8 +111,11 @@ export function EcommerceSimulatorContent() {
     COLOR_OPTIONS.find((c) => c.id === simColor) || COLOR_OPTIONS[0];
   const activeColorStyle = activeColor.buttonClass;
 
-  const formatPrice = (value) =>
-    `$${Number(value || 0).toLocaleString(locale)}`;
+  const money = (value) => formatPrice(value, locale);
+
+  // Si el admin vació el carrito (por ejemplo eliminando un producto) mientras
+  // el comprador estaba en el formulario de pago, se vuelve al catálogo.
+  const step = checkoutStep === "form" && cart.length === 0 ? "browse" : checkoutStep;
 
   const handleSwitchView = (nextView) => {
     setActiveView(nextView);
@@ -148,14 +165,11 @@ export function EcommerceSimulatorContent() {
     event.preventDefault();
     if (cart.length === 0) return;
 
-    const methodLabel =
-      t(`solutions.simulator.ecommerce.checkout.methods.${paymentMethod}`) ||
-      paymentMethod;
-
     const createdOrder = checkout({
       customerName: buyerName,
       customerEmail: buyerEmail,
-      paymentMethod: methodLabel,
+      customerPhone: buyerPhone,
+      paymentMethodId: paymentMethod,
       fallbackCustomerName:
         t("solutions.simulator.ecommerce.checkout.guestCustomer") ||
         "Cliente Web",
@@ -179,20 +193,51 @@ export function EcommerceSimulatorContent() {
     clearUnseenOrders();
   };
 
-  const getProductName = (product) => {
-    const key = `solutions.simulator.ecommerce.products.${product.id}`;
-    const translated = t(key);
-    return translated && translated !== key ? translated : product.name;
+  const adminBadgeCount = (tabId) => {
+    if (tabId === "orders") return orders.length;
+    if (tabId === "products") return products.length;
+    if (tabId === "customers") return customers.length;
+    return null;
   };
 
-  const totalRevenue = orders.reduce((acc, ord) => acc + ord.total, 0);
-  const lowStockProducts = products.filter(
-    (p) => p.stock <= p.lowStockThreshold,
-  );
+  const renderAdminContent = () => {
+    switch (activeAdminTab) {
+      case "products":
+        return (
+          <AdminProductsTab
+            products={products}
+            onAdd={addProduct}
+            onUpdate={updateProduct}
+            onAdjustStock={adjustStock}
+            onDelete={deleteProduct}
+          />
+        );
+      case "customers":
+        return <AdminCustomersTab customers={customers} />;
+      case "reports":
+        return <AdminReportsTab stats={stats} />;
+      case "dashboard":
+        return (
+          <AdminDashboardTab
+            stats={stats}
+            orders={orders}
+            customersCount={customers.length}
+          />
+        );
+      default:
+        return (
+          <AdminOrdersTab
+            orders={orders}
+            onChangeOrderStatus={updateOrderStatus}
+            onChangePaymentStatus={updatePaymentStatus}
+          />
+        );
+    }
+  };
 
   return (
     <div className="flex flex-col gap-5 py-2">
-      {/* Barra superior de navegación: Tienda Online vs Panel Admin (LC-010) */}
+      {/* Barra superior de navegación: Tienda Online vs Panel Admin */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface p-3 rounded-2xl border border-line">
         <div
           role="tablist"
@@ -271,13 +316,13 @@ export function EcommerceSimulatorContent() {
           <span className="text-line-strong">•</span>
           <span>
             {t("solutions.simulator.ecommerce.nav.cartCounter")}:{" "}
-            <strong className="text-ink">{formatPrice(cartTotal)}</strong>
+            <strong className="text-ink">{money(cartTotal)}</strong>
           </span>
         </div>
       </div>
 
       {/* ===================================================================== */}
-      {/* VISTA 1: TIENDA ONLINE (LC-008 + LC-009)                               */}
+      {/* VISTA 1: TIENDA ONLINE                                                 */}
       {/* ===================================================================== */}
       {activeView === "store" && (
         <div
@@ -345,14 +390,14 @@ export function EcommerceSimulatorContent() {
                   {cartItemCount}
                 </span>
                 <span className="text-sm font-bold text-ink">
-                  {formatPrice(cartTotal)}
+                  {money(cartTotal)}
                 </span>
                 <button
                   type="button"
-                  disabled={cart.length === 0 || checkoutStep !== "browse"}
+                  disabled={cart.length === 0 || step !== "browse"}
                   onClick={openCheckout}
                   className={`ml-1 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
-                    cart.length === 0 || checkoutStep !== "browse"
+                    cart.length === 0 || step !== "browse"
                       ? "bg-surface border border-line text-mute opacity-50 cursor-not-allowed"
                       : `${activeColorStyle} cursor-pointer shadow-sm`
                   }`}
@@ -363,8 +408,8 @@ export function EcommerceSimulatorContent() {
               </div>
             </div>
 
-            {/* Paso Confirmación de Compra (LC-009) */}
-            {checkoutStep === "confirmed" && lastConfirmedOrder ? (
+            {/* Paso Confirmación de Compra */}
+            {step === "confirmed" && lastConfirmedOrder ? (
               <div className="p-5 sm:p-8 flex flex-col items-center text-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-accent/15 text-accent flex items-center justify-center">
                   <CheckCircle2 className="w-7 h-7" aria-hidden="true" />
@@ -408,23 +453,29 @@ export function EcommerceSimulatorContent() {
                         className="flex items-center justify-between text-xs sm:text-sm"
                       >
                         <span className="text-ink">
-                          {item.name}{" "}
+                          {getDisplayName(t, item)}{" "}
                           <span className="text-mute">x{item.qty}</span>
                         </span>
                         <span className="font-semibold text-ink">
-                          {formatPrice(item.subtotal)}
+                          {money(item.subtotal)}
                         </span>
                       </div>
                     ))}
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-line">
+                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-line">
                     <span className="text-xs font-bold uppercase tracking-wider text-mute">
-                      {t("solutions.simulator.ecommerce.checkout.totalPaid")} (
-                      {lastConfirmedOrder.paymentMethod})
+                      {lastConfirmedOrder.paymentStatus === "paid"
+                        ? t("solutions.simulator.ecommerce.checkout.totalPaid")
+                        : t("solutions.simulator.ecommerce.checkout.totalLabel")}{" "}
+                      (
+                      {t(
+                        `solutions.simulator.ecommerce.checkout.methods.${lastConfirmedOrder.paymentMethodId}`,
+                      )}
+                      )
                     </span>
-                    <span className="font-display text-base sm:text-lg font-bold text-accent">
-                      {formatPrice(lastConfirmedOrder.total)}
+                    <span className="font-display text-base sm:text-lg font-bold text-accent-text">
+                      {money(lastConfirmedOrder.total)}
                     </span>
                   </div>
                 </div>
@@ -442,7 +493,7 @@ export function EcommerceSimulatorContent() {
                   <button
                     type="button"
                     onClick={handleGoToAdminOrders}
-                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand text-white text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-all cursor-pointer"
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-text text-white text-xs font-bold uppercase tracking-wider hover:bg-brand-text/90 transition-colors cursor-pointer"
                   >
                     <LayoutDashboard
                       className="w-3.5 h-3.5"
@@ -452,8 +503,8 @@ export function EcommerceSimulatorContent() {
                   </button>
                 </div>
               </div>
-            ) : checkoutStep === "form" ? (
-              /* Paso Formulario de Pago Simulado (LC-009) */
+            ) : step === "form" ? (
+              /* Paso Formulario de Pago Simulado */
               <form
                 onSubmit={handleConfirmPayment}
                 className="p-4 sm:p-6 flex flex-col gap-5"
@@ -510,6 +561,25 @@ export function EcommerceSimulatorContent() {
                       className="w-full bg-surface border border-line-strong rounded-xl px-3.5 py-2 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
                     />
                   </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label
+                      htmlFor="ecom-checkout-phone"
+                      className="text-xs font-semibold text-mute"
+                    >
+                      {t("solutions.simulator.ecommerce.checkout.buyerPhone")}
+                    </label>
+                    <input
+                      id="ecom-checkout-phone"
+                      type="tel"
+                      value={buyerPhone}
+                      onChange={(e) => setBuyerPhone(e.target.value)}
+                      placeholder={t(
+                        "solutions.simulator.ecommerce.checkout.buyerPhonePlaceholder",
+                      )}
+                      className="w-full bg-surface border border-line-strong rounded-xl px-3.5 py-2 text-sm text-ink focus:outline-none focus:border-brand transition-colors"
+                    />
+                  </div>
                 </div>
 
                 {/* Selección de medio de pago simulado */}
@@ -520,13 +590,13 @@ export function EcommerceSimulatorContent() {
                     )}
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                    {PAYMENT_METHODS.map((method) => {
-                      const isSelected = paymentMethod === method.id;
+                    {PAYMENT_METHOD_IDS.map((methodId) => {
+                      const isSelected = paymentMethod === methodId;
                       return (
                         <button
-                          key={method.id}
+                          key={methodId}
                           type="button"
-                          onClick={() => setPaymentMethod(method.id)}
+                          onClick={() => setPaymentMethod(methodId)}
                           aria-pressed={isSelected}
                           className={`px-3.5 py-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer text-left ${
                             isSelected
@@ -535,7 +605,7 @@ export function EcommerceSimulatorContent() {
                           }`}
                         >
                           {t(
-                            `solutions.simulator.ecommerce.checkout.methods.${method.labelKey}`,
+                            `solutions.simulator.ecommerce.checkout.methods.${methodId}`,
                           )}
                         </button>
                       );
@@ -554,11 +624,11 @@ export function EcommerceSimulatorContent() {
                       className="flex items-center justify-between text-xs sm:text-sm"
                     >
                       <span className="text-ink">
-                        {item.name}{" "}
+                        {getDisplayName(t, item)}{" "}
                         <span className="text-mute">x{item.qty}</span>
                       </span>
                       <span className="font-bold text-ink">
-                        {formatPrice(item.price * item.qty)}
+                        {money(item.price * item.qty)}
                       </span>
                     </div>
                   ))}
@@ -567,7 +637,7 @@ export function EcommerceSimulatorContent() {
                       {t("solutions.simulator.ecommerce.checkout.totalLabel")}
                     </span>
                     <span className="font-display text-lg font-bold text-ink">
-                      {formatPrice(cartTotal)}
+                      {money(cartTotal)}
                     </span>
                   </div>
                 </div>
@@ -589,82 +659,92 @@ export function EcommerceSimulatorContent() {
                     {t(
                       "solutions.simulator.ecommerce.checkout.confirmButton",
                     )}{" "}
-                    ({formatPrice(cartTotal)})
+                    ({money(cartTotal)})
                   </button>
                 </div>
               </form>
             ) : (
-              /* Catálogo + Carrito con botón Pagar (LC-008 + LC-009) */
+              /* Catálogo + Carrito con botón Pagar */
               <>
-                <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {products.map((product) => {
-                    const translatedName = getProductName(product);
-                    const inCartItem = cart.find(
-                      (item) => item.id === product.id,
-                    );
-                    const inCartQty = inCartItem ? inCartItem.qty : 0;
-                    const remainingStock = Math.max(
-                      0,
-                      product.stock - inCartQty,
-                    );
-                    const isOutOfStock = product.stock === 0;
-                    const cannotAddMore = remainingStock === 0;
+                {products.length === 0 ? (
+                  <p className="p-8 text-center text-sm text-mute">
+                    {t("solutions.simulator.ecommerce.emptyCatalog")}
+                  </p>
+                ) : (
+                  <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {products.map((product) => {
+                      const productName = getDisplayName(t, product);
+                      const inCartItem = cart.find(
+                        (item) => item.id === product.id,
+                      );
+                      const inCartQty = inCartItem ? inCartItem.qty : 0;
+                      const remainingStock = Math.max(
+                        0,
+                        product.stock - inCartQty,
+                      );
+                      const isOutOfStock = product.stock === 0;
+                      const cannotAddMore = remainingStock === 0;
 
-                    return (
-                      <div
-                        key={product.id}
-                        className="flex flex-col items-center p-4 border border-line rounded-xl bg-surface h-full"
-                      >
-                        <img
-                          src={product.image}
-                          alt={translatedName}
-                          loading="lazy"
-                          className="w-20 h-20 object-cover rounded-lg mb-3"
-                        />
-                        <span className="text-sm font-bold text-ink text-center mb-1">
-                          {translatedName}
-                        </span>
-                        <span className="text-xs font-semibold text-ink mb-1">
-                          {formatPrice(product.price)}
-                        </span>
-                        <span
-                          className={`text-[11px] mb-3 ${
-                            isOutOfStock
-                              ? "text-red-400 [[data-theme=light]_&]:text-red-700 font-semibold"
-                              : product.stock <= product.lowStockThreshold
-                                ? "text-amber-400 [[data-theme=light]_&]:text-amber-700 font-semibold"
-                                : "text-mute"
-                          }`}
+                      return (
+                        <div
+                          key={product.id}
+                          className="flex flex-col items-center p-4 border border-line rounded-xl bg-surface h-full"
                         >
-                          {isOutOfStock
-                            ? t("solutions.simulator.ecommerce.outOfStock")
-                            : `${product.stock} ${t("solutions.simulator.ecommerce.stockAvailable")}`}
-                        </span>
+                          <div className="relative mb-3">
+                            <img
+                              key={product.image}
+                              src={product.image}
+                              alt={productName}
+                              loading="lazy"
+                              onError={handleImageError}
+                              className={`w-20 h-20 object-cover rounded-lg ${
+                                isOutOfStock ? "opacity-50 grayscale" : ""
+                              }`}
+                            />
+                          </div>
+                          <span className="text-sm font-bold text-ink text-center mb-1">
+                            {productName}
+                          </span>
+                          <span className="text-xs font-semibold text-ink mb-1">
+                            {money(product.price)}
+                          </span>
+                          <span
+                            className={`text-[11px] mb-3 ${
+                              isOutOfStock
+                                ? "text-red-400 [[data-theme=light]_&]:text-red-700 font-semibold"
+                                : product.stock <= product.lowStockThreshold
+                                  ? "text-amber-400 [[data-theme=light]_&]:text-amber-700 font-semibold"
+                                  : "text-mute"
+                            }`}
+                          >
+                            {isOutOfStock
+                              ? t("solutions.simulator.ecommerce.soldOut")
+                              : `${product.stock} ${t("solutions.simulator.ecommerce.stockAvailable")}`}
+                          </span>
 
-                        <button
-                          type="button"
-                          disabled={cannotAddMore}
-                          onClick={() =>
-                            addToCart({ ...product, name: translatedName })
-                          }
-                          className={`w-full py-2 text-xs font-bold rounded-lg transition-colors mt-auto ${
-                            cannotAddMore
-                              ? "bg-bg border border-line text-mute opacity-50 cursor-not-allowed"
-                              : `${activeColorStyle} cursor-pointer`
-                          }`}
-                        >
-                          {isOutOfStock
-                            ? t("solutions.simulator.ecommerce.outOfStock")
-                            : cannotAddMore
-                              ? t(
-                                  "solutions.simulator.ecommerce.maxStockReached",
-                                )
-                              : t("solutions.simulator.ecommerce.add")}
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
+                          <button
+                            type="button"
+                            disabled={cannotAddMore}
+                            onClick={() => addToCart(product.id)}
+                            className={`w-full py-2 text-xs font-bold rounded-lg transition-colors mt-auto ${
+                              cannotAddMore
+                                ? "bg-bg border border-line text-mute opacity-50 cursor-not-allowed"
+                                : `${activeColorStyle} cursor-pointer`
+                            }`}
+                          >
+                            {isOutOfStock
+                              ? t("solutions.simulator.ecommerce.soldOut")
+                              : cannotAddMore
+                                ? t(
+                                    "solutions.simulator.ecommerce.maxStockReached",
+                                  )
+                                : t("solutions.simulator.ecommerce.add")}
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
 
                 {/* Resumen del carrito + Botón Pagar */}
                 {cart.length > 0 ? (
@@ -675,55 +755,67 @@ export function EcommerceSimulatorContent() {
                         {cartItemCount})
                       </p>
                       <span className="text-sm font-bold text-ink">
-                        {formatPrice(cartTotal)}
+                        {money(cartTotal)}
                       </span>
                     </div>
 
                     <div className="flex flex-col gap-2 max-h-52 overflow-y-auto pr-1">
-                      {cart.map((item) => (
-                        <div
-                          key={item.id}
-                          className="flex flex-wrap justify-between items-center gap-2 text-sm border-b border-line/50 pb-2"
-                        >
-                          <span className="text-ink font-medium">
-                            {item.name}
-                          </span>
-                          <div className="flex items-center gap-2.5 ml-auto">
-                            <div className="inline-flex items-center gap-1.5 bg-bg border border-line-strong rounded-lg px-1.5 py-0.5">
-                              <button
-                                type="button"
-                                onClick={() => updateCartQty(item.id, -1)}
-                                aria-label={`Restar ${item.name}`}
-                                className="p-0.5 text-mute hover:text-ink cursor-pointer"
-                              >
-                                <Minus className="w-3 h-3" aria-hidden="true" />
-                              </button>
-                              <span className="text-xs font-bold text-ink min-w-[1.25rem] text-center">
-                                {item.qty}
+                      {cart.map((item) => {
+                        const itemName = getDisplayName(t, item);
+                        return (
+                          <div
+                            key={item.id}
+                            className="flex flex-wrap justify-between items-center gap-2 text-sm border-b border-line/50 pb-2"
+                          >
+                            <span className="text-ink font-medium">
+                              {itemName}
+                            </span>
+                            <div className="flex items-center gap-2.5 ml-auto">
+                              <div className="inline-flex items-center gap-1.5 bg-bg border border-line-strong rounded-lg px-1.5 py-0.5">
+                                <button
+                                  type="button"
+                                  onClick={() => updateCartQty(item.id, -1)}
+                                  aria-label={`Restar ${itemName}`}
+                                  className="p-0.5 text-mute hover:text-ink cursor-pointer"
+                                >
+                                  <Minus
+                                    className="w-3 h-3"
+                                    aria-hidden="true"
+                                  />
+                                </button>
+                                <span className="text-xs font-bold text-ink min-w-[1.25rem] text-center">
+                                  {item.qty}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => updateCartQty(item.id, 1)}
+                                  aria-label={`Sumar ${itemName}`}
+                                  className="p-0.5 text-mute hover:text-ink cursor-pointer"
+                                >
+                                  <Plus
+                                    className="w-3 h-3"
+                                    aria-hidden="true"
+                                  />
+                                </button>
+                              </div>
+                              <span className="font-bold text-ink min-w-[4.5rem] text-right">
+                                {money(item.price * item.qty)}
                               </span>
                               <button
                                 type="button"
-                                onClick={() => updateCartQty(item.id, 1)}
-                                aria-label={`Sumar ${item.name}`}
-                                className="p-0.5 text-mute hover:text-ink cursor-pointer"
+                                onClick={() => removeFromCart(item.id)}
+                                aria-label={`Quitar ${itemName}`}
+                                className="p-1 text-red-400 [[data-theme=light]_&]:text-red-700 hover:opacity-80 cursor-pointer"
                               >
-                                <Plus className="w-3 h-3" aria-hidden="true" />
+                                <Trash2
+                                  className="w-4 h-4"
+                                  aria-hidden="true"
+                                />
                               </button>
                             </div>
-                            <span className="font-bold text-ink min-w-[4.5rem] text-right">
-                              {formatPrice(item.price * item.qty)}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => removeFromCart(item.id)}
-                              aria-label={`Quitar ${item.name}`}
-                              className="p-1 text-red-400 [[data-theme=light]_&]:text-red-700 hover:opacity-80 cursor-pointer"
-                            >
-                              <Trash2 className="w-4 h-4" aria-hidden="true" />
-                            </button>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
 
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
@@ -739,7 +831,7 @@ export function EcommerceSimulatorContent() {
                         {t(
                           "solutions.simulator.ecommerce.checkout.payButton",
                         )}{" "}
-                        · {formatPrice(cartTotal)}
+                        · {money(cartTotal)}
                       </button>
                     </div>
                   </div>
@@ -762,7 +854,7 @@ export function EcommerceSimulatorContent() {
       )}
 
       {/* ===================================================================== */}
-      {/* VISTA 2: PANEL DE ADMINISTRACIÓN CONECTADO AL STORE (LC-008 + LC-010)  */}
+      {/* VISTA 2: PANEL DE ADMINISTRACIÓN CONECTADO AL STORE                    */}
       {/* ===================================================================== */}
       {activeView === "admin" && (
         <div
@@ -780,14 +872,7 @@ export function EcommerceSimulatorContent() {
             {ADMIN_TABS.map((tab, idx) => {
               const Icon = tab.icon;
               const isSelected = activeAdminTab === tab.id;
-              const badgeCount =
-                tab.id === "orders"
-                  ? orders.length
-                  : tab.id === "products"
-                    ? products.length
-                    : tab.id === "customers"
-                      ? customers.length
-                      : null;
+              const badgeCount = adminBadgeCount(tab.id);
 
               return (
                 <button
@@ -825,175 +910,36 @@ export function EcommerceSimulatorContent() {
 
           {/* Alerta visual si entró un pedido nuevo desde la tienda */}
           {unseenOrdersCount > 0 && (
-            <div className="flex flex-wrap items-center justify-between gap-2 bg-accent/15 border border-accent/30 rounded-xl px-3.5 py-2.5 text-xs">
-              <div className="flex items-center gap-2 text-accent font-semibold">
+            <div
+              role="status"
+              className="flex flex-wrap items-center justify-between gap-2 bg-accent/15 border border-accent/30 rounded-xl px-3.5 py-2.5 text-xs"
+            >
+              <div className="flex items-center gap-2 text-accent-text font-semibold">
                 <Bell className="w-4 h-4 shrink-0" aria-hidden="true" />
                 <span>
                   {t("solutions.simulator.ecommerce.admin.newOrderBanner")} (+
                   {unseenOrdersCount})
                 </span>
               </div>
-              <button
-                type="button"
-                onClick={() => handleAdminTabChange("orders")}
-                className="px-3 py-1 rounded-lg bg-accent text-white font-bold uppercase tracking-wider text-[11px] cursor-pointer"
-              >
-                {t("solutions.simulator.ecommerce.admin.viewOrdersCta")}
-              </button>
+              {activeAdminTab !== "orders" && (
+                <button
+                  type="button"
+                  onClick={() => handleAdminTabChange("orders")}
+                  className="px-3 py-1 rounded-lg bg-brand-text text-white font-bold uppercase tracking-wider text-[11px] cursor-pointer"
+                >
+                  {t("solutions.simulator.ecommerce.admin.viewOrdersCta")}
+                </button>
+              )}
             </div>
           )}
 
-          {/* Resumen rápido conectado al store compartido */}
-          {activeAdminTab !== "dashboard" && (
-  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <div className="bg-surface border border-line rounded-xl p-3.5">
-              <span className="block text-[10px] font-bold uppercase tracking-wider text-mute">
-                {t("solutions.simulator.ecommerce.admin.kpis.revenue")}
-              </span>
-              <span className="font-display text-base sm:text-xl font-bold text-accent">
-                {formatPrice(totalRevenue)}
-              </span>
-            </div>
-            <div className="bg-surface border border-line rounded-xl p-3.5">
-              <span className="block text-[10px] font-bold uppercase tracking-wider text-mute">
-                {t("solutions.simulator.ecommerce.admin.kpis.orders")}
-              </span>
-              <span className="font-display text-base sm:text-xl font-bold text-ink">
-                {orders.length}
-              </span>
-            </div>
-            <div className="bg-surface border border-line rounded-xl p-3.5">
-              <span className="block text-[10px] font-bold uppercase tracking-wider text-mute">
-                {t("solutions.simulator.ecommerce.admin.kpis.customers")}
-              </span>
-              <span className="font-display text-base sm:text-xl font-bold text-ink">
-                {customers.length}
-              </span>
-            </div>
-            <div className="bg-surface border border-line rounded-xl p-3.5">
-              <span className="block text-[10px] font-bold uppercase tracking-wider text-mute">
-                {t("solutions.simulator.ecommerce.admin.kpis.lowStock")}
-              </span>
-              <span className="font-display text-base sm:text-xl font-bold text-ink">
-                {lowStockProducts.length}
-              </span>
-            </div>
-          </div>
-          )}
-
-
-          {/* Contenido sincronizado del Admin según pestaña activa */}
+          {/* Contenido del Admin según pestaña activa */}
           <div
             role="tabpanel"
             id={`ecom-admin-panel-${activeAdminTab}`}
             aria-labelledby={`ecom-admin-tab-${activeAdminTab}`}
-            className="flex flex-col gap-3"
           >
-            {activeAdminTab === "dashboard" ? (
-              <EcommerceDashboard orders={orders} products={products} formatPrice={formatPrice}/>
-            ) : activeAdminTab === "products" ? (
-              <div className="flex flex-col gap-2.5">
-                {products.map((prod) => (
-                  <div
-                    key={prod.id}
-                    className="flex flex-wrap items-center justify-between gap-3 bg-surface border border-line rounded-xl p-3.5"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <img
-                        src={prod.image}
-                        alt={getProductName(prod)}
-                        loading="lazy"
-                        className="w-10 h-10 rounded-lg object-cover shrink-0"
-                      />
-                      <div className="min-w-0">
-                        <p className="text-sm font-bold text-ink truncate">
-                          {getProductName(prod)}
-                        </p>
-                        <p className="text-xs text-mute">
-                          {formatPrice(prod.price)}
-                        </p>
-                      </div>
-                    </div>
-                    <span
-                      className={`px-2.5 py-1 rounded-lg text-xs font-bold ${
-                        prod.stock === 0
-                          ? "bg-red-400/15 text-red-400 [[data-theme=light]_&]:text-red-700"
-                          : prod.stock <= prod.lowStockThreshold
-                            ? "bg-amber-400/15 text-amber-400 [[data-theme=light]_&]:text-amber-700"
-                            : "bg-accent/15 text-accent"
-                      }`}
-                    >
-                      Stock: {prod.stock}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            ) : activeAdminTab === "customers" ? (
-              <div className="flex flex-col gap-2.5">
-                {customers.map((cust) => (
-                  <div
-                    key={cust.id}
-                    className="flex flex-wrap items-center justify-between gap-3 bg-surface border border-line rounded-xl p-3.5"
-                  >
-                    <div className="min-w-0">
-                      <p className="text-sm font-bold text-ink truncate">
-                        {cust.name}
-                      </p>
-                      <p className="text-xs text-mute truncate">{cust.email}</p>
-                    </div>
-                    <div className="text-right text-xs">
-                      <span className="block font-bold text-ink">
-                        {formatPrice(cust.totalSpent)}
-                      </span>
-                      <span className="text-mute">
-                        {cust.ordersCount}{" "}
-                        {t("solutions.simulator.ecommerce.admin.ordersWord")}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              /* Listado vivo de pedidos (Dashboard / Pedidos / Informes) */
-              <div className="flex flex-col gap-2.5">
-                <span className="text-xs font-bold uppercase tracking-wider text-mute">
-                  {t("solutions.simulator.ecommerce.admin.recentOrdersTitle")}
-                </span>
-                {orders.map((order) => (
-                  <div
-                    key={order.id}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-surface border border-line rounded-xl p-3.5"
-                  >
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-brand">
-                          {order.number}
-                        </span>
-                        <span className="text-sm font-bold text-ink truncate">
-                          {order.customerName}
-                        </span>
-                      </div>
-                      <p className="text-xs text-mute truncate">
-                        {order.items
-                          .map((i) => `${i.name} x${i.qty}`)
-                          .join(" · ")}{" "}
-                        · {order.paymentMethod}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
-                      <span className="px-2.5 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wider bg-accent/15 text-accent">
-                        {t(
-                          `solutions.simulator.ecommerce.admin.paymentStatuses.${order.paymentStatus}`,
-                        )}
-                      </span>
-                      <span className="text-sm font-bold text-ink">
-                        {formatPrice(order.total)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            {renderAdminContent()}
           </div>
         </div>
       )}
