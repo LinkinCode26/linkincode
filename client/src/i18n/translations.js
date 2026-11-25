@@ -279,9 +279,6 @@ const es = {
             pending: "Pendiente",
           },
           dashboard: {
-            sales: "Ventas de hoy",
-            thisMonth: "Este mes",
-            ordersReceived: "Pedidos recibidos",
             pendingPayments: "Pagos pendientes",
             toPrepare: "Por preparar",
             lowStock: "Stock bajo",

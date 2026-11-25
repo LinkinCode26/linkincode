@@ -103,6 +103,9 @@ export const ecommerceAdminEs = {
       lowStock: "Stock bajo",
       pendingRevenue: "Por cobrar",
       outOfStock: "Agotados",
+      salesToday: "Ventas de hoy",
+      salesMonth: "Ventas del mes",
+      toPrepare: "Por preparar",
     },
     dashboard: {
       revenueNote:
@@ -111,6 +114,8 @@ export const ecommerceAdminEs = {
       paymentsByStatus: "Pedidos por estado de pago",
       recentOrders: "Últimos pedidos",
       empty: "Todavía no hay pedidos.",
+      salesChart: "Evolución de ventas, últimos 7 días",
+      salesSeries: "Ventas",
     },
     reports: {
       topProducts: "Productos más vendidos",
@@ -127,7 +132,8 @@ export const ecommerceAdminEs = {
       allPayments: "Todos los pagos",
       showing: "Mostrando",
       of: "de",
-      empty: "Todavía no hay pedidos. Cuando alguien compre en la tienda, va a aparecer acá.",
+      empty:
+        "Todavía no hay pedidos. Cuando alguien compre en la tienda, va a aparecer acá.",
       noResults: "No hay pedidos que coincidan con estos filtros.",
       clearFilters: "Limpiar filtros",
       orderStatus: "Estado del pedido",
@@ -201,7 +207,8 @@ export const ecommerceAdminEs = {
       title: "Clientes registrados",
       searchPlaceholder: "Buscar por nombre, email o teléfono...",
       clearSearch: "Limpiar búsqueda",
-      empty: "Todavía no hay clientes. Se crean solos cuando alguien compra en la tienda.",
+      empty:
+        "Todavía no hay clientes. Se crean solos cuando alguien compra en la tienda.",
       noResults: "No encontramos clientes que coincidan con tu búsqueda.",
       purchases: "Compras",
       totalSpent: "Total gastado",
@@ -294,6 +301,9 @@ export const ecommerceAdminEn = {
       lowStock: "Low stock",
       pendingRevenue: "Pending payment",
       outOfStock: "Sold out",
+      salesToday: "Sales today",
+      salesMonth: "Sales this month",
+      toPrepare: "To prepare",
     },
     dashboard: {
       revenueNote:
@@ -302,6 +312,8 @@ export const ecommerceAdminEn = {
       paymentsByStatus: "Orders by payment status",
       recentOrders: "Latest orders",
       empty: "There are no orders yet.",
+      salesChart: "Sales trend, last 7 days",
+      salesSeries: "Sales",
     },
     reports: {
       topProducts: "Best-selling products",
@@ -318,7 +330,8 @@ export const ecommerceAdminEn = {
       allPayments: "All payments",
       showing: "Showing",
       of: "of",
-      empty: "There are no orders yet. When someone buys from the store, it will show up here.",
+      empty:
+        "There are no orders yet. When someone buys from the store, it will show up here.",
       noResults: "No orders match these filters.",
       clearFilters: "Clear filters",
       orderStatus: "Order status",
@@ -384,14 +397,16 @@ export const ecommerceAdminEn = {
         priceRange: "The price must be greater than 0 and below 10,000,000.",
         stockRequired: "Enter the stock.",
         stockRange: "Stock must be a whole number between 0 and 99,999.",
-        imageInvalid: "The photo must be a URL starting with http:// or https://.",
+        imageInvalid:
+          "The photo must be a URL starting with http:// or https://.",
       },
     },
     customers: {
       title: "Registered customers",
       searchPlaceholder: "Search by name, email or phone...",
       clearSearch: "Clear search",
-      empty: "There are no customers yet. They are created automatically when someone buys from the store.",
+      empty:
+        "There are no customers yet. They are created automatically when someone buys from the store.",
       noResults: "We couldn't find customers matching your search.",
       purchases: "Purchases",
       totalSpent: "Total spent",

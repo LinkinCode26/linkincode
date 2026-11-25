@@ -1,3 +1,12 @@
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import useLanguage from "../../hooks/useLanguage";
 import {
   ORDER_STATUSES,
@@ -55,6 +64,7 @@ export function AdminDashboardTab({ stats, orders, customersCount }) {
   const locale = lang === "en" ? "en-US" : "es-AR";
   const D = (key) => t(`${BASE}.dashboard.${key}`);
   const money = (value) => formatPrice(value, locale);
+    const toPrepare = stats.ordersByStatus.new + stats.ordersByStatus.preparing;
 
   const recentOrders = [...orders]
     .sort((a, b) => new Date(b.date) - new Date(a.date))
@@ -64,9 +74,18 @@ export function AdminDashboardTab({ stats, orders, customersCount }) {
     <div className="flex flex-col gap-4">
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
         <KpiCard
+          label={t(`${BASE}.kpis.salesToday`)}
+          value={money(stats.salesToday)}
+          accent
+        />
+        <KpiCard
+          label={t(`${BASE}.kpis.salesMonth`)}
+          value={money(stats.salesMonth)}
+        />
+        <KpiCard label={t(`${BASE}.kpis.toPrepare`)} value={toPrepare} />
+        <KpiCard
           label={t(`${BASE}.kpis.revenue`)}
           value={money(stats.revenue)}
-          accent
         />
         <KpiCard
           label={t(`${BASE}.kpis.pendingRevenue`)}
@@ -78,9 +97,64 @@ export function AdminDashboardTab({ stats, orders, customersCount }) {
         <KpiCard label={t(`${BASE}.kpis.outOfStock`)} value={stats.outOfStock} />
       </div>
       <p className="text-[11px] text-mute">{D("revenueNote")}</p>
-
+<section className="rounded-2xl border border-line bg-surface p-4">
+        <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-mute">
+          {D("salesChart")}
+        </h4>
+        <div className="h-56 w-full sm:h-64" role="img" aria-label={D("salesChart")}>
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart
+              data={stats.salesByDay}
+              margin={{ top: 5, right: 18, left: 0, bottom: 0 }}
+            >
+              <defs>
+                <linearGradient id="salesFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="var(--brand)" stopOpacity={0.35} />
+                  <stop offset="100%" stopColor="var(--brand)" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid stroke="var(--line)" strokeDasharray="3 3" vertical={false} />
+              <XAxis
+                dataKey="label"
+                stroke="var(--mute)"
+                fontSize={11}
+                tickLine={false}
+                axisLine={false}
+                interval="preserveStartEnd"
+                minTickGap={12}
+              />
+              <YAxis
+                stroke="var(--mute)"
+                fontSize={11}
+                tickLine={false}
+                axisLine={false}
+                width={40}
+                tickFormatter={(v) => (v >= 1000 ? `${v / 1000}k` : v)}
+              />
+              <Tooltip
+                formatter={(v) => money(v)}
+                contentStyle={{
+                  background: "var(--surface)",
+                  border: "1px solid var(--line)",
+                  borderRadius: 12,
+                  fontSize: 12,
+                }}
+              />
+              <Area
+                type="monotone"
+                dataKey="ventas"
+                name={D("salesSeries")}
+                stroke="var(--brand)"
+                strokeWidth={2.5}
+                fill="url(#salesFill)"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      </section>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <section className="rounded-2xl border border-line bg-surface p-4">
+             
+<section className="rounded-2xl border border-line bg-surface p-4">
           <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-mute">
             {D("ordersByStatus")}
           </h4>
@@ -96,7 +170,6 @@ export function AdminDashboardTab({ stats, orders, customersCount }) {
             ))}
           </ul>
         </section>
-
         <section className="rounded-2xl border border-line bg-surface p-4">
           <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-mute">
             {D("paymentsByStatus")}
