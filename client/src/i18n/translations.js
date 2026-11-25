@@ -278,6 +278,13 @@ const es = {
             paid: "Pagado",
             pending: "Pendiente",
           },
+          dashboard: {
+            pendingPayments: "Pagos pendientes",
+            toPrepare: "Por preparar",
+            lowStock: "Stock bajo",
+            chartTitle: "Evolución de ventas, últimos 7 días",
+            salesSeries: "Ventas",
+          },
         },
         products: {
           "prod-1": "Auriculares Inalámbricos",
@@ -895,6 +902,16 @@ const en = {
           paymentStatuses: {
             paid: "Paid",
             pending: "Pending",
+          },
+          dashboard: {
+            sales: "Sales today",
+            thisMonth: "This month",
+            ordersReceived: "Orders received",
+            pendingPayments: "Pending payments",
+            toPrepare: "To prepare",
+            lowStock: "Low stock",
+            chartTitle: "Sales trend, last 7 days",
+            salesSeries: "Sales",
           },
         },
         products: {

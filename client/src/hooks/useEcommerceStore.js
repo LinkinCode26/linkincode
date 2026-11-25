@@ -21,13 +21,20 @@ const line = (productId, name, price, qty) => ({
   subtotal: price * qty,
 });
 
+const isoDaysAgo = (days, hour = 12) => {
+  const d = new Date();
+  d.setDate(d.getDate() - days);
+  d.setHours(days === 0 ? Math.min(hour, d.getHours()) : hour, 0, 0, 0);
+  return d.toISOString();
+};
+
 // Los pedidos guardan el medio de pago como id (no como texto traducido) para
 // que se muestre en el idioma activo.
 const INITIAL_ORDERS = [
   {
     id: "ord-1001",
     number: "ORD-1001",
-    date: "2026-11-14T14:20:00.000Z",
+    date: isoDaysAgo(5, 14),
     customerId: "cust-1",
     customerName: "Martina López",
     customerEmail: "martina.lopez@ejemplo.com",
@@ -43,7 +50,7 @@ const INITIAL_ORDERS = [
   {
     id: "ord-1002",
     number: "ORD-1002",
-    date: "2026-11-15T10:45:00.000Z",
+    date: isoDaysAgo(0, 10),
     customerId: "cust-2",
     customerName: "Lucas Fernández",
     customerEmail: "lucas.fernandez@ejemplo.com",
@@ -56,7 +63,7 @@ const INITIAL_ORDERS = [
   {
     id: "ord-1003",
     number: "ORD-1003",
-    date: "2026-11-15T18:10:00.000Z",
+    date: isoDaysAgo(1, 18),
     customerId: "cust-3",
     customerName: "Sofía Pereyra",
     customerEmail: "sofia.pereyra@ejemplo.com",
@@ -429,6 +436,38 @@ export function useEcommerceStore() {
       .sort((a, b) => b.units - a.units)
       .slice(0, 5);
 
+    const now = new Date();
+    const isSameDay = (date, day) =>
+      new Date(date).toDateString() === day.toDateString();
+
+    const salesToday = sum(
+      paid.filter((o) => isSameDay(o.date, now)),
+      (o) => o.total,
+    );
+
+    const salesMonth = sum(
+      paid.filter((o) => {
+        const d = new Date(o.date);
+        return (
+          d.getMonth() === now.getMonth() &&
+          d.getFullYear() === now.getFullYear()
+        );
+      }),
+      (o) => o.total,
+    );
+
+    const salesByDay = Array.from({ length: 7 }, (_, i) => {
+      const day = new Date();
+      day.setDate(day.getDate() - (6 - i));
+      return {
+        label: `${day.getDate()}/${day.getMonth() + 1}`,
+        ventas: sum(
+          paid.filter((o) => isSameDay(o.date, day)),
+          (o) => o.total,
+        ),
+      };
+    });
+
     return {
       revenue: sum(paid, (o) => o.total),
       pendingRevenue: sum(pending, (o) => o.total),
@@ -439,6 +478,9 @@ export function useEcommerceStore() {
       topProducts,
       lowStock: products.filter((p) => p.stock <= p.lowStockThreshold).length,
       outOfStock: products.filter((p) => p.stock <= 0).length,
+      salesToday,
+      salesMonth,
+      salesByDay,
     };
   }, [orders, products]);
 
