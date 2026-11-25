@@ -1,5 +1,6 @@
 // Diccionario de textos estáticos del sitio, en español e inglés.
 import { adminEs, adminEn } from "./admin.js";
+import { withEcommerceAdmin, ecommerceAdminEs, ecommerceAdminEn } from "./ecommerceAdmin.js";
 
 const es = {
   nav: {
@@ -82,13 +83,14 @@ const es = {
       },
       api: {
         badge: "Servicio 03",
-        heading: "APIs REST & Backends",
+        heading: "APIs REST & Integraciones",
         description:
-          "Desarrollamos backends robustos y escalables para empresas que ya tienen su frontend o necesitan una API para sus aplicaciones.",
+          "¿Ya tenés tu sitio web o sistemas y necesitás conectar plataformas o integrar Mercado Pago? Desarrollamos backends robustos y automatizamos el intercambio de datos entre tus herramientas.",
         bullets: [
-          "Arquitectura RESTful documentada",
-          "Autenticación JWT / OAuth",
-          "Testing automatizado y CI/CD",
+          "Integración de Mercado Pago en sitios web y tiendas online",
+          "Conexión con sistemas de gestión o bases de datos externas",
+          "Integración de APIs de terceros y servicios externos",
+          "Automatización del intercambio de información entre plataformas",
         ],
         cta: "Solicitar presupuesto",
       },
@@ -96,7 +98,7 @@ const es = {
         badge: "Servicio 04",
         heading: "Dashboards & Paneles Admin",
         description:
-          "Paneles de control personalizados para visualizar métricas, KPIs y datos de negocio en tiempo real.",
+          "Paneles de control personalizados para visualizar métricas, KPIs y datos de negocio en real time.",
         bullets: [
           "Gráficos interactivos y reportes",
           "Roles de usuario y permisos",
@@ -163,6 +165,15 @@ const es = {
       simulateTrigger: "Simulá tu servicio",
       liveEditing: "Editando en vivo",
       fullscreenTitle: "Simulando en pantalla completa",
+      names: {
+        landing: "Simulador de Landing Pages",
+        ecommerce: "Simulador de E-commerce",
+        api: "Simulador de APIs & Backends",
+        dashboard: "Simulador de Dashboards",
+        stock: "Simulador de Control de Stock",
+        staff: "Simulador de Gestión de Personal",
+        billing: "Simulador de Facturación Digital",
+      },
       resetLabel: "Reiniciar",
       exitLabel: "Salir del simulador",
       fullscreenLabel: "Pantalla completa",
@@ -197,13 +208,84 @@ const es = {
         },
       },
       disclaimer:
-        "Simulación visual — no se envía ni almacena en nuestros servidores.",
+        "Funcionalidades con fines demostrativos — se adaptan y personalizan según las necesidades de cada cliente.",
       ecommerce: {
         clientName: "Nombre del cliente",
         placeholder: "Ej: Juan Pérez...",
         defaultStore: "Mi Tienda",
         add: "Agregar",
         cartSummary: "Resumen del carrito",
+        emptyCart: "Agregá productos al carrito para simular una compra.",
+        stockAvailable: "disponibles",
+        outOfStock: "Sin stock",
+        maxStockReached: "Stock máximo en carrito",
+        nav: {
+          ariaLabel: "Cambiar vista del simulador E-commerce",
+          store: "Tienda Online",
+          admin: "Panel Admin",
+          ordersCounter: "Pedidos",
+          cartCounter: "Carrito",
+        },
+        checkout: {
+          payButton: "Pagar",
+          readyHint:
+            "Completá el pago simulado para generar el pedido en el Admin.",
+          stepTitle: "Checkout simulado",
+          backToCart: "Volver al carrito",
+          buyerName: "Nombre del comprador",
+          buyerNamePlaceholder: "Ej: Camila Rodríguez",
+          buyerEmail: "Email de contacto",
+          buyerEmailPlaceholder: "camila@ejemplo.com",
+          guestCustomer: "Cliente Web",
+          paymentMethodLabel: "Medio de pago",
+          methods: {
+            mercadopago: "Mercado Pago",
+            card: "Tarjeta de crédito",
+            transfer: "Transferencia",
+          },
+          totalLabel: "Total a pagar",
+          cancel: "Cancelar",
+          confirmButton: "Confirmar pago",
+          confirmedTitle: "¡Compra confirmada!",
+          confirmedSubtitle:
+            "El pedido ya se registró en el Panel Admin y se descontó el stock.",
+          orderLabel: "Pedido",
+          buyerLabel: "Cliente",
+          totalPaid: "Total abonado",
+          continueShopping: "Seguir comprando",
+          viewInAdmin: "Ver pedido en Admin",
+        },
+        admin: {
+          navAriaLabel: "Secciones del panel de administración",
+          tabs: {
+            dashboard: "Dashboard",
+            orders: "Pedidos",
+            products: "Productos",
+            customers: "Clientes",
+            reports: "Informes",
+          },
+          newOrderBanner: "Nuevo pedido recibido desde la tienda online",
+          viewOrdersCta: "Ver pedidos",
+          recentOrdersTitle: "Pedidos sincronizados con la tienda",
+          ordersWord: "pedidos",
+          kpis: {
+            revenue: "Facturación",
+            orders: "Pedidos",
+            customers: "Clientes",
+            lowStock: "Stock bajo",
+          },
+          paymentStatuses: {
+            paid: "Pagado",
+            pending: "Pendiente",
+          },
+          dashboard: {
+            pendingPayments: "Pagos pendientes",
+            toPrepare: "Por preparar",
+            lowStock: "Stock bajo",
+            chartTitle: "Evolución de ventas, últimos 7 días",
+            salesSeries: "Ventas",
+          },
+        },
         products: {
           "prod-1": "Auriculares Inalámbricos",
           "prod-2": "Mochila Urbana",
@@ -294,6 +376,9 @@ const es = {
         present: "Presente",
         absent: "Ausente",
         hoursShort: "hs",
+        addEmployee: "Agregar empleado",
+        searchPlaceholder: "Buscar por nombre o rol...",
+        clearSearch: "Limpiar búsqueda",
         summary: {
           scheduledHours: "Horas programadas",
           workedHours: "Horas trabajadas",
@@ -305,6 +390,53 @@ const es = {
           deposito: "Depósito",
           atencion: "Atención al cliente",
           administracion: "Administración",
+        },
+        actions: {
+          viewDetail: "Ver detalle",
+          edit: "Editar",
+          delete: "Dar de baja",
+        },
+        form: {
+          createTitle: "Nuevo empleado",
+          editTitle: "Editar empleado",
+          nameLabel: "Nombre completo",
+          namePlaceholder: "Ej: Valentina Gómez",
+          roleLabel: "Rol / Área",
+          hoursLabel: "Horas por turno",
+          hoursPlaceholder: "Ej: 8",
+          cancel: "Cancelar",
+          saveCreate: "Guardar empleado",
+          saveEdit: "Guardar cambios",
+          errors: {
+            nameRequired: "Ingresá el nombre del empleado.",
+            nameMin: "El nombre debe tener al menos 2 caracteres.",
+            roleRequired: "Seleccioná un rol válido.",
+            hoursRequired: "Ingresá las horas del turno.",
+            hoursRange: "Las horas deben estar entre 1 y 24.",
+          },
+        },
+        deleteConfirm: {
+          question: "¿Dar de baja a",
+          cancel: "Cancelar",
+          confirm: "Confirmar baja",
+        },
+        detail: {
+          title: "Ficha del empleado",
+          role: "Rol",
+          dailyShift: "Jornada diaria",
+          weeklyWorked: "Horas semanales trabajadas",
+          weeklyAttendance: "Asistencia semanal",
+          dailyStatus: "Asistencia por día (clic para alternar)",
+          close: "Cerrar ficha",
+        },
+        empty: {
+          title: "No hay empleados en la nómina",
+          description:
+            "Agregá un nuevo empleado para gestionar turnos y asistencias, o usá Reiniciar arriba para restaurar la lista inicial.",
+          cta: "Agregar primer empleado",
+          noResultsTitle: "Sin coincidencias",
+          noResultsDescription:
+            "No encontramos empleados que coincidan con tu búsqueda.",
         },
         disclaimer:
           "Datos de personal simulados con fines demostrativos — no representan empleados reales ni se envían a ningún servidor.",
@@ -580,13 +712,14 @@ const en = {
       },
       api: {
         badge: "Service 03",
-        heading: "REST APIs & Backends",
+        heading: "REST APIs & Integrations",
         description:
-          "We build robust, scalable backends for companies that already have a frontend or need an API for their applications.",
+          "Already have a website or systems and need to connect platforms or integrate Mercado Pago? We build robust backends and automate data exchange across your workflows.",
         bullets: [
-          "Documented RESTful architecture",
-          "JWT / OAuth authentication",
-          "Automated testing and CI/CD",
+          "Mercado Pago integration for websites and online stores",
+          "Connection with management systems or external databases",
+          "Third-party API and external service integration",
+          "Automated cross-platform data exchange",
         ],
         cta: "Request a quote",
       },
@@ -659,6 +792,15 @@ const en = {
       simulateTrigger: "Simulate your service",
       liveEditing: "Editing live",
       fullscreenTitle: "Fullscreen simulation",
+      names: {
+        landing: "Landing Pages Simulator",
+        ecommerce: "E-commerce Simulator",
+        api: "APIs & Backends Simulator",
+        dashboard: "Dashboards Simulator",
+        stock: "Stock Control Simulator",
+        staff: "Staff Management Simulator",
+        billing: "Digital Billing Simulator",
+      },
       resetLabel: "Reset",
       exitLabel: "Exit simulator",
       fullscreenLabel: "Fullscreen",
@@ -692,13 +834,86 @@ const en = {
         },
       },
       disclaimer:
-        "Visual simulation — nothing is sent or stored on our servers.",
+        "Demonstration features — fully adaptable and customizable to each client's needs.",
       ecommerce: {
         clientName: "Client name",
         placeholder: "E.g. John Doe...",
         defaultStore: "My Store",
         add: "Add to cart",
         cartSummary: "Cart summary",
+        emptyCart: "Add products to the cart to simulate a purchase.",
+        stockAvailable: "available",
+        outOfStock: "Out of stock",
+        maxStockReached: "Max stock in cart",
+        nav: {
+          ariaLabel: "Switch E-commerce simulator view",
+          store: "Online Store",
+          admin: "Admin Panel",
+          ordersCounter: "Orders",
+          cartCounter: "Cart",
+        },
+        checkout: {
+          payButton: "Checkout",
+          readyHint: "Complete simulated payment to create the order in Admin.",
+          stepTitle: "Simulated checkout",
+          backToCart: "Back to cart",
+          buyerName: "Buyer name",
+          buyerNamePlaceholder: "E.g. Sarah Connor",
+          buyerEmail: "Contact email",
+          buyerEmailPlaceholder: "sarah@example.com",
+          guestCustomer: "Web Customer",
+          paymentMethodLabel: "Payment method",
+          methods: {
+            mercadopago: "Mercado Pago",
+            card: "Credit card",
+            transfer: "Bank transfer",
+          },
+          totalLabel: "Total to pay",
+          cancel: "Cancel",
+          confirmButton: "Confirm payment",
+          confirmedTitle: "Purchase confirmed!",
+          confirmedSubtitle:
+            "The order was recorded in the Admin Panel and stock was updated.",
+          orderLabel: "Order",
+          buyerLabel: "Customer",
+          totalPaid: "Total paid",
+          continueShopping: "Continue shopping",
+          viewInAdmin: "View order in Admin",
+        },
+        admin: {
+          navAriaLabel: "Admin panel sections",
+          tabs: {
+            dashboard: "Dashboard",
+            orders: "Orders",
+            products: "Products",
+            customers: "Customers",
+            reports: "Reports",
+          },
+          newOrderBanner: "New order received from the online store",
+          viewOrdersCta: "View orders",
+          recentOrdersTitle: "Orders synced with the storefront",
+          ordersWord: "orders",
+          kpis: {
+            revenue: "Revenue",
+            orders: "Orders",
+            customers: "Customers",
+            lowStock: "Low stock",
+          },
+          paymentStatuses: {
+            paid: "Paid",
+            pending: "Pending",
+          },
+          dashboard: {
+            sales: "Sales today",
+            thisMonth: "This month",
+            ordersReceived: "Orders received",
+            pendingPayments: "Pending payments",
+            toPrepare: "To prepare",
+            lowStock: "Low stock",
+            chartTitle: "Sales trend, last 7 days",
+            salesSeries: "Sales",
+          },
+        },
         products: {
           "prod-1": "Wireless Headphones",
           "prod-2": "Urban Backpack",
@@ -789,6 +1004,9 @@ const en = {
         present: "Present",
         absent: "Absent",
         hoursShort: "hrs",
+        addEmployee: "Add employee",
+        searchPlaceholder: "Search by name or role...",
+        clearSearch: "Clear search",
         summary: {
           scheduledHours: "Scheduled hours",
           workedHours: "Worked hours",
@@ -800,6 +1018,53 @@ const en = {
           deposito: "Warehouse",
           atencion: "Customer service",
           administracion: "Administration",
+        },
+        actions: {
+          viewDetail: "View details",
+          edit: "Edit",
+          delete: "Remove",
+        },
+        form: {
+          createTitle: "New employee",
+          editTitle: "Edit employee",
+          nameLabel: "Full name",
+          namePlaceholder: "E.g. Sarah Connor",
+          roleLabel: "Role / Department",
+          hoursLabel: "Shift hours",
+          hoursPlaceholder: "E.g. 8",
+          cancel: "Cancel",
+          saveCreate: "Save employee",
+          saveEdit: "Save changes",
+          errors: {
+            nameRequired: "Please enter the employee's name.",
+            nameMin: "Name must be at least 2 characters long.",
+            roleRequired: "Please select a valid role.",
+            hoursRequired: "Please enter the shift hours.",
+            hoursRange: "Hours must be between 1 and 24.",
+          },
+        },
+        deleteConfirm: {
+          question: "Remove",
+          cancel: "Cancel",
+          confirm: "Confirm removal",
+        },
+        detail: {
+          title: "Employee details",
+          role: "Role",
+          dailyShift: "Daily shift",
+          weeklyWorked: "Weekly worked hours",
+          weeklyAttendance: "Weekly attendance",
+          dailyStatus: "Daily attendance (click to toggle)",
+          close: "Close details",
+        },
+        empty: {
+          title: "No employees in the roster",
+          description:
+            "Add a new employee to manage shifts and attendance, or click Reset above to restore the initial list.",
+          cta: "Add first employee",
+          noResultsTitle: "No matching employees",
+          noResultsDescription:
+            "We couldn't find any employees matching your search.",
         },
         disclaimer:
           "Simulated staff data for demonstration purposes only — it does not represent real employees and is not sent to any server.",
@@ -995,8 +1260,8 @@ const en = {
 };
 
 export const translations = {
-  es: { ...es, admin: adminEs },
-  en: { ...en, admin: adminEn },
+  es: withEcommerceAdmin({ ...es, admin: adminEs }, ecommerceAdminEs),
+  en: withEcommerceAdmin({ ...en, admin: adminEn }, ecommerceAdminEn),
 };
 
 export default translations;
